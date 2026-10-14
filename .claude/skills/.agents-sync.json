@@ -1,0 +1,8 @@
+{
+  "generatedBy": "scripts/agents-sync.mjs",
+  "source": ".agents/skills",
+  "skills": [
+    "native-from-scratch",
+    "rigorous-code-audit"
+  ]
+}
