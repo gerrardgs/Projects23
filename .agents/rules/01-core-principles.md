@@ -1,6 +1,6 @@
 ---
 trigger: always_on
-description: Core engineering principles for every coding task - scope discipline, simplicity, completeness, and respect for the existing codebase.
+description: Core engineering principles for every coding task: scope discipline, simplicity, completeness, and respect for the existing codebase.
 ---
 
 # R-01: Core Engineering Principles

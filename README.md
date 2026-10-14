@@ -5,7 +5,7 @@
 [![Models: Universal](https://img.shields.io/badge/Models-Gemini%20%7C%20Claude%20%7C%20GPT%20%7C%20DeepSeek%20%7C%20Llama-purple.svg)](#tool-compatibility-verified-2026-10-14)
 [![Tools: Multi-Harness](https://img.shields.io/badge/Harness-Antigravity%20%7C%20Claude%20Code%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Copilot-green.svg)](#tool-compatibility-verified-2026-10-14)
 
-> **The open-source, model-agnostic coding specification that makes autonomous AI agents write clean, idiomatic, and robust software native from scratch—just like a principal software engineer.**
+> **The open-source, model-agnostic coding specification that makes autonomous AI agents write clean, idiomatic, and robust software native from scratch, just like an experienced principal engineer.**
 
 One source of truth ([`AGENTS.md`](AGENTS.md)), loaded natively by all major agent tools, with zero dependency bloat, strict type invariants, and a deterministic 5-step anti-hallucination protocol.
 
