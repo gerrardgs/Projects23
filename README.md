@@ -1,167 +1,103 @@
 # UCNA-Spec: Universal Clean Native Agent Specification
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Specification: Agent Skills](https://img.shields.io/badge/Specification-Agent%20Skills%202.0-blue.svg)](https://agentskills.io/specification)
-[![Models: Universal](https://img.shields.io/badge/Models-Gemini%20%7C%20Claude%20%7C%20GPT%20%7C%20DeepSeek%20%7C%20Llama-purple.svg)](#tool-compatibility-verified-2026-10-14)
-[![Tools: Multi-Harness](https://img.shields.io/badge/Harness-Antigravity%20%7C%20Claude%20Code%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Copilot-green.svg)](#tool-compatibility-verified-2026-10-14)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Format: Agent Skills](https://img.shields.io/badge/Format-Agent%20Skills-blue.svg)](https://agentskills.io/specification)
+[![Validate](https://github.com/gerrardgs/Projects23/actions/workflows/validate.yml/badge.svg)](https://github.com/gerrardgs/Projects23/actions/workflows/validate.yml)
 
-> **The open-source, model-agnostic coding specification that makes autonomous AI agents write clean, idiomatic, and robust software native from scratch, just like an experienced principal engineer.**
+Free, model-agnostic rules and skills that make AI coding agents work like an experienced engineer. They cover the whole lifecycle, from an empty folder through testing, debugging, security, CI/CD and deployment, and safe changes to existing code. One source of truth, loaded by Claude Code, Codex, Gemini CLI, Antigravity, Cursor, Windsurf, GitHub Copilot, Cline, Aider, or any chat model you paste it into.
 
-One source of truth ([`AGENTS.md`](AGENTS.md)), loaded natively by all major agent tools, with zero dependency bloat, strict type invariants, and a deterministic 5-step anti-hallucination protocol.
+Every version, command, package name, extension ID and template in this repository was checked against official sources or by running it. Each time-sensitive fact carries its verification date.
 
----
+## What is inside
 
-## Quickstart: Install into Any Project
+| Layer | Location | Loaded | Contents |
+| :--- | :--- | :--- | :--- |
+| Core | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 115 lines) |
+| Rules | [`.agents/rules/`](.agents/rules/) | Always (4) or when relevant (4) | Principles, clean code, verification, security, dependencies, error handling, testing, Git workflow |
+| Skills | [`.agents/skills/`](.agents/skills/) | When the task matches | Nine step-by-step procedures with verified templates and references |
+| Adapters | `CLAUDE.md`, `GEMINI.md`, `.gemini/settings.json`, `.github/copilot-instructions.md`, `.aider.conf.yml` | Per tool | Make each tool load the same core |
+| Mirror | `.claude/skills/` | Generated | Copy of the skills for Claude Code and Cline; never edit by hand |
+| Tooling | [`scripts/`](scripts/) | You or CI | Installer, and the sync and validation script |
+| Docs | [`docs/`](docs/) | Reference | Architecture, operational manual, anti-hallucination playbook, contributing guide |
 
-Choose your preferred installation method:
+### Skills: one per lifecycle phase
 
-### Method 1: Instant Terminal One-Liner (Recommended)
+| Phase | Skill | Highlights |
+| :--- | :--- | :--- |
+| Start | [project-bootstrap](.agents/skills/project-bootstrap/SKILL.md) | Toolchains for 7 language families, 32 VS Code extension IDs verified on the Marketplace, `.editorconfig`, `.gitattributes`, pre-commit with secret scanning, README and ADR templates |
+| Build | [native-from-scratch](.agents/skills/native-from-scratch/SKILL.md) | Standard-library-first design; runnable Node.js and Python services with tests, lockfile and Dockerfile |
+| Change | [change-existing-code](.agents/skills/change-existing-code/SKILL.md) | Characterization tests, small verified steps, upgrades, codemods, strangler fig |
+| Test | [test-engineering](.agents/skills/test-engineering/SKILL.md) | Test levels, determinism, property-based, fuzz and mutation testing, tools per language |
+| Debug | [systematic-debugging](.agents/skills/systematic-debugging/SKILL.md) | Reproduce, isolate, `git bisect`, debuggers and profilers, performance, incidents |
+| Review | [rigorous-code-audit](.agents/skills/rigorous-code-audit/SKILL.md) | Toolchain checks, OWASP Top 10:2025 checklist, verified and severity-ranked findings |
+| Secure | [security-hardening](.agents/skills/security-hardening/SKILL.md) | Threat modelling, OWASP ASVS 5.0, secrets, SAST, dependency and container scanning, SBOM |
+| Automate | [ci-cd-pipeline](.agents/skills/ci-cd-pipeline/SKILL.md) | GitHub Actions templates pinned to commit SHAs, least privilege, Dependabot with cooldown |
+| Ship | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Production checklist, containers, rollout strategies, zero-downtime migrations, observability, rollback |
 
-Run this command inside the root of your existing repository:
+## Install into a project
+
+The installer adds only the spec files. It **never overwrites a file that already exists and differs** (it lists those for you to merge), and it never touches your README, LICENSE, CHANGELOG, `.gitignore` or workflows.
 
 ```sh
+# Preview first: nothing is written
+curl -fsSL https://raw.githubusercontent.com/gerrardgs/Projects23/main/scripts/install.sh | bash -s -- --dry-run
+
+# Install into the current directory
 curl -fsSL https://raw.githubusercontent.com/gerrardgs/Projects23/main/scripts/install.sh | bash
 ```
 
-This downloads the core specification, configures your rules and skills, runs the synchronization script, and prepares your project for all AI agent tools in seconds.
+Options: `--ref <tag-or-commit>` to install a fixed version (recommended for reproducibility), `--force` to overwrite differing files, `--source <dir>` to install from a local clone, and a target directory as the last argument. As with any script piped to a shell, read it first: [scripts/install.sh](scripts/install.sh).
 
----
+Manual alternative: clone this repository and run `bash scripts/install.sh --source /path/to/clone /path/to/your/project`.
 
-### Method 2: Git Clone & Local Copy
+After installing:
 
-Clone the repository and copy the specification into your project:
+1. Fill in section 8 ("Project profile") of `AGENTS.md` with your real install, lint, test, build and run commands.
+2. If you already had an `AGENTS.md` or `CLAUDE.md`, merge them: `CLAUDE.md` needs the line `@AGENTS.md`, and `AGENTS.md` needs the rules and skills indexes.
+3. Run `node scripts/agents-sync.mjs` (Node.js 22+) and commit the result, including `.claude/skills/`.
 
-```sh
-# 1. Clone UCNA-Spec
-git clone https://github.com/gerrardgs/Projects23.git ucna-spec
+## Tool compatibility (checked against official docs on 2026-10-14)
 
-# 2. Copy the spec into your project
-cp -r ucna-spec/.agents ucna-spec/AGENTS.md ucna-spec/CLAUDE.md ucna-spec/GEMINI.md ucna-spec/.github ucna-spec/scripts /path/to/your/project/
-
-# 3. Enter your project and sync mirrors
-cd /path/to/your/project
-node scripts/agents-sync.mjs
-```
-
----
-
-### Method 3: GitHub Fork & Templates
-
-1. Click **Fork** at the top-right of [github.com/gerrardgs/Projects23](https://github.com/gerrardgs/Projects23).
-2. Clone your fork locally or use it as a template for new repositories.
-3. Keep your fork updated with upstream changes to receive new skills and updated runtime baselines.
-
----
-
-## Step-by-Step Implementation Workflow
-
-To get the full power of UCNA-Spec, follow this 4-step workflow:
-
-```mermaid
-graph LR
-    A[Step 1: Install Spec] --> B[Step 2: Fill Project Profile]
-    B --> C[Step 3: Run agents-sync]
-    C --> D[Step 4: Launch Agent & Verify]
-```
-
-1. **Install the files**: Use the terminal one-liner or copy the files into your project root.
-2. **Fill in the Project Profile**: Open [`AGENTS.md`](AGENTS.md) and scroll to **Section 8 ("Project profile")**. Fill in your runtime version, package manager commands, test runner, and linter (e.g., `npm test`, `cargo test`, `ruff check`).
-3. **Run the Sync Engine**:
-   ```sh
-   node scripts/agents-sync.mjs
-   ```
-   This generates `.claude/skills/` (for Claude Code and Cline) and validates frontmatter, token budgets, and relative links.
-4. **Launch Your Agent**: Open your project in Google Antigravity, Claude Code, Cursor, Windsurf, or GitHub Copilot. Your agent will automatically adhere to the specification.
-
----
-
-## Non-Negotiable Operational Rules
-
-Anyone adopting UCNA-Spec must follow these core engineering non-negotiables:
-
-1. **Do not fabricate (Zero Hallucination)**: Never invent APIs, CLI flags, package names, versions, or test results. Verify external symbols against installed code, `--help`, or official docs ([03-verification](.agents/rules/03-verification.md)).
-2. **Deliver complete work**: No placeholder comments (`// TODO`), elided bodies (`...`), or stubbed returns in finished code.
-3. **Never silence the toolchain**: No unconstrained `any`, `@ts-ignore`, `# type: ignore`, `//nolint`, or weakened assertions without an inline justification.
-4. **Standard Library First (Zero Bloat)**: Prioritize standard runtime libraries (Node.js, Python stdlib, Go standard library, Rust std) before introducing external dependencies ([04-dependencies](.agents/rules/04-dependencies.md)).
-5. **Deterministic Testing**: Every behavior change requires a deterministic test that fails without the change. Report exact terminal commands and actual output.
-
----
-
-## Architecture & System Organization
-
-UCNA-Spec follows a **two-tier progressive disclosure model** to prevent context window saturation and instruction drift:
-
-| Layer | Location | Loading Mode | Purpose |
-| :--- | :--- | :--- | :--- |
-| **Core** | [`AGENTS.md`](AGENTS.md) | Always-On | Priorities, non-negotiables, workflow, and definition of done (~100 lines) |
-| **Rules** | [`.agents/rules/`](.agents/rules/) | Always-On / Progressive | Short normative standards: principles, clean code, verification, dependencies, error handling |
-| **Skills** | [`.agents/skills/`](.agents/skills/) | On-Demand | Step-by-step runbooks with verified runnable templates ([Agent Skills](https://agentskills.io/specification) format) |
-| **Documentation** | [`docs/`](docs/) | Reference | Comprehensive system design, operational manual, anti-hallucination playbook, contributing guide |
-| **Adapters** | `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`, `.aider.conf.yml` | Tool-Specific | Thin pointers so each tool loads the same core without duplication |
-| **Mirrors** | `.claude/skills/` | Auto-Generated | Mirror of `.agents/skills/` for Claude Code and Cline (managed by sync script) |
-| **Tooling** | [`scripts/agents-sync.mjs`](scripts/agents-sync.mjs) | Manual / CI | Syncs mirrors and validates frontmatter, token limits, and links |
-
----
-
-## Tool Compatibility (Verified 2026-10-14)
-
-| Tool / Platform | Reads Core | Reads Rules | Reads Skills | Official Source |
+| Tool | Reads the core | Rules in `.agents/rules/` | Skills | Source |
 | :--- | :--- | :--- | :--- | :--- |
-| **Claude Code** | `CLAUDE.md` (imports `AGENTS.md`) | Via index in `AGENTS.md` | `.claude/skills/` (mirror) | [Claude Code Memory](https://code.claude.com/docs/en/memory) |
-| **Google Antigravity** | `AGENTS.md`, `GEMINI.md` | Native (`trigger` frontmatter) | `.agents/skills/` | [Antigravity Rules](https://antigravity.google/docs/rules) |
-| **Gemini CLI** | `GEMINI.md` + `AGENTS.md` (via `.gemini/settings.json`) | Via index | `.agents/skills/` | [Gemini CLI Context](https://geminicli.com/docs/cli/gemini-md/) |
-| **Cursor IDE** | `AGENTS.md` | Via index | `.agents/skills/` | [Cursor Rules](https://cursor.com/docs/context/rules) |
-| **Windsurf / Devin** | `AGENTS.md` | Via index | `.agents/skills/` | [Windsurf Cascade](https://docs.devin.ai/desktop/cascade/memories) |
-| **GitHub Copilot** | `.github/copilot-instructions.md`, `AGENTS.md` | Via index | `.agents/skills/` | [Copilot Custom Instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions) |
-| **Cline** | `AGENTS.md` | Via index | `.claude/skills/` (mirror) | [Cline Customization](https://docs.cline.bot/customization/skills.md) |
-| **Aider CLI** | `AGENTS.md` (via `.aider.conf.yml`) | Via index | Manual reference | [Aider Conventions](https://aider.chat/docs/usage/conventions.html) |
-| **Web Chat Models** | Paste [`AGENTS.md`](AGENTS.md) as system prompt | Manual paste | Manual paste | Universal Prompting |
+| Claude Code | `CLAUDE.md`, which imports `AGENTS.md` and the always-on rules | Always-on rules imported; others via index | `.claude/skills/` (mirror) | [memory](https://code.claude.com/docs/en/memory), [skills](https://code.claude.com/docs/en/skills) |
+| OpenAI Codex | `AGENTS.md` | Via index | `.agents/skills/` | [skills](https://learn.chatgpt.com/docs/build-skills) |
+| Gemini CLI | `GEMINI.md` and `AGENTS.md` (via `.gemini/settings.json`) | Via index | `.agents/skills/` | [context files](https://geminicli.com/docs/cli/gemini-md/), [skills](https://geminicli.com/docs/cli/skills/) |
+| Google Antigravity | `AGENTS.md`, `GEMINI.md` | Native (`trigger` frontmatter) | `.agents/skills/` | [rules](https://antigravity.google/docs/rules), [skills codelab](https://codelabs.developers.google.com/getting-started-with-antigravity-skills) |
+| Cursor | `AGENTS.md` (nested files supported) | Via index | `.agents/skills/` (also reads `.claude/skills/`) | [rules](https://cursor.com/docs/context/rules), [skills](https://cursor.com/docs/context/skills) |
+| Windsurf / Devin Desktop | `AGENTS.md` | Via index | `.agents/skills/` | [rules](https://docs.devin.ai/desktop/cascade/memories), [skills](https://docs.devin.ai/desktop/cascade/skills) |
+| GitHub Copilot | `.github/copilot-instructions.md`, `AGENTS.md` | Via index | `.agents/skills/` (also `.claude/skills/`) | [instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions), [skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) |
+| Cline | `AGENTS.md` (when no `.clinerules/` exists) | Via index | `.claude/skills/` (mirror) | [rules](https://docs.cline.bot/features/cline-rules/overview), [skills](https://docs.cline.bot/customization/skills.md) |
+| Aider | `AGENTS.md` via `.aider.conf.yml` | Via index | Not supported | [conventions](https://aider.chat/docs/usage/conventions.html) |
+| Any chat model | Paste `AGENTS.md`, then the rule or skill for the task | Manual | Manual | [operational manual](docs/AGENT-OPERATIONAL-MANUAL.md) |
 
----
+"Via index" means the tool does not load the folder itself; `AGENTS.md` tells the agent which file to open.
 
-## Supporting Documentation
+## Quality checks
 
-Deepen your engineering knowledge with the supporting documentation:
+[`.github/workflows/validate.yml`](.github/workflows/validate.yml) runs on every push and pull request:
 
-- [Architecture & Systems Design](docs/ARCHITECTURE.md): Progressive disclosure theory, token budgeting mathematics (< 27% footprint), and tool loading mechanics.
-- [Agent Operational Manual](docs/AGENT-OPERATIONAL-MANUAL.md): Step-by-step procedures for greenfield development, refactoring, bisection debugging, and PR reviews.
-- [Anti-Hallucination Playbook](docs/ANTI-HALLUCINATION-PLAYBOOK.md): Concrete countermeasures against phantom packages, fabricated flags, and deprecations.
-- [Contributing Guide](docs/CONTRIBUTING.md): Authoring standards, frontmatter schemas, and validation workflows.
+- Validator self-tests, then `node scripts/agents-sync.mjs --check --all-markdown`: skill and rule frontmatter (strict YAML), size limits, indexes, mirror drift, broken links.
+- A second YAML check with PyYAML, `shellcheck` on the installer, `actionlint` and `zizmor` on the workflows.
+- Installer tests: existing files are preserved, and a fresh install validates cleanly.
+- Both templates: Node.js 22, 24 and 26 (`npm ci`, type-check, tests, `npm audit`), and Python 3.11 to 3.14 (Ruff, mypy, tests, `pip-audit`).
 
----
+Run the same checks locally with the commands in [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md).
 
-## Verified Templates Included
+## Limits
 
-The specification includes runnable, production-grade template architectures in [`.agents/skills/native-from-scratch/assets/`](.agents/skills/native-from-scratch/assets/):
+- Rules guide a model; they cannot force it. For hard guarantees, use what the tools enforce: CI checks, branch protection, pre-commit hooks, and agent hooks such as Claude Code's `PreToolUse`.
+- Tools that read both `.agents/skills/` and `.claude/skills/` list each skill twice, with identical content. If nobody uses Claude Code or Cline, delete `.claude/skills/` and remove it from `MIRRORS` in the sync script.
+- Versions, action SHAs and tool locations are dated. Dependabot updates the pinned actions and images; re-check the rest when tools release major versions.
 
-1. **Node.js Native HTTP Service** ([`assets/node-http-service/`](.agents/skills/native-from-scratch/assets/node-http-service/)): Zero-dependency HTTP service built with `node:http`, strict typing, input size limits, graceful shutdown, and 12 passing tests using built-in `node:test`.
-2. **Python Native HTTP Service** ([`assets/python-http-service/`](.agents/skills/native-from-scratch/assets/python-http-service/)): Standard library HTTP service built with `http.server`, `urllib`, and 11 passing tests using built-in `unittest` (passes `mypy --strict` and Ruff).
+## Documentation
 
----
-
-## Continuous Integration & Quality Assurance
-
-To validate the specification in your CI pipeline, add `node scripts/agents-sync.mjs --check`:
-
-```sh
-# Self-tests for parser
-node --test "scripts/*.test.mjs"
-
-# Validate skills, rule triggers, token budgets, and links
-node scripts/agents-sync.mjs --check
-```
-
----
-
-## Roadmap
-
-- **Stage 1 (Completed):** Core architecture, cross-tool adapters, validator, verified Node.js and Python native templates. See [CHANGELOG.md](CHANGELOG.md).
-- **Stage 2 (In Progress):** Testing and Git workflow rules; project bootstrap skills per language (Go, Rust, TypeScript, Python).
-- **Stage 3:** Security hardening (OWASP ASVS, secret scanning, SBOM) and SHA-pinned CI/CD workflows.
-- **Stage 4:** Polyglot toolchain catalog and performance profiling benchmarks.
-
----
+- [Architecture](docs/ARCHITECTURE.md): the design, the research behind it, and how each tool loads the files.
+- [Agent operational manual](docs/AGENT-OPERATIONAL-MANUAL.md): which rule and skill to use for each scenario.
+- [Anti-hallucination playbook](docs/ANTI-HALLUCINATION-PLAYBOOK.md): failure modes and how the verification protocol catches them.
+- [Contributing](docs/CONTRIBUTING.md): authoring rules for rules, skills and templates.
+- [Changelog](CHANGELOG.md).
 
 ## License
 
-[MIT](https://opensource.org/licenses/MIT) © 2026 Gerrard Sebastian. Free for personal, commercial, and enterprise use worldwide.
+[MIT](LICENSE) © 2026 Gerrard Sebastian.

@@ -4,6 +4,7 @@
 // Usage (Node.js 22+, no dependencies):
 //   node scripts/agents-sync.mjs           sync the mirror, then validate
 //   node scripts/agents-sync.mjs --check   validate only; exit 1 on errors or mirror drift (for CI)
+//   add --all-markdown to check links in every Markdown file of the repository, not only the spec files
 
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
@@ -41,7 +42,11 @@ const relative = (absolutePath) => path.relative(ROOT, absolutePath) || ".";
 const fail = (where, message) => errors.push(`${relative(where)}: ${message}`);
 const warn = (where, message) => warnings.push(`${relative(where)}: ${message}`);
 
-/** Parses the YAML subset used in frontmatter: scalars, quoted scalars, block scalars, string maps and lists. */
+/**
+ * Parses the YAML subset used in frontmatter: plain and quoted scalars, block scalars, string maps and lists.
+ * It is deliberately strict: anything a real YAML parser could read differently (for example an unquoted
+ * value containing ": ") is an error, because tools such as Antigravity drop files with invalid frontmatter.
+ */
 export function parseFrontmatter(text) {
   const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(text);
   if (match === null) {
@@ -52,48 +57,76 @@ export function parseFrontmatter(text) {
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
     if (line.trim() === "" || line.trimStart().startsWith("#")) continue;
-    const pair = /^([A-Za-z0-9_-]+):\s*(.*)$/.exec(line);
+    const pair = /^([A-Za-z0-9_-]+):(?:\s+(.*))?$/.exec(line);
     if (pair === null) {
       throw new Error(`unsupported frontmatter line ${index + 1}: "${line}"`);
     }
-    const [, key, rawValue] = pair;
-    const value = rawValue.replace(/\s+#.*$/, "").trim();
+    const [, key, rawValue = ""] = pair;
+    if (Object.hasOwn(data, key)) throw new Error(`duplicate key "${key}"`);
     const nested = [];
     while (index + 1 < lines.length && (/^\s+\S/.test(lines[index + 1]) || lines[index + 1].trim() === "")) {
       index += 1;
       nested.push(lines[index]);
     }
-    data[key] = parseValue(value, nested);
+    data[key] = parseValue(key, rawValue.trim(), nested);
   }
   return { data, body: text.slice(match[0].length) };
 }
 
-function parseValue(value, nested) {
+function parseValue(key, value, nested) {
   const content = nested.map((line) => line.trim()).filter((line) => line !== "");
   if (/^[>|][-+]?$/.test(value)) {
     return value.startsWith(">") ? content.join(" ") : content.join("\n");
   }
+  if (content.length > 0 && value !== "") {
+    throw new Error(`key "${key}" has both an inline value and indented lines`);
+  }
   if (value === "" && content.length > 0) {
     if (content.every((line) => line.startsWith("- "))) {
-      return content.map((line) => unquote(line.slice(2).trim()));
+      return content.map((line) => parseScalar(key, line.slice(2)));
     }
     return Object.fromEntries(
       content.map((line) => {
-        const entry = /^([A-Za-z0-9_.-]+):\s*(.*)$/.exec(line);
-        if (entry === null) throw new Error(`unsupported nested frontmatter line: "${line}"`);
-        return [entry[1], unquote(entry[2].trim())];
+        const entry = /^([A-Za-z0-9_.-]+):(?:\s+(.*))?$/.exec(line);
+        if (entry === null) throw new Error(`unsupported nested line under "${key}": "${line}"`);
+        return [entry[1], parseScalar(`${key}.${entry[1]}`, entry[2] ?? "")];
       }),
     );
   }
-  if (value.startsWith("[") && value.endsWith("]")) {
-    return value.slice(1, -1).split(",").map((item) => unquote(item.trim())).filter((item) => item !== "");
+  if (value.startsWith("[")) {
+    const flow = /^\[(.*)\]\s*(?:#.*)?$/.exec(value);
+    if (flow === null) throw new Error(`key "${key}" has an unterminated flow list`);
+    return flow[1].split(",").map((item) => item.trim()).filter((item) => item !== "").map((item) => parseScalar(key, item));
   }
-  return unquote(value);
+  return parseScalar(key, value);
 }
 
-function unquote(value) {
-  const quoted = /^(["'])(.*)\1$/.exec(value);
-  return quoted === null ? value : quoted[2];
+const DOUBLE_QUOTE_ESCAPES = { n: "\n", t: "\t", '"': '"', "\\": "\\", "/": "/" };
+
+/** Parses one scalar, rejecting plain values that YAML would parse differently or not at all. */
+export function parseScalar(key, raw) {
+  const value = raw.trim();
+  if (value.startsWith('"')) {
+    const quoted = /^"((?:[^"\\]|\\.)*)"\s*(?:#.*)?$/.exec(value);
+    if (quoted === null) throw new Error(`key "${key}" has a malformed double-quoted string`);
+    return quoted[1].replace(/\\(.)/g, (_, escaped) => {
+      if (!Object.hasOwn(DOUBLE_QUOTE_ESCAPES, escaped)) throw new Error(`key "${key}" uses unsupported escape \\${escaped}`);
+      return DOUBLE_QUOTE_ESCAPES[escaped];
+    });
+  }
+  if (value.startsWith("'")) {
+    const quoted = /^'((?:[^']|'')*)'\s*(?:#.*)?$/.exec(value);
+    if (quoted === null) throw new Error(`key "${key}" has a malformed single-quoted string`);
+    return quoted[1].replaceAll("''", "'");
+  }
+  const plain = value.replace(/\s+#.*$/, "");
+  if (/^[-?:,[\]{}#&*!|>%@`]/.test(plain)) {
+    throw new Error(`key "${key}": a plain value cannot start with "${plain[0]}"; wrap the value in double quotes`);
+  }
+  if (/:\s/.test(plain) || plain.endsWith(":")) {
+    throw new Error(`key "${key}": unquoted value contains ": ", which is invalid YAML; wrap the value in double quotes`);
+  }
+  return plain;
 }
 
 async function listFiles(directory) {
@@ -219,6 +252,8 @@ async function validateSkill(name) {
 
 async function validateRules() {
   let alwaysOnChars = 0;
+  const alwaysOnFiles = [];
+  const ruleFiles = [];
   for (const file of (await listFiles(RULES_DIR)).filter((candidate) => candidate.endsWith(".md"))) {
     const text = await readFile(file, "utf8");
     if (text.length > RULE_MAX_CHARS) {
@@ -231,18 +266,52 @@ async function validateRules() {
       fail(file, `invalid frontmatter: ${error.message}`);
       continue;
     }
+    ruleFiles.push(file);
     if (data === null || !RULE_TRIGGERS.has(data.trigger)) {
       fail(file, `needs frontmatter "trigger: ${[...RULE_TRIGGERS].join(" | ")}" (Antigravity silently ignores rules without it)`);
       continue;
     }
     if (data.trigger === "model_decision" && !data.description) fail(file, "model_decision rules need a description");
     if (data.trigger === "glob" && !data.globs && !data.glob) fail(file, "glob rules need globs");
-    if (data.trigger === "always_on") alwaysOnChars += text.length;
+    if (data.trigger === "always_on") {
+      alwaysOnChars += text.length;
+      alwaysOnFiles.push(file);
+    }
   }
-  return alwaysOnChars;
+  return { alwaysOnChars, alwaysOnFiles, ruleFiles };
 }
 
-async function validateAlwaysOnBudget(alwaysOnRuleChars) {
+/** AGENTS.md is the router for tools that do not load .agents/ natively, so it must link every rule and skill. */
+async function validateIndex(ruleFiles, skillNames) {
+  const agentsFile = path.join(ROOT, "AGENTS.md");
+  if (!existsSync(agentsFile)) return;
+  const agentsText = await readFile(agentsFile, "utf8");
+  for (const file of ruleFiles) {
+    const link = `(${path.relative(ROOT, file).split(path.sep).join("/")})`;
+    if (!agentsText.includes(link)) fail(agentsFile, `does not link rule ${relative(file)}; add it to the rules index`);
+  }
+  for (const name of skillNames) {
+    if (!agentsText.includes(`(.agents/skills/${name}/SKILL.md)`)) {
+      fail(agentsFile, `does not link skill "${name}"; add it to the skills index`);
+    }
+  }
+}
+
+/** Claude Code reads CLAUDE.md instead of AGENTS.md, so CLAUDE.md should import AGENTS.md and the always-on rules. */
+async function validateClaudeImports(alwaysOnFiles) {
+  const claudeFile = path.join(ROOT, "CLAUDE.md");
+  if (!existsSync(claudeFile)) return;
+  const importLines = new Set(
+    (await readFile(claudeFile, "utf8")).split(/\r?\n/).map((line) => line.trim()).filter((line) => line.startsWith("@")),
+  );
+  if (!importLines.has("@AGENTS.md")) fail(claudeFile, 'must contain the line "@AGENTS.md" so Claude Code loads the shared rules');
+  for (const file of alwaysOnFiles) {
+    const expected = `@${path.relative(ROOT, file).split(path.sep).join("/")}`;
+    if (!importLines.has(expected)) warn(claudeFile, `does not import always-on rule "${expected}"`);
+  }
+}
+
+async function validateAlwaysOnBudget({ alwaysOnChars: alwaysOnRuleChars }) {
   const agentsFile = path.join(ROOT, "AGENTS.md");
   if (!existsSync(agentsFile)) {
     fail(agentsFile, "missing");
@@ -272,9 +341,19 @@ async function markdownFiles(directory) {
   return files;
 }
 
-async function validateLinks() {
+const SPEC_MARKDOWN = ["AGENTS.md", "CLAUDE.md", "GEMINI.md", path.join(".github", "copilot-instructions.md")];
+
+async function linkScanTargets(allMarkdown) {
+  if (allMarkdown) return markdownFiles(ROOT);
+  const files = SPEC_MARKDOWN.map((name) => path.join(ROOT, name)).filter((file) => existsSync(file));
+  const agentsDir = path.join(ROOT, ".agents");
+  if (existsSync(agentsDir)) files.push(...(await markdownFiles(agentsDir)));
+  return files;
+}
+
+async function validateLinks(allMarkdown) {
   const linkPattern = /\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
-  for (const file of await markdownFiles(ROOT)) {
+  for (const file of await linkScanTargets(allMarkdown)) {
     const text = (await readFile(file, "utf8")).replace(/```[\s\S]*?```/g, "").replace(/`[^`\n]*`/g, "");
     for (const [, target] of text.matchAll(linkPattern)) {
       if (target.startsWith("file:")) {
@@ -310,8 +389,11 @@ async function main() {
     else await syncMirror(mirror, skillNames);
   }
   for (const name of skillNames) await validateSkill(name);
-  await validateAlwaysOnBudget(await validateRules());
-  await validateLinks();
+  const rules = await validateRules();
+  await validateAlwaysOnBudget(rules);
+  await validateIndex(rules.ruleFiles, skillNames);
+  await validateClaudeImports(rules.alwaysOnFiles);
+  await validateLinks(process.argv.includes("--all-markdown"));
   await validateLegacyFiles();
 
   for (const message of warnings) console.warn(`warning: ${message}`);

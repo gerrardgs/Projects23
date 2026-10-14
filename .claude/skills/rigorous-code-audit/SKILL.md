@@ -27,7 +27,7 @@ A review is only useful if its findings are **real, ranked and actionable**. Run
 | Java / Kotlin | Spotless or ktlint, if configured | `mvn verify` / `./gradlew check` | (compiler) | same |
 | C# / .NET | `dotnet format --verify-no-changes` | `dotnet build -warnaserror` | (compiler) | `dotnet test` |
 
-Then run the dependency vulnerability audit listed in [04-dependencies](../../rules/04-dependencies.md).
+Then run the dependency vulnerability audit listed in [04-dependencies](../../rules/04-dependencies.md). For secret scanning, SAST and container scanning commands, see the [security-hardening tools reference](../security-hardening/references/tools.md).
 
 Use `npx --no-install` (or the script in `package.json`) for local tools. A bare `npx tsc` in a project without TypeScript installed offers to download the npm package named `tsc`, which is "a deprecated release of the TypeScript compiler", not the current one.
 

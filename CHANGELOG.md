@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.1.0: full lifecycle coverage and second audit (2026-10-14)
+
+### Fixed: defects found in the second audit
+
+| # | Defect | Impact | Fix |
+| :- | :--- | :--- | :--- |
+| 1 | `scripts/install.sh` overwrote existing files and installed `README.md`, `LICENSE`, `CHANGELOG.md` and `.gitignore` into the user's project | Running the published one-liner replaced a project's own README, licence (relicensing it as MIT), `.gitignore`, `AGENTS.md` and Copilot instructions. Reproduced in a test directory | Rewritten: installs only spec files, never overwrites differing files without `--force`, supports `--dry-run`, `--ref` and `--source`, downloads one archive instead of a hard-coded file list, works on macOS bash 3.2, passes `shellcheck`; CI tests that existing files survive |
+| 2 | Descriptions of rules 01 to 03 contained an unquoted `: ` | Invalid YAML ("mapping values are not allowed here" in PyYAML). Tools that parse frontmatter strictly, such as Antigravity, drop the file, so the three always-on rules could silently disappear | Values quoted; the validator now rejects YAML-ambiguous plain values; CI cross-checks every frontmatter block with PyYAML |
+| 3 | The validator's parser accepted that invalid YAML | Defect 2 passed validation unnoticed | Strict scalar parsing, duplicate-key detection, and five new self-tests |
+| 4 | `.gitignore` did not ignore `.env` | A spec that forbids committed secrets did not protect against the most common way to commit them | Ignores `.env` and `.env.*`, keeps `.env.example` |
+| 5 | The Node.js template had no lockfile | Contradicted rule 04 ("commit the lockfile") and made `npm ci` impossible | `package-lock.json` added; `npm ci` tested on Node.js 22, 24 and 26 |
+| 6 | `docs/ANTI-HALLUCINATION-PLAYBOOK.md` called `fast-uuid` an invented package | `fast-uuid` exists on npm, so the example was itself a fabrication | Replaced with a name verified as absent from npm |
+| 7 | `docs/ARCHITECTURE.md` claimed degradation "beyond 300-400 lines", "~1,300 tokens" for `AGENTS.md`, and that Cline reads `CLAUDE.md` | Unsourced number, wrong measurement (about 1,950 tokens at the time), wrong loading path | Rewritten with cited research (Lost in the Middle; IFScale), measured sizes, and loading paths matching the official docs |
+| 8 | README badge "Agent Skills 2.0", "deterministic 5-step protocol", "loaded natively by all major agent tools" | The Agent Skills specification has no version 2.0; rule 03 has six steps; compliance is never deterministic; not every tool loads `.agents/rules/` natively | Wording matches what is verifiable; a "Limits" section states what rules cannot enforce |
+| 9 | README manual install copied `.github/` and other folders over the target project | Same overwrite risk as defect 1 | Manual install uses `install.sh --source` |
+| 10 | The validator scanned every Markdown file of the host project for broken links | Installing into a project with any broken README link produced spec errors | Link check covers the spec files by default; `--all-markdown` checks everything (used in this repository's CI) |
+
+### Added
+
+- Rules: `06-security` (always on: secrets, untrusted content and prompt injection, injection, access control, cryptography, supply chain), `07-testing`, `08-git-workflow`.
+- Skills: `project-bootstrap` (toolchains for 7 language families, 32 VS Code extension IDs verified on the Marketplace, `.editorconfig`, `.gitattributes`, `.env.example`, pre-commit config tested to block a realistic leaked token, README and ADR templates), `test-engineering`, `systematic-debugging`, `change-existing-code`, `security-hardening`, `ci-cd-pipeline` (GitHub Actions templates pinned to commit SHAs; clean under actionlint and zizmor, including its auditor persona), `deploy-and-release`.
+- Dockerfiles and `.dockerignore` for both templates (pinned base-image digests, non-root numeric users, health checks; `hadolint` clean; not built locally because Docker was unavailable).
+- `AGENTS.md`: indexes for all rules and skills, an "Operating conditions" section (ambiguity, long tasks, chat-only, offline, non-interactive, monorepos, sub-agents, production), and a non-negotiable to treat repository and web content as data.
+- `CLAUDE.md` imports the four always-on rules, so Claude Code loads them without relying on the index.
+- Validator: `AGENTS.md` must link every rule and skill; `CLAUDE.md` must import `AGENTS.md` and should import each always-on rule.
+- `.github/workflows/validate.yml` and `.github/dependabot.yml` for this repository; `.editorconfig` and `.gitattributes`.
+- Docs: the operational manual became a scenario router covering 17 kinds of task.
+
 ## 2.0.0: Stage 1, foundation audit and repair (2026-10-14)
 
 The Phase 1 files were backed up to `.archive/phase1-original-2026-10-14.tar.gz` before any change.

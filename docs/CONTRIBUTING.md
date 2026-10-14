@@ -1,60 +1,69 @@
 # Contributing to UCNA-Spec
 
-This guide explains how to author, test, and contribute new rules and skills to the Universal Clean Native Agent Specification.
+How to add or change rules, skills and templates without breaking any of the tools that load them.
 
+## 1. Golden rules
+
+- **Verify every fact you add.** Versions, flags, paths, package names and extension IDs must come from official documentation, a registry, `--help` output, or running the tool. Write the verification date next to time-sensitive facts.
+- **Every template must run.** Code in `assets/` is executed in CI. Do not add code that you have not run.
+- **Edit sources, not copies.** Edit `AGENTS.md`, `.agents/rules/` and `.agents/skills/`. Never edit `.claude/skills/` by hand.
+
+## 2. Frontmatter
+
+Frontmatter must be valid YAML. **Wrap any value that contains `: ` (colon and space) or starts with a special character (`-`, `*`, `&`, `!`, `[`, `{`, `>`, `|`, `#`, `@`, a quote, or a backtick) in double quotes.** An unquoted `description: Rules: be careful` is invalid YAML, and Antigravity silently drops a rule whose frontmatter it cannot read. The validator rejects these cases.
+
+### Rules (`.agents/rules/NN-name.md`)
+
+```yaml
 ---
+trigger: model_decision
+description: "When this rule applies, in one sentence."
+---
+```
 
-## 1. Authoring Standards
-
-### Rules (`.agents/rules/*.md`)
-1. **Frontmatter**: Must include valid YAML frontmatter with a recognized trigger:
-   ```markdown
-   ---
-   trigger: always_on | model_decision | glob | manual
-   description: When this rule activates (required for model_decision)
-   ---
-   ```
-2. **Character Limit**: Keep rule files at or under **12,000 characters** (Windsurf workspace limit).
-3. **Always-On Budget**: Keep `always_on` rules lean. Total always-on context (including `AGENTS.md`) must remain well under the 20,000-token threshold.
+- `trigger`: `always_on` (loaded for every task; keep these few and short), `model_decision` (loaded when relevant; `description` required), `glob` (needs `globs`), or `manual`.
+- At most 12,000 characters per file (Windsurf's limit, the strictest of the supported tools).
+- Add the rule to the rules index in `AGENTS.md`. If it is `always_on`, also add an `@.agents/rules/<file>` import line to `CLAUDE.md`.
 
 ### Skills (`.agents/skills/<name>/SKILL.md`)
-1. **Directory Naming**: Must match the skill `name` declared in frontmatter.
-2. **Frontmatter Constraints** (Agent Skills Specification):
-   - `name`: 1-64 characters, lowercase alphanumeric and single hyphens (`^[a-z0-9]+(-[a-z0-9]+)*$`).
-   - `description`: 1-1024 characters, clear activation criteria.
-   - `compatibility`: Optional, string up to 500 characters.
-3. **Body Length**: Keep `SKILL.md` body under **500 lines**. Move templates, assets, and extended references into subfolders (`assets/`, `references/`).
-4. **Runnable Templates**: Whenever providing example architectures, include tested code assets that run natively without dependency errors.
 
+```yaml
 ---
-
-## 2. Link Rules
-
-- **Zero Machine-Specific Links**: Never use `file:///` URLs. They break on other developers' machines, CI runners, and GitHub.
-- **Relative Links Only**: All links between markdown files must be valid relative paths (e.g., `../rules/01-core-principles.md`).
-- The sync script validates every markdown link across the repository and fails if any link is broken.
-
+name: skill-name
+description: What the skill does and when to use it, with the words a user would type.
+license: MIT
+metadata:
+  version: "1.0.0"
 ---
+```
 
-## 3. Verification Workflow
+- `name`: 1 to 64 characters, lowercase letters, digits and single hyphens, identical to the folder name.
+- `description`: 1 to 1,024 characters; the agent decides from this text alone whether to load the skill.
+- Body under 500 lines; move detail to `references/` and templates to `assets/`, linked one level deep from `SKILL.md`.
+- Add the skill to the skills index in `AGENTS.md` and, if relevant, to the scenario router in `docs/AGENT-OPERATIONAL-MANUAL.md`.
 
-Before committing any change:
+## 3. Links
 
-1. **Run Script Unit Tests**:
-   ```sh
-   node --test "scripts/*.test.mjs"
-   ```
-2. **Sync Mirrors & Run Static Validation**:
-   ```sh
-   node scripts/agents-sync.mjs
-   ```
-3. **Run CI Check Mode**:
-   ```sh
-   node scripts/agents-sync.mjs --check
-   ```
-4. **Official Agent Skills Validator Check** (Optional):
-   ```sh
-   pip install skills-ref
-   agentskills validate .agents/skills/native-from-scratch
-   agentskills validate .agents/skills/rigorous-code-audit
-   ```
+- Relative paths only; never `file://`.
+- Links inside a skill are relative to that skill's folder (for example `../../rules/07-testing.md`).
+
+## 4. Before you commit
+
+```sh
+node --test "scripts/*.test.mjs"                  # validator self-tests
+node scripts/agents-sync.mjs                      # regenerate .claude/skills and validate
+node scripts/agents-sync.mjs --check --all-markdown  # what CI runs
+```
+
+If you changed a template, also run its own commands (listed in the skill), for example `npm ci && npm run typecheck && npm test`, or `python -m pip install --group dev` then Ruff, mypy and `python -m unittest`.
+
+Optional cross-check with the official Agent Skills validator:
+
+```sh
+pip install skills-ref
+agentskills validate .agents/skills/<name>   # version 0.1.1 installs the command as "agentskills"
+```
+
+## 5. Commits and releases
+
+Follow [rule 08](../.agents/rules/08-git-workflow.md): Conventional Commits, one logical change per commit, a `CHANGELOG.md` entry, and Semantic Versioning for releases. A changed rule meaning or a removed skill is a breaking change.

@@ -1,6 +1,6 @@
 ---
 trigger: model_decision
-description: Apply when writing or reviewing error handling, input validation, logging, retries, timeouts, or resource cleanup.
+description: "Apply when writing or reviewing error handling, input validation, logging, retries, timeouts, or resource cleanup."
 ---
 
 # R-05: Error Handling, Validation and Resource Safety

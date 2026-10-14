@@ -1,6 +1,6 @@
 ---
 trigger: always_on
-description: Anti-hallucination protocol: verify every API, package, version, flag, path and claim against the real environment or official documentation before relying on it.
+description: "Anti-hallucination protocol: verify every API, package, version, flag, path and claim against the real environment or official documentation before relying on it."
 ---
 
 # R-03: Verification and Anti-Hallucination Protocol

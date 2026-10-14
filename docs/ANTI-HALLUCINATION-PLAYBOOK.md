@@ -1,62 +1,49 @@
-# Anti-Hallucination Engineering Playbook
+# Anti-Hallucination Playbook
 
-Language models naturally produce confident, syntactically convincing, but completely fabricated code details. This playbook explains common AI failure modes and the deterministic defenses enforced by UCNA-Spec.
+Language models produce fluent, confident text whether or not it is true. In code this shows up as APIs, flags and packages that look right but do not exist. This playbook explains the common failure modes and the checks in [rule 03](../.agents/rules/03-verification.md) that catch them. Following it reduces fabrication; no written rule can guarantee a model never makes a mistake, which is why every claim must be checked by running something.
 
----
+## 1. Failure modes and countermeasures
 
-## 1. Common Hallucination Modes in AI Coding
-
-| Hallucination Type | Manifestation | Real-World Risk | Countermeasure |
+| Failure | Example | Risk | Countermeasure |
 | :--- | :--- | :--- | :--- |
-| **Phantom Packages** | Inventing package names like `fast-uuid` or `node-crypto-kit` | Attackers register hallucinated names ("slopsquatting") to execute malicious code | Verify package existence in official registry prior to install per [03-verification](../.agents/rules/03-verification.md) |
-| **Phantom APIs** | Calling methods that don't exist in the installed version | Runtime `TypeError` / production crashes | Inspect installed `.d.ts`, `site-packages`, or local sources before calling |
-| **Phantom CLI Flags** | Fabricating options (e.g. `tar -xvf --strip-path=1`) | Command execution failure or corrupted operations | Check built-in tool help (`--help`, `man`) |
-| **Deprecated Patterns** | Using obsolete patterns (`new Buffer()`, `datetime.utcnow()`) | Memory safety bugs, deprecation warnings, broken upgrades | Check version baselines in [04-dependencies](../.agents/rules/04-dependencies.md) |
-| **Silent Suppression** | Adding `any`, `@ts-ignore`, `# type: ignore` | Weakens type system, obscures real type errors | Strictly prohibited in UCNA-Spec without human approval |
-| **Invented Verification** | Reporting "Tests passed" without running them | Shipping broken code to users | Mandatory citation of exact terminal commands and actual output |
+| Phantom package | Importing `node-crypto-kit` (checked on 2026-10-14: no such package on npm) | Attackers register names that models tend to invent ("slopsquatting") and wait for installs | Confirm the exact name, publisher and repository in the official registry before installing |
+| Look-alike package | `reqeusts` instead of `requests` (not registered on PyPI on 2026-10-14, but anyone could register it) | Typosquatted malware | Copy names from the registry or official docs, never from memory |
+| Phantom API | Calling a method that exists only in a newer version, or never existed | Runtime errors in production | Read the installed type definitions or source; check the version in the lockfile |
+| Phantom flag | `tar --strip-path=1` (the real GNU and BSD flag is `--strip-components`) | Failed or destructive commands | Check `<tool> --help` or the man page for the installed version |
+| Deprecated pattern | `new Buffer(n)`, `datetime.utcnow()` | Security bugs (older `Buffer(n)` could expose uninitialised memory), warnings, breakage on upgrade | Deprecation table in rule 03; the runtime's deprecation warnings |
+| Silent suppression | `any`, `@ts-ignore`, `# type: ignore` to make errors disappear | Real defects hidden from the type checker | Forbidden without the user's approval and an inline reason |
+| Invented verification | "All tests pass" without running them | Broken code shipped with false confidence | Quote the command and its real output; say "not run" when it was not |
+| Stale facts | "Node 20 is the current LTS" after its end of life | Unsupported, insecure runtimes | Date every version claim and link the official release schedule |
+| Weak test of a safety tool | A fake secret like `ghp_aaaa...` that a scanner ignores because of low entropy | Believing a scanner works when it was never really tested | Test scanners with realistic samples and confirm they fail |
 
----
+## 2. The verification protocol in short
 
-## 2. The Deterministic Verification Workflow
-
-To eliminate hallucinations, agents must execute this 4-tier check before presenting code as complete:
+Rule 03 defines six steps. Condensed:
 
 ```mermaid
-graph TD
-    A[Proposed Code or Command] --> B[Tier 1: Ground Truth in Workspace]
-    B -->|Check manifests, lockfiles, version| C[Tier 2: Interface Verification]
-    C -->|Check type definitions, installed APIs| D[Tier 3: Static Analysis Pass]
-    D -->|Run compiler, linter, typecheck| E[Tier 4: Execution & Test Pass]
-    E -->|Run test suite, verify output| F[Verified Output Delivered]
+graph LR
+    A[1. Ground in the workspace] --> B[2. Verify each external symbol]
+    B --> C[3. Check deprecation]
+    C --> D[4. Static checks]
+    D --> E[5. Run it]
+    E --> F[6. Label what stays unverified]
 ```
 
-### Tier 1: Workspace Ground Truth
-- Read `package.json`, `Cargo.toml`, `pyproject.toml`, or `go.mod`.
-- Determine exact installed versions. Never assume a runtime version that is not verified.
+1. **Ground**: read manifests and lockfiles; check the runtime version actually installed.
+2. **Verify symbols**: installed source and types, then `--help`, then the official docs for that exact version.
+3. **Deprecation**: changelogs and migration guides when crossing major versions.
+4. **Static checks**: the compiler or type checker (`tsc --noEmit`, `mypy`, `go build ./...` and `go vet ./...`, `cargo check`), then the linter.
+5. **Run**: tests or a minimal reproduction; read the actual output.
+6. **Label**: say explicitly what could not be checked and how the user can check it.
 
-### Tier 2: Interface Verification
-- When using an external symbol, inspect its definition in `node_modules/@types/`, Python `site-packages/`, `go doc`, or `cargo doc`.
-- If an API has optional configuration options, confirm their exact keys and types.
+## 3. When the environment blocks verification
 
-### Tier 3: Static Analysis Pass
-- Always run the compiler: `tsc --noEmit`, `mypy --strict`, `cargo check`, or `go vet`.
-- A change is not verified if the compiler has not checked it.
+No network, missing tools, or a chat-only model: do not guess. Report like this:
 
-### Tier 4: Execution Pass
-- Run unit tests or execute a minimal verification script.
-- Quote the actual terminal output in the final report.
-
----
-
-## 3. Dealing with Unverifiable Environments
-
-If an agent operates in an environment without internet access or without the necessary compiler/runtime installed:
-
-- **Do NOT guess or fabricate.**
-- Clearly label what could not be executed:
-  ```text
-  Changed:    src/auth.ts (implemented token revocation)
-  Verified:   unit tests passed; tsc --noEmit (clean)
-  Not done:   integration test against live Redis (Redis CLI not available locally)
-  Risks:      requires REDIS_URL environment variable to be configured in staging
-  ```
+```text
+Changed:    src/auth/revoke.ts (token revocation endpoint)
+Verified:   npm test → 57 passed, 0 failed; npx --no-install tsc --noEmit → no errors
+Not done:   integration test against Redis (Redis is not available in this environment)
+            Run: docker run -d -p 6379:6379 redis:8 && npm run test:integration
+Risks:      REDIS_URL must be set in staging before deploy
+```

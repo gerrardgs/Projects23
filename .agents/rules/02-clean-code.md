@@ -1,6 +1,6 @@
 ---
 trigger: always_on
-description: Clean code standards: idiomatic naming per language, small focused functions, sound types, immutability, comments, and tool-enforced formatting.
+description: "Clean code standards: idiomatic naming per language, small focused functions, sound types, immutability, comments, and tool-enforced formatting."
 ---
 
 # R-02: Clean Code Standards

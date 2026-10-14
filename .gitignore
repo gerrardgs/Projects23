@@ -19,6 +19,7 @@ venv/
 .ruff_cache/
 .pytest_cache/
 
-# Local Environment
-.env.local
-.env.*.local
+# Local environment and secrets (commit only .env.example)
+.env
+.env.*
+!.env.example

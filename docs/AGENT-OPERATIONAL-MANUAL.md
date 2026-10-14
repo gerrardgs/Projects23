@@ -1,69 +1,47 @@
 # Agent Operational Manual
 
-This manual provides practical procedures for AI agents and human engineers applying UCNA-Spec to real-world software engineering workflows.
+Which rules and skills to use for each kind of task, for AI agents and for the people directing them. The always-on core in [AGENTS.md](../AGENTS.md) applies to every scenario. Paths below are relative to the repository root.
 
----
+## 1. Scenario router
 
-## 1. Starting a New Component or Service (Native From Scratch)
+| Scenario | Read first | Then |
+| :--- | :--- | :--- |
+| New repository from an empty folder | [project-bootstrap](../.agents/skills/project-bootstrap/SKILL.md) | [native-from-scratch](../.agents/skills/native-from-scratch/SKILL.md), [ci-cd-pipeline](../.agents/skills/ci-cd-pipeline/SKILL.md) |
+| New feature in an existing project | [change-existing-code](../.agents/skills/change-existing-code/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md), rule [05](../.agents/rules/05-error-handling.md) |
+| Bug report or failing behaviour | [systematic-debugging](../.agents/skills/systematic-debugging/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md) for the regression test |
+| Flaky test | [test-engineering](../.agents/skills/test-engineering/SKILL.md) section 4 | [systematic-debugging](../.agents/skills/systematic-debugging/SKILL.md) |
+| Refactoring | [change-existing-code](../.agents/skills/change-existing-code/SKILL.md) | rule [02](../.agents/rules/02-clean-code.md) |
+| Dependency or runtime upgrade | [change-existing-code](../.agents/skills/change-existing-code/SKILL.md) section 4 | rule [04](../.agents/rules/04-dependencies.md) |
+| Code review or pull request review | [rigorous-code-audit](../.agents/skills/rigorous-code-audit/SKILL.md) | rule [06](../.agents/rules/06-security.md) |
+| Security review, auth, payments, uploads, personal data | [security-hardening](../.agents/skills/security-hardening/SKILL.md) | [rigorous-code-audit](../.agents/skills/rigorous-code-audit/SKILL.md) |
+| Slow code or high memory | [systematic-debugging](../.agents/skills/systematic-debugging/SKILL.md) "Performance problems" | its [tools reference](../.agents/skills/systematic-debugging/references/tools.md) |
+| CI is failing | [systematic-debugging](../.agents/skills/systematic-debugging/SKILL.md) | [ci-cd-pipeline](../.agents/skills/ci-cd-pipeline/SKILL.md) |
+| Set up or harden CI/CD | [ci-cd-pipeline](../.agents/skills/ci-cd-pipeline/SKILL.md) | [security-hardening](../.agents/skills/security-hardening/SKILL.md) section 4 |
+| Containerise or deploy | [deploy-and-release](../.agents/skills/deploy-and-release/SKILL.md) | [ci-cd-pipeline](../.agents/skills/ci-cd-pipeline/SKILL.md) |
+| Database schema change | [deploy-and-release](../.agents/skills/deploy-and-release/SKILL.md) section 4 | [change-existing-code](../.agents/skills/change-existing-code/SKILL.md) |
+| Production incident | [systematic-debugging](../.agents/skills/systematic-debugging/SKILL.md) "Production incidents" | [deploy-and-release](../.agents/skills/deploy-and-release/SKILL.md) section 6 |
+| Commit, pull request, release | rule [08](../.agents/rules/08-git-workflow.md) | |
+| Documentation only | rule [01](../.agents/rules/01-core-principles.md) section 7 | [project-bootstrap assets](../.agents/skills/project-bootstrap/assets/) (README and ADR templates) |
+| Question about the code, no change requested | rule [03](../.agents/rules/03-verification.md) | Answer from the code you read, with file and line references; change nothing |
 
-When tasked with building a new module, microservice, or CLI tool:
+## 2. Execution loop for any scenario
 
-1. **Activate the Skill**: Consult [native-from-scratch](../.agents/skills/native-from-scratch/SKILL.md).
-2. **Consult Rule 04**: Check [04-dependencies](../.agents/rules/04-dependencies.md) to identify standard library capabilities for your language.
-3. **Establish Day-One Guardrails**:
-   - Create `.gitignore`, `.editorconfig`.
-   - Configure the native linter and strict type checker (`tsconfig.json`, `pyproject.toml`, or `Cargo.toml`).
-   - Write a self-contained README with verified *install, test, run* commands.
-4. **Build the Functional Core First**:
-   - Write pure functions for validation, domain models, and state transitions.
-   - Unit-test these pure functions with deterministic tests (no network, no mocks).
-5. **Build the I/O Shell**:
-   - Wrap the pure core in standard HTTP handlers, CLI parsers, or file processors.
-   - Enforce timeouts, graceful shutdown, and size limits on input bodies.
+1. **Understand**: restate the goal and acceptance criteria; list assumptions.
+2. **Ground**: read the relevant code, manifests and tests; run the baseline build and tests.
+3. **Plan**: the smallest correct change; for multi-step work, a numbered plan with checkpoints.
+4. **Do**: one step at a time, following the rules and the chosen skill.
+5. **Verify**: run the formatter, linter, type checker and tests; read the actual output.
+6. **Report**: the format in `AGENTS.md` section 7: changed, verified, not done, risks.
 
----
+## 3. Using the spec where files are not loaded automatically
 
-## 2. Refactoring Existing Code Safely
+- **Chat models (ChatGPT, Claude.ai, Gemini, DeepSeek, Llama, Qwen and others)**: paste `AGENTS.md` first, then the rule or skill for the task. Tell the model it cannot run commands, so every result must be labelled unverified until you run it.
+- **IDE or CLI agents that load only `AGENTS.md`**: the indexes in `AGENTS.md` direct the agent to open the right rule or skill file.
+- **Sub-agents**: pass each one the task, the acceptance criteria, and the links to the relevant rule and skill files. Sub-agents start without the parent's context.
 
-When modifying or refactoring existing code:
+## 4. What humans should still do
 
-1. **Characterize Before Changing**:
-   - Read the existing implementation and its callers.
-   - Run existing tests to ensure a green baseline. If tests are missing, write a characterization test asserting the current behavior before touching the code.
-2. **Apply the Rule of Clean Code**:
-   - Follow [02-clean-code](../.agents/rules/02-clean-code.md).
-   - Use early returns to keep nesting depth $\le 3$.
-   - Maintain cyclomatic complexity $\le 10$.
-3. **Keep Diffs Minimal & Focused**:
-   - Do not reformat unrelated files or rename public interfaces unless explicitly requested.
-   - Verify every step by running the test suite after each atomic change.
-
----
-
-## 3. Systematic Debugging Protocol
-
-When diagnosing a failure or production defect:
-
-1. **Reproduce with Evidence**:
-   - Construct a minimal, deterministic reproducer test that fails with the reported bug.
-   - Never "guess" a fix without reproducing the symptom.
-2. **Isolate the Cause**:
-   - Formulate one hypothesis at a time.
-   - Trace variables and state transitions using logs or debuggers.
-3. **Fix the Root Cause**:
-   - Address the fundamental flaw, not merely the symptom.
-   - Ensure boundary values (null, empty, negative, max) are resilient per [05-error-handling](../.agents/rules/05-error-handling.md).
-4. **Retain the Regression Test**:
-   - Keep the reproducer test in the test suite permanently to prevent future regressions.
-
----
-
-## 4. Code Auditing & Pull Request Review
-
-When reviewing a PR or auditing an existing codebase:
-
-1. **Activate the Skill**: Consult [rigorous-code-audit](../.agents/skills/rigorous-code-audit/SKILL.md).
-2. **Run Automated Toolchain**: Execute the project's native formatter, linter, type checker, and test runner.
-3. **Security Checklist**: Audit against OWASP Top 10:2025 (Access control, injection, cryptographic weaknesses, supply-chain hygiene).
-4. **Falsification & Verification**: Confirm candidate bugs by tracing code paths and constructing concrete scenarios before reporting.
-5. **Severity-Ranked Output**: Report findings ordered by severity (Critical, High, Medium, Low) with concrete files, lines, and fixes.
+- Approve anything irreversible or outward-facing: deletions, force pushes, migrations, deployments, publishing, messages to other people.
+- Review diffs before merging; an agent's report is a summary, not proof.
+- Keep the "Project profile" in `AGENTS.md` current, so agents run the right commands.
+- Re-verify dated facts (runtime versions, tool locations, action SHAs) periodically; `node scripts/agents-sync.mjs` checks structure, not the outside world.

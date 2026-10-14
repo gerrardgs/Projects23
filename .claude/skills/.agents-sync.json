@@ -2,7 +2,14 @@
   "generatedBy": "scripts/agents-sync.mjs",
   "source": ".agents/skills",
   "skills": [
+    "change-existing-code",
+    "ci-cd-pipeline",
+    "deploy-and-release",
     "native-from-scratch",
-    "rigorous-code-audit"
+    "project-bootstrap",
+    "rigorous-code-audit",
+    "security-hardening",
+    "systematic-debugging",
+    "test-engineering"
   ]
 }

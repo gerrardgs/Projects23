@@ -1,83 +1,155 @@
 #!/usr/bin/env bash
-# ==============================================================================
-# UCNA-Spec Quick Installer
-# Installs the Universal Clean Native Agent Specification into the current project.
+# Installs the UCNA-Spec agent rules and skills into a project without overwriting existing files.
+#
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/gerrardgs/Projects23/main/scripts/install.sh | bash
-# ==============================================================================
+#   curl -fsSL https://raw.githubusercontent.com/gerrardgs/Projects23/main/scripts/install.sh | bash -s -- [options] [target-dir]
+#
+# Options:
+#   --ref <ref>       branch, tag or commit to install (default: main; a tag is recommended for reproducibility)
+#   --source <dir>    install from a local checkout instead of downloading
+#   --force           overwrite files that already exist and differ
+#   --dry-run         show what would happen without writing anything
+#   -h, --help        show this help
+#
+# Installed: AGENTS.md, CLAUDE.md, GEMINI.md, .aider.conf.yml, .gemini/settings.json,
+#            .github/copilot-instructions.md, .agents/ (rules and skills), scripts/agents-sync.mjs.
+# Never installed: README, LICENSE, CHANGELOG, .gitignore, docs or workflows. Those belong to your project.
 
 set -euo pipefail
 
-REPO_RAW_URL="https://raw.githubusercontent.com/gerrardgs/Projects23/main"
-TARGET_DIR="${1:-.}"
+REPOSITORY="gerrardgs/Projects23"
+REF="${UCNA_REF:-main}"
+SOURCE_DIR="${UCNA_SOURCE_DIR:-}"
+TARGET_DIR="."
+FORCE=0
+DRY_RUN=0
 
-echo "=========================================================="
-echo "Installing UCNA-Spec: Clean Native Agent Specification"
-echo "Target directory: $(cd "$TARGET_DIR" && pwd)"
-echo "=========================================================="
+SPEC_FILES=(
+  "AGENTS.md"
+  "CLAUDE.md"
+  "GEMINI.md"
+  ".aider.conf.yml"
+  ".gemini/settings.json"
+  ".github/copilot-instructions.md"
+  "scripts/agents-sync.mjs"
+)
+SPEC_DIRECTORIES=(".agents")
 
-download_file() {
-  local remote_path="$1"
-  local local_path="$TARGET_DIR/$1"
-  mkdir -p "$(dirname "$local_path")"
-  echo "  -> Fetching $remote_path"
-  curl -fsSL "$REPO_RAW_URL/$remote_path" -o "$local_path"
+usage() {
+  sed -n '2,18p' "$0" 2>/dev/null | sed 's/^# \{0,1\}//' || true
 }
 
-# Core files
-download_file "AGENTS.md"
-download_file "CLAUDE.md"
-download_file "GEMINI.md"
-download_file ".aider.conf.yml"
-download_file ".github/copilot-instructions.md"
-download_file ".gemini/settings.json"
-download_file "LICENSE"
-download_file "README.md"
-download_file "CHANGELOG.md"
-download_file ".gitignore"
+die() {
+  printf 'error: %s\n' "$1" >&2
+  exit 1
+}
 
-# Rules
-download_file ".agents/rules/01-core-principles.md"
-download_file ".agents/rules/02-clean-code.md"
-download_file ".agents/rules/03-verification.md"
-download_file ".agents/rules/04-dependencies.md"
-download_file ".agents/rules/05-error-handling.md"
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --ref)
+      [ "$#" -ge 2 ] || die "--ref needs a value"
+      REF="$2"
+      shift 2
+      ;;
+    --source)
+      [ "$#" -ge 2 ] || die "--source needs a directory"
+      SOURCE_DIR="$2"
+      shift 2
+      ;;
+    --force) FORCE=1; shift ;;
+    --dry-run) DRY_RUN=1; shift ;;
+    -h | --help) usage; exit 0 ;;
+    -*) die "unknown option: $1 (use --help)" ;;
+    *) TARGET_DIR="$1"; shift ;;
+  esac
+done
 
-# Skills
-download_file ".agents/skills/native-from-scratch/SKILL.md"
-download_file ".agents/skills/native-from-scratch/assets/node-http-service/package.json"
-download_file ".agents/skills/native-from-scratch/assets/node-http-service/server.ts"
-download_file ".agents/skills/native-from-scratch/assets/node-http-service/server.test.ts"
-download_file ".agents/skills/native-from-scratch/assets/node-http-service/tsconfig.json"
-download_file ".agents/skills/native-from-scratch/assets/python-http-service/app.py"
-download_file ".agents/skills/native-from-scratch/assets/python-http-service/pyproject.toml"
-download_file ".agents/skills/native-from-scratch/assets/python-http-service/test_app.py"
-download_file ".agents/skills/rigorous-code-audit/SKILL.md"
+[ -d "$TARGET_DIR" ] || die "target directory does not exist: $TARGET_DIR"
+TARGET_DIR="$(cd "$TARGET_DIR" && pwd)"
 
-# Supporting Documentation
-download_file "docs/ARCHITECTURE.md"
-download_file "docs/AGENT-OPERATIONAL-MANUAL.md"
-download_file "docs/ANTI-HALLUCINATION-PLAYBOOK.md"
-download_file "docs/CONTRIBUTING.md"
+WORK_DIR="$(mktemp -d)"
+trap 'rm -rf "$WORK_DIR"' EXIT
 
-# Scripts
-download_file "scripts/agents-sync.mjs"
-download_file "scripts/agents-sync.test.mjs"
-download_file "scripts/install.sh"
-chmod +x "$TARGET_DIR/scripts/agents-sync.mjs" "$TARGET_DIR/scripts/install.sh"
-
-# Run sync to generate .claude/skills and validate
-if command -v node >/dev/null 2>&1; then
-  echo ""
-  echo "Running agents-sync to configure tool mirrors..."
-  (cd "$TARGET_DIR" && node scripts/agents-sync.mjs)
+if [ -n "$SOURCE_DIR" ]; then
+  [ -f "$SOURCE_DIR/AGENTS.md" ] || die "--source does not look like a UCNA-Spec checkout: $SOURCE_DIR"
+  SOURCE_DIR="$(cd "$SOURCE_DIR" && pwd)"
+  printf 'Installing UCNA-Spec from %s\n' "$SOURCE_DIR"
 else
-  echo ""
-  echo "Node.js 22+ was not detected. Run 'node scripts/agents-sync.mjs' once Node is installed."
+  command -v curl >/dev/null 2>&1 || die "curl is required"
+  command -v tar >/dev/null 2>&1 || die "tar is required"
+  ARCHIVE_URL="https://github.com/${REPOSITORY}/archive/${REF}.tar.gz"
+  printf 'Downloading UCNA-Spec (%s) from %s\n' "$REF" "$ARCHIVE_URL"
+  curl -fsSL "$ARCHIVE_URL" -o "$WORK_DIR/spec.tar.gz" || die "download failed; check the --ref value and your network"
+  mkdir "$WORK_DIR/extract"
+  tar -xzf "$WORK_DIR/spec.tar.gz" -C "$WORK_DIR/extract"
+  SOURCE_DIR="$(find "$WORK_DIR/extract" -mindepth 1 -maxdepth 1 -type d | head -n 1)"
+  [ -f "$SOURCE_DIR/AGENTS.md" ] || die "downloaded archive does not contain AGENTS.md"
+fi
+printf 'Target: %s\n\n' "$TARGET_DIR"
+
+list_files() {
+  local relative_path
+  for relative_path in "${SPEC_FILES[@]}"; do
+    [ -f "$SOURCE_DIR/$relative_path" ] && printf '%s\n' "$relative_path"
+  done
+  for relative_path in "${SPEC_DIRECTORIES[@]}"; do
+    [ -d "$SOURCE_DIR/$relative_path" ] || continue
+    (cd "$SOURCE_DIR" && find "$relative_path" -type f \
+      ! -path '*/node_modules/*' ! -path '*/__pycache__/*' ! -path '*/.venv/*' \
+      ! -path '*/.mypy_cache/*' ! -path '*/.ruff_cache/*' ! -name '.DS_Store' | LC_ALL=C sort)
+  done
+}
+
+installed=0
+unchanged=0
+skipped=0
+skipped_list=""
+
+while IFS= read -r relative_path; do
+  source_file="$SOURCE_DIR/$relative_path"
+  target_file="$TARGET_DIR/$relative_path"
+  if [ -e "$target_file" ]; then
+    if cmp -s "$source_file" "$target_file"; then
+      unchanged=$((unchanged + 1))
+      continue
+    fi
+    if [ "$FORCE" -ne 1 ]; then
+      skipped=$((skipped + 1))
+      skipped_list="${skipped_list}  ${relative_path}"$'\n'
+      continue
+    fi
+  fi
+  installed=$((installed + 1))
+  if [ "$DRY_RUN" -eq 1 ]; then
+    printf '  would write %s\n' "$relative_path"
+  else
+    mkdir -p "$(dirname "$target_file")"
+    cp "$source_file" "$target_file"
+    printf '  wrote %s\n' "$relative_path"
+  fi
+done < <(list_files)
+
+printf '\n%d written, %d already up to date, %d kept because they differ\n' "$installed" "$unchanged" "$skipped"
+if [ "$skipped" -gt 0 ]; then
+  printf '\nThese existing files were NOT changed:\n%s' "$skipped_list"
+  printf 'Merge them by hand, or re-run with --force to overwrite them.\n'
 fi
 
-echo ""
-echo "=========================================================="
-echo "UCNA-Spec installed cleanly."
-echo "Next step: Open your project in Google Antigravity, Claude Code, Cursor, Windsurf, or Copilot."
-echo "=========================================================="
+if [ -f "$TARGET_DIR/CLAUDE.md" ] && ! grep -qx '@AGENTS.md' "$TARGET_DIR/CLAUDE.md"; then
+  printf '\nNote: your CLAUDE.md does not import AGENTS.md. Add a line "@AGENTS.md" so Claude Code loads the rules.\n'
+fi
+
+if [ "$DRY_RUN" -eq 1 ]; then
+  printf '\nDry run: nothing was written.\n'
+  exit 0
+fi
+
+if command -v node >/dev/null 2>&1 && [ -f "$TARGET_DIR/scripts/agents-sync.mjs" ]; then
+  printf '\nGenerating .claude/skills and validating (node scripts/agents-sync.mjs):\n'
+  (cd "$TARGET_DIR" && node scripts/agents-sync.mjs) || printf 'Validation reported problems; see the messages above.\n'
+else
+  printf '\nNode.js was not found. Install Node.js 22 or later, then run: node scripts/agents-sync.mjs\n'
+fi
+
+printf '\nNext: fill in section 8 ("Project profile") of AGENTS.md with your real commands, then commit the files.\n'

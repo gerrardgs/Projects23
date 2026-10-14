@@ -57,10 +57,11 @@ Follow [02-clean-code](../../rules/02-clean-code.md) and [05-error-handling](../
 
 ## Verified templates
 
-Both templates were run on 2026-10-14 (Node.js 24.9 with TypeScript 7.0.2; Python 3.14 with mypy 2.4 and Ruff 0.17). Copy one as a starting point:
+Copy one as a starting point. Verification on 2026-10-14 (CI re-runs it on every change):
 
-- [assets/node-http-service/](assets/node-http-service/): `node:http` JSON API with validation, body limits, graceful shutdown and 12 `node:test` tests. Runs directly with `node server.ts` (Node.js 22.18+). Commands: `npm test`, `npm run typecheck` (after `npm install`), `npm start`.
-- [assets/python-http-service/](assets/python-http-service/): `http.server` JSON API with the same behaviour and 11 `unittest` tests; passes `mypy --strict` and Ruff with mccabe complexity ≤ 10. Commands: `python3 -m unittest -v`, `PORT=3000 python3 app.py`. `http.server` is fine for internal tools and learning. For internet-facing production, put it behind a reverse proxy or move to an ASGI/WSGI server.
+- [assets/node-http-service/](assets/node-http-service/): `node:http` JSON API with validation, body limits, graceful shutdown and 12 `node:test` tests, plus a committed lockfile, a Dockerfile and `.dockerignore`. Runs directly with `node server.ts` (Node.js 22.18+, built-in type stripping). Tested on Node.js 22.23.3, 24.9.0 and 26.11.1: `npm ci`, `npm run typecheck` (TypeScript 7.0.2), `npm test`, and `npm audit` with 0 vulnerabilities.
+- [assets/python-http-service/](assets/python-http-service/): `http.server` JSON API with the same behaviour and 11 `unittest` tests, plus a Dockerfile and `.dockerignore`. Development tools are a PEP 735 group: `python -m pip install --group dev` (pip 25.1+). Tested on Python 3.11, 3.12, 3.13 and 3.14: Ruff (format and lint, mccabe complexity ≤ 10), `mypy --strict`, tests, Bandit, and `pip-audit` with no known vulnerabilities. `http.server` is fine for internal tools and learning; for internet-facing production, put it behind a reverse proxy or move to an ASGI/WSGI server.
+- Both Dockerfiles pass `hadolint` 2.15.1 and pin their base image by digest. They have **not** been built in the authoring environment (no Docker available there), so run `docker build` before relying on them. See [deploy-and-release](../deploy-and-release/SKILL.md).
 
 ## Checklist before handing over
 

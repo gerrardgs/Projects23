@@ -29,3 +29,28 @@ test("returns null data when there is no frontmatter", () => {
 test("rejects lines it cannot parse instead of guessing", () => {
   assert.throws(() => parseFrontmatter("---\nnot a key value line\n---\n"), /unsupported frontmatter line 1/);
 });
+
+test("rejects an unquoted value containing ': ' (invalid YAML)", () => {
+  assert.throws(
+    () => parseFrontmatter("---\ndescription: Core principles: scope and simplicity\n---\n"),
+    /unquoted value contains ": "/,
+  );
+});
+
+test("accepts the same value when double-quoted, and decodes escapes", () => {
+  const { data } = parseFrontmatter('---\ndescription: "Core principles: \\"scope\\" and simplicity"\n---\n');
+  assert.equal(data.description, 'Core principles: "scope" and simplicity');
+});
+
+test("decodes doubled quotes in single-quoted values", () => {
+  const { data } = parseFrontmatter("---\nnote: 'it''s fine: really'\n---\n");
+  assert.equal(data.note, "it's fine: really");
+});
+
+test("rejects plain values starting with a YAML indicator", () => {
+  assert.throws(() => parseFrontmatter("---\nglobs: *.ts\n---\n"), /cannot start with "\*"/);
+});
+
+test("rejects duplicate keys", () => {
+  assert.throws(() => parseFrontmatter("---\nname: a\nname: b\n---\n"), /duplicate key "name"/);
+});

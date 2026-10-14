@@ -1,6 +1,6 @@
 ---
 trigger: model_decision
-description: Apply when adding, removing, replacing or upgrading a dependency, or when choosing between the standard library and a third-party package.
+description: "Apply when adding, removing, replacing or upgrading a dependency, or when choosing between the standard library and a third-party package."
 ---
 
 # R-04: Dependencies and Standard-Library-First

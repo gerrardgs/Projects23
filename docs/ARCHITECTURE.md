@@ -1,85 +1,96 @@
-# Architecture and Systems Design
+# Architecture
 
-This document details the architectural principles, cognitive loading theory, and multi-tool orchestration mechanics behind the Universal Clean Native Agent Specification (UCNA-Spec).
+How UCNA-Spec is organised, why, and how each AI coding tool loads it.
 
----
+## 1. The problem
 
-## 1. The Core Problem: Agent Degradation Under Instruction Bloat
+1. **Long instructions are followed less reliably.** Research shows that language models use information in the middle of long inputs less reliably than information at the start or end ([Liu et al., "Lost in the Middle", TACL](https://arxiv.org/abs/2307.03172)). Accuracy also falls as the number of simultaneous instructions grows: in the IFScale benchmark, even the best frontier models reached only 68% accuracy at 500 instructions ([Jaroslawicz et al., 2025](https://arxiv.org/abs/2507.11538)). Claude Code's documentation gives the practical consequence: keep each `CLAUDE.md` under 200 lines, because "longer files consume more context and reduce adherence" ([source](https://code.claude.com/docs/en/memory)).
+2. **Every tool looks in a different place.** `CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`, `.cursor/rules/`, `.windsurf/rules/`, `.clinerules/`, `.agents/`... Copying the same rules into each location makes them drift apart.
+3. **Context is shared with the actual work.** Every token of always-on instructions is a token not available for the user's code.
 
-Language models exhibit marked degradation in reasoning, instruction following, and code synthesis when overloaded with excessive context. Research into context window dynamics (such as "Lost in the Middle" phenomena and attention dispersion) demonstrates:
+## 2. The design: a small core plus on-demand detail
 
-1. **Large monolithic prompt degradation**: When prompt instructions exceed 300-400 lines, models frequently miss negative constraints ("never use `any`") or selectively apply rules.
-2. **Context starvation**: Bloating always-on instructions with language-specific boilerplate consumes valuable token budget that should be reserved for the user's actual codebase, AST context, and dependency trees.
-3. **Tool conflicts**: Different tools (Claude Code, Cursor, Windsurf, Antigravity) expect instructions in distinct file locations and formats. Duplicating rules across multiple uncoordinated files leads to instruction drift and contradictory mandates.
-
----
-
-## 2. The Solution: Progressive Disclosure & Lean Core
-
-UCNA-Spec implements a **two-tier progressive disclosure model**:
-
-```
-+-------------------------------------------------------------------+
-| LAYER 1: Lean Always-On Core (AGENTS.md)                          |
-| - Priorities, Non-negotiables, Universal Workflow, Definition of Done |
-| - Size: ~100 lines (~1,300 tokens)                                |
-+-------------------------------------------------------------------+
-                               |
-               +---------------+---------------+
-               |                               |
-               v                               v
-+-----------------------------+ +-----------------------------+
-| LAYER 2A: Rules (Targeted)  | | LAYER 2B: Skills (Procedures) |
-| - Loaded on demand/decision | | - Loaded on explicit workflow |
-| - 01-core-principles.md     | | - native-from-scratch         |
-| - 02-clean-code.md          | | - rigorous-code-audit         |
-| - 03-verification.md        | | - Runnable verified assets    |
-| - 04-dependencies.md        | |                               |
-| - 05-error-handling.md      | |                               |
-+-----------------------------+ +-----------------------------+
+```text
+┌──────────────────────────────────────────────────────────────────────┐
+│ Core (always loaded): AGENTS.md, about 115 lines                     │
+│ Priorities, non-negotiables, workflow, indexes, operating conditions │
+└──────────────────────────────────────────────────────────────────────┘
+          │ links to                               │ links to
+          ▼                                        ▼
+┌───────────────────────────────────┐   ┌───────────────────────────────────┐
+│ Rules (.agents/rules/)            │   │ Skills (.agents/skills/)          │
+│ always_on: 01, 02, 03, 06         │   │ Loaded when the task matches:     │
+│ model_decision (on demand):       │   │ bootstrap, build, change, test,   │
+│   04, 05, 07, 08                  │   │ debug, review, secure, CI/CD,     │
+│ Short, normative "must" rules     │   │ deploy. Procedures plus verified  │
+│                                   │   │ templates and references          │
+└───────────────────────────────────┘   └───────────────────────────────────┘
 ```
 
-### Mathematical Token Budgeting
-- **Always-On Budget**: Antigravity budgets 20,000 tokens for always-on rules; Claude Code recommends under 200 lines per `CLAUDE.md`.
-- **UCNA-Spec Footprint**: `AGENTS.md` is strictly capped at ~100 lines. Together with `always_on` rules, the baseline footprint is approximately **5,340 tokens**, consuming less than 27% of the maximum budget and leaving 73%+ for repository reasoning.
+- **Rules** say *what* must hold. Four are always on, because they apply to every task (principles, clean code, verification, security). Four load only when relevant.
+- **Skills** say *how* to do a kind of task, step by step. They follow the [Agent Skills specification](https://agentskills.io/specification): only each skill's name and description are loaded at startup, and the body loads when the task matches. Bulky material sits in `references/` and `assets/` and loads only when needed.
+- **Size**: `node scripts/agents-sync.mjs` prints the current always-on estimate (characters divided by 4). On 2026-10-14 it was about 6,900 tokens for `AGENTS.md` plus the four always-on rules. Antigravity's documented budget for global and always-on rules is 20,000 tokens.
 
----
-
-## 3. Tool Ingestion Architecture
-
-Every major autonomous coding tool accesses the exact same single source of truth without duplication:
+## 3. How each tool loads the spec
 
 ```mermaid
 graph TD
-    AGENTS[AGENTS.md: Single Source of Truth]
+    AGENTS[AGENTS.md]
+    RULES[.agents/rules/]
+    SKILLS[.agents/skills/]
+    MIRROR[.claude/skills/ generated mirror]
 
-    Claude[Claude Code / Cline] -->|Imports @AGENTS.md| CLAUDE[CLAUDE.md]
-    CLAUDE --> AGENTS
+    ClaudeCode[Claude Code] -->|reads| CLAUDE[CLAUDE.md]
+    CLAUDE -->|"@ imports"| AGENTS
+    CLAUDE -->|"@ imports always-on rules"| RULES
+    ClaudeCode --> MIRROR
 
-    Gemini[Gemini CLI] -->|Loads context files| GEMINI_SETTING[.gemini/settings.json]
-    GEMINI_SETTING --> AGENTS
+    Codex[OpenAI Codex] --> AGENTS
+    Codex --> SKILLS
 
-    Antigravity[Google Antigravity] -->|Walks workspace root| AGENTS
-    Antigravity -->|Loads triggers| RULES[.agents/rules/]
+    GeminiCLI[Gemini CLI] -->|context.fileName in .gemini/settings.json| AGENTS
+    GeminiCLI --> SKILLS
 
-    Cursor[Cursor IDE] -->|Reads root AGENTS.md| AGENTS
+    Antigravity[Google Antigravity] --> AGENTS
+    Antigravity -->|trigger frontmatter| RULES
+    Antigravity --> SKILLS
 
-    Windsurf[Windsurf / Devin] -->|Reads root AGENTS.md| AGENTS
+    Cursor[Cursor] --> AGENTS
+    Cursor --> SKILLS
 
-    Copilot[GitHub Copilot] -->|Reads custom instructions| COPILOT[.github/copilot-instructions.md]
-    COPILOT --> AGENTS
+    Windsurf[Windsurf / Devin Desktop] --> AGENTS
+    Windsurf --> SKILLS
 
-    Aider[Aider CLI] -->|Reads conventions file| AIDER[.aider.conf.yml]
-    AIDER --> AGENTS
+    Copilot[GitHub Copilot] --> AGENTS
+    Copilot --> COPILOT[.github/copilot-instructions.md]
+    Copilot --> SKILLS
+
+    Cline[Cline] -->|when no .clinerules/ exists| AGENTS
+    Cline --> MIRROR
+
+    Aider[Aider] -->|read: in .aider.conf.yml| AGENTS
 ```
 
----
+Where a tool does not load `.agents/rules/` itself, the indexes in `AGENTS.md` tell the agent which file to open. Sources for every edge are listed in the README's compatibility table.
 
-## 4. The Mirror Synchronization Engine (`scripts/agents-sync.mjs`)
+## 4. The sync and validation script
 
-To support tools that require isolated skill directories (e.g., Claude Code and Cline requiring `.claude/skills/`), UCNA-Spec provides a zero-dependency synchronization and validation script:
+`scripts/agents-sync.mjs` (Node.js, no dependencies) keeps the copies consistent and catches mistakes before an agent sees them:
 
-1. **Single Source of Truth**: All skills are authored and edited in `.agents/skills/`.
-2. **Deterministic Hashing**: The script hashes files using SHA-256 and copies changes into `.claude/skills/`.
-3. **Manifest Tracking**: The `.agents-sync.json` manifest ensures stale mirrors of deleted skills are pruned automatically without touching unmanaged files.
-4. **Specification Auditing**: Enforces the Agent Skills Open Specification (name patterns, description lengths, line counts, relative link validity).
+1. **Mirror**: copies each skill from `.agents/skills/` to `.claude/skills/`. A manifest (`.claude/skills/.agents-sync.json`) records which skills it created, so it removes only its own stale copies and never touches skills you added by hand.
+2. **Drift check** (`--check`): compares SHA-256 fingerprints of source and mirror and fails if they differ.
+3. **Skill validation**: frontmatter per the Agent Skills specification (name format and length, name matches folder, description length, body under 500 lines).
+4. **Rule validation**: a valid `trigger` (Antigravity silently drops rules without one), a description for `model_decision` rules, and at most 12,000 characters (Windsurf's per-file limit, the strictest of the tools).
+5. **Strict YAML**: rejects frontmatter that real YAML parsers would reject or read differently, such as an unquoted value containing `: `.
+6. **Consistency**: `AGENTS.md` must link every rule and skill; `CLAUDE.md` must import `AGENTS.md` and should import every always-on rule.
+7. **Links**: every relative link in the spec files must resolve; `file://` links are rejected. `--all-markdown` extends the check to every Markdown file in the repository.
+
+## 5. Design decisions
+
+| Decision | Reason | Trade-off |
+| :--- | :--- | :--- |
+| `AGENTS.md` as the single core | Read natively by most tools; an open standard under the Linux Foundation's Agentic AI Foundation | Tools without native support need a thin adapter file |
+| Rules in `.agents/rules/` with Antigravity/Windsurf `trigger` frontmatter | One format that at least one tool loads natively, readable as plain Markdown by the rest | Other tools reach them only through the index |
+| Generated `.claude/skills/` mirror | Claude Code and Cline do not read `.agents/skills/` | Tools that read both folders (Cursor, Copilot) list each skill twice, with identical content |
+| No `.cursorrules` / `.windsurfrules` | Both tools read `AGENTS.md`; extra files would load the same rules twice | Teams wanting glob-scoped Cursor rules must add `.cursor/rules/*.mdc` themselves |
+| Verified, runnable templates | Examples that do not run teach agents to write code that does not run | Templates must be re-verified when runtimes change |
