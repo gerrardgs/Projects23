@@ -29,9 +29,6 @@ jobs:
           python-version: "3.14"
       - name: Validator self-tests
         run: node --test "scripts/*.test.mjs"
-      - name: Sync mirror on Dependabot PRs
-        if: github.actor == 'dependabot[bot]'
-        run: node scripts/agents-sync.mjs
       - name: Validate rules, skills, mirror and links
         run: node scripts/agents-sync.mjs --check --all-markdown
       - name: Install lint tools
