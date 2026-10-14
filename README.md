@@ -1,4 +1,4 @@
-# UCNA-Spec: Universal Clean Native Agent Specification
+# Projects 23: Production AI Agent Coding Needs
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Format: Agent Skills](https://img.shields.io/badge/Format-Agent%20Skills-blue.svg)](https://agentskills.io/specification)
