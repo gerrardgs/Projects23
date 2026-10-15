@@ -3,6 +3,8 @@
 These instructions apply to every AI model and coding agent working in this repository: Claude Code, Codex, Gemini CLI, Antigravity, Cursor, Windsurf/Devin, GitHub Copilot, Cline, Aider, and any chat model given this file as a system prompt.
 They describe how an experienced engineer works, from an empty folder to a running deployment, and how to change existing code safely.
 
+**The concept is clean code and clean execution.** Clean code ([02-clean-code](.agents/rules/02-clean-code.md)) is a result that the next engineer can read, change and trust. Clean execution ([09-clean-execution](.agents/rules/09-clean-execution.md)) is how the work is done: predictable, minimal, verified step by step, reversible, and leaving no mess. Every rule and skill below serves one or both.
+
 This file is the **always-on core**. Deeper guidance loads on demand:
 
 - **Rules** (short, normative): [`.agents/rules/`](.agents/rules/)
@@ -49,6 +51,7 @@ If your tool does not load these folders automatically, **open the matching file
 | [02-clean-code.md](.agents/rules/02-clean-code.md) | always | Naming, functions, types, state, comments, formatting |
 | [03-verification.md](.agents/rules/03-verification.md) | always | Anti-hallucination protocol: verifying APIs, packages, versions, flags |
 | [06-security.md](.agents/rules/06-security.md) | always | Secrets, untrusted input and content, injection, access control, crypto |
+| [09-clean-execution.md](.agents/rules/09-clean-execution.md) | always | How to carry out work: plan, verify each step, fail cleanly, leave no mess |
 | [04-dependencies.md](.agents/rules/04-dependencies.md) | on demand | Adding, replacing or upgrading dependencies; standard library first |
 | [05-error-handling.md](.agents/rules/05-error-handling.md) | on demand | Errors, boundary validation, logging, timeouts, resource cleanup |
 | [07-testing.md](.agents/rules/07-testing.md) | on demand | Writing, changing or running tests |

@@ -57,24 +57,23 @@ export function parseNewUser(input: unknown): Validation<NewUser> {
     return { ok: false, errors: ["body must be a JSON object"] };
   }
   const { name, email } = input as Record<string, unknown>;
-  const errors: string[] = [];
-
-  if (typeof name !== "string" || name.trim().length === 0) {
-    errors.push("name is required");
-  } else if (name.length > MAX_NAME_LENGTH) {
-    errors.push(`name must be at most ${MAX_NAME_LENGTH} characters`);
-  }
-
-  if (typeof email !== "string" || !EMAIL_PATTERN.test(email)) {
-    errors.push("email must be a valid address");
-  } else if (email.length > MAX_EMAIL_LENGTH) {
-    errors.push(`email must be at most ${MAX_EMAIL_LENGTH} characters`);
-  }
-
+  const errors = [nameProblem(name), emailProblem(email)].filter((problem) => problem !== undefined);
   if (errors.length > 0 || typeof name !== "string" || typeof email !== "string") {
     return { ok: false, errors };
   }
   return { ok: true, value: { name: name.trim(), email: email.toLowerCase() } };
+}
+
+function nameProblem(name: unknown): string | undefined {
+  if (typeof name !== "string" || name.trim().length === 0) return "name is required";
+  if (name.length > MAX_NAME_LENGTH) return `name must be at most ${MAX_NAME_LENGTH} characters`;
+  return undefined;
+}
+
+function emailProblem(email: unknown): string | undefined {
+  if (typeof email !== "string" || !EMAIL_PATTERN.test(email)) return "email must be a valid address";
+  if (email.length > MAX_EMAIL_LENGTH) return `email must be at most ${MAX_EMAIL_LENGTH} characters`;
+  return undefined;
 }
 
 async function readJsonBody(request: http.IncomingMessage): Promise<unknown> {
@@ -117,6 +116,35 @@ function sendJson(
   response.end(payload);
 }
 
+/** Sends 405 with an Allow header and returns false when the method does not match. */
+function methodAllowed(method: string, allowed: string, response: http.ServerResponse): boolean {
+  if (method === allowed) return true;
+  sendJson(response, 405, { error: "Method not allowed" }, { Allow: allowed });
+  return false;
+}
+
+async function createUser(
+  store: UserStore,
+  request: http.IncomingMessage,
+  response: http.ServerResponse,
+): Promise<void> {
+  const parsed = parseNewUser(await readJsonBody(request));
+  if (!parsed.ok) {
+    sendJson(response, 400, { error: "Validation failed", details: parsed.errors });
+    return;
+  }
+  sendJson(response, 201, store.create(parsed.value));
+}
+
+function showUser(store: UserStore, id: string, response: http.ServerResponse): void {
+  const user = store.findById(id);
+  if (user === undefined) {
+    sendJson(response, 404, { error: "User not found" });
+    return;
+  }
+  sendJson(response, 200, user);
+}
+
 async function route(
   store: UserStore,
   request: http.IncomingMessage,
@@ -131,31 +159,13 @@ async function route(
   }
 
   if (pathname === "/users") {
-    if (method !== "POST") {
-      sendJson(response, 405, { error: "Method not allowed" }, { Allow: "POST" });
-      return;
-    }
-    const parsed = parseNewUser(await readJsonBody(request));
-    if (!parsed.ok) {
-      sendJson(response, 400, { error: "Validation failed", details: parsed.errors });
-      return;
-    }
-    sendJson(response, 201, store.create(parsed.value));
+    if (methodAllowed(method, "POST", response)) await createUser(store, request, response);
     return;
   }
 
   const userMatch = USER_PATH_PATTERN.exec(pathname);
   if (userMatch?.[1] !== undefined) {
-    if (method !== "GET") {
-      sendJson(response, 405, { error: "Method not allowed" }, { Allow: "GET" });
-      return;
-    }
-    const user = store.findById(decodeURIComponent(userMatch[1]));
-    if (user === undefined) {
-      sendJson(response, 404, { error: "User not found" });
-      return;
-    }
-    sendJson(response, 200, user);
+    if (methodAllowed(method, "GET", response)) showUser(store, decodeURIComponent(userMatch[1]), response);
     return;
   }
 

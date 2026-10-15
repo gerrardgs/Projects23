@@ -52,3 +52,14 @@ updates:
       interval: weekly
     cooldown:
       default-days: 7
+  - package-ecosystem: npm
+    directory: /tools/lint
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    ignore:
+      # typescript-eslint 8 declares the peer range typescript >=4.8.4 <6.1.0.
+      - dependency-name: "typescript"
+        versions: [">=6.1.0"]
+

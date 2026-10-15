@@ -3,6 +3,7 @@
 @.agents/rules/02-clean-code.md
 @.agents/rules/03-verification.md
 @.agents/rules/06-security.md
+@.agents/rules/09-clean-execution.md
 
 ## Claude Code notes
 

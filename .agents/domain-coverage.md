@@ -1,6 +1,6 @@
 # Domain Coverage
 
-Which parts of this specification to load for each role and technical domain. The always-on core (`AGENTS.md` and rules 01, 02, 03 and 06) applies to every row. Skills are in `.agents/skills/`; rules are in `.agents/rules/`.
+Which parts of this specification to load for each role and technical domain. The always-on core (`AGENTS.md` and rules 01, 02, 03, 06 and 09) applies to every row. Skills are in `.agents/skills/`; rules are in `.agents/rules/`.
 
 No written specification can contain every fact of every field. Any language, framework, library, platform or SaaS product, listed or not, is handled with the [technology-adoption](skills/technology-adoption/SKILL.md) skill, its [catalog of widely used tools](skills/technology-adoption/references/technology-catalog.md), and the live lookup script `scripts/tech-lookup.mjs`. What this one guarantees is a consistent way of working (verify, test, secure, review, ship) plus domain checklists where the risks are specific. For domains without a dedicated skill, the lifecycle skills and the always-on rules still apply, and section 4 lists verified starting points.
 

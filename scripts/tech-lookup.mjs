@@ -18,7 +18,7 @@
 
 import { fileURLToPath } from "node:url";
 
-const USER_AGENT = "ucna-spec-tech-lookup (https://github.com/gerrardgs/Projects23)";
+const USER_AGENT = "projects23-tech-lookup (https://github.com/gerrardgs/Projects23)";
 const TIMEOUT_MS = 20_000;
 const PRERELEASE_PATTERN = /(?:^|[.\-_+])(?:alpha|beta|rc|cr|m\d+|milestone|snapshot|dev|pre|preview|nightly|canary|next|ea)(?:[.\-_]?\d+)?(?:$|[.\-_+])/i;
 
@@ -31,24 +31,24 @@ export function isStableVersion(version) {
   return !PRERELEASE_PATTERN.test(version);
 }
 
-/** Compares dotted versions numerically part by part; numeric parts rank above text parts. */
+/** Compares one version component: numbers numerically, numbers above text, text alphabetically. */
+function compareParts(left, right) {
+  const leftNumeric = /^\d+$/.test(left);
+  const rightNumeric = /^\d+$/.test(right);
+  if (leftNumeric && rightNumeric) return Math.sign(Number(left) - Number(right));
+  if (leftNumeric !== rightNumeric) return leftNumeric ? 1 : -1;
+  if (left === right) return 0;
+  return left < right ? -1 : 1;
+}
+
+/** Compares dotted versions part by part ("1.10.0" is newer than "1.9.9"). */
 export function compareVersions(left, right) {
   const split = (value) => value.replace(/^v/, "").split(/[.\-_+]/);
   const leftParts = split(left);
   const rightParts = split(right);
   for (let index = 0; index < Math.max(leftParts.length, rightParts.length); index += 1) {
-    const a = leftParts[index] ?? "0";
-    const b = rightParts[index] ?? "0";
-    const aNumeric = /^\d+$/.test(a);
-    const bNumeric = /^\d+$/.test(b);
-    if (aNumeric && bNumeric) {
-      const difference = Number(a) - Number(b);
-      if (difference !== 0) return Math.sign(difference);
-    } else if (aNumeric !== bNumeric) {
-      return aNumeric ? 1 : -1;
-    } else if (a !== b) {
-      return a < b ? -1 : 1;
-    }
+    const result = compareParts(leftParts[index] ?? "0", rightParts[index] ?? "0");
+    if (result !== 0) return result;
   }
   return 0;
 }
@@ -61,6 +61,11 @@ export function latestStable(versions) {
 /** Go module proxy escaping: each upper-case letter becomes "!" plus its lower-case form. */
 export function escapeGoModule(path) {
   return path.replace(/[A-Z]/g, (letter) => `!${letter.toLowerCase()}`);
+}
+
+/** First value that is neither undefined, null nor an empty string. */
+function firstPresent(...values) {
+  return values.find((value) => value !== undefined && value !== null && value !== "");
 }
 
 function repositoryUrl(repository) {
@@ -77,14 +82,18 @@ export const parsers = {
     repository: repositoryUrl(body.repository),
     warning: body.deprecated ? `deprecated: ${body.deprecated}` : undefined,
   }),
-  pypi: (body) => ({
-    version: body.info.version,
-    released: body.urls?.[0]?.upload_time_iso_8601,
-    license: body.info.license_expression || body.info.license || undefined,
-    repository: body.info.project_urls?.Source ?? body.info.project_urls?.Repository ?? body.info.home_page ?? undefined,
-    requires: body.info.requires_python ? `Python ${body.info.requires_python}` : undefined,
-    warning: body.info.yanked ? `yanked: ${body.info.yanked_reason ?? "no reason given"}` : undefined,
-  }),
+  pypi: (body) => {
+    const { info } = body;
+    const projectUrls = info.project_urls ?? {};
+    return {
+      version: info.version,
+      released: body.urls?.[0]?.upload_time_iso_8601,
+      license: firstPresent(info.license_expression, info.license),
+      repository: firstPresent(projectUrls.Source, projectUrls.Repository, info.home_page),
+      requires: info.requires_python ? `Python ${info.requires_python}` : undefined,
+      warning: info.yanked ? `yanked: ${info.yanked_reason ?? "no reason given"}` : undefined,
+    };
+  },
   crates: (body) => {
     const current = body.versions?.find((entry) => entry.num === body.crate.max_stable_version);
     return {
@@ -108,13 +117,13 @@ export const parsers = {
     repository: body.source_code_uri ?? body.homepage_uri,
   }),
   packagist: (body, name) => {
-    const latest = body.packages?.[name]?.[0];
+    const { version, time, license = [], source = {}, abandoned } = body.packages?.[name]?.[0] ?? {};
     return {
-      version: latest?.version,
-      released: latest?.time,
-      license: latest?.license?.join(", "),
-      repository: repositoryUrl(latest?.source?.url),
-      warning: latest?.abandoned ? "package is marked abandoned" : undefined,
+      version,
+      released: time,
+      license: license.join(", "),
+      repository: repositoryUrl(source.url),
+      warning: abandoned ? "package is marked abandoned" : undefined,
     };
   },
   pub: (body) => ({
@@ -156,44 +165,47 @@ export const parsers = {
   }),
 };
 
+function requireShape(name, pattern, ecosystem, shape) {
+  if (!pattern.test(name)) throw new Error(`${ecosystem} names look like "${shape}"`);
+}
+
+const OWNER_AND_NAME = /^[\w.-]+\/[\w.-]+$/;
+
+/** One URL builder per ecosystem; `text: true` marks XML responses. */
+const REQUEST_BUILDERS = {
+  npm: (name) => {
+    const path = name.startsWith("@") ? `@${encodeURIComponent(name.slice(1))}` : encodeURIComponent(name);
+    return { url: `https://registry.npmjs.org/${path}/latest` };
+  },
+  pypi: (name) => ({ url: `https://pypi.org/pypi/${encodeURIComponent(name)}/json` }),
+  crates: (name) => ({ url: `https://crates.io/api/v1/crates/${encodeURIComponent(name)}` }),
+  go: (name) => ({ url: `https://proxy.golang.org/${escapeGoModule(name)}/@latest` }),
+  maven: (name) => {
+    requireShape(name, /^[\w.-]+:[\w.-]+$/, "maven", "group:artifact");
+    const [group, artifact] = name.split(":");
+    return { url: `https://repo1.maven.org/maven2/${group.replaceAll(".", "/")}/${artifact}/maven-metadata.xml`, text: true };
+  },
+  nuget: (name) => ({ url: `https://api.nuget.org/v3-flatcontainer/${name.toLowerCase()}/index.json` }),
+  rubygems: (name) => ({ url: `https://rubygems.org/api/v1/gems/${encodeURIComponent(name)}.json` }),
+  packagist: (name) => {
+    requireShape(name, OWNER_AND_NAME, "packagist", "vendor/package");
+    return { url: `https://repo.packagist.org/p2/${name.toLowerCase()}.json` };
+  },
+  pub: (name) => ({ url: `https://pub.dev/api/packages/${encodeURIComponent(name)}` }),
+  hex: (name) => ({ url: `https://hex.pm/api/packages/${encodeURIComponent(name)}` }),
+  eol: (name) => ({ url: `https://endoflife.date/api/v1/products/${encodeURIComponent(name)}` }),
+  scorecard: (name) => ({ url: `https://api.securityscorecards.dev/projects/${name}` }),
+  github: (name) => {
+    requireShape(name, OWNER_AND_NAME, "github", "owner/repository");
+    return { url: `https://api.github.com/repos/${name}/releases/latest` };
+  },
+};
+
 /** Builds the request for one lookup. Exported for tests. */
 export function requestFor(ecosystem, name) {
-  const encoded = encodeURIComponent(name);
-  switch (ecosystem) {
-    case "npm":
-      return { url: `https://registry.npmjs.org/${name.startsWith("@") ? `@${encodeURIComponent(name.slice(1))}` : encoded}/latest` };
-    case "pypi":
-      return { url: `https://pypi.org/pypi/${encoded}/json` };
-    case "crates":
-      return { url: `https://crates.io/api/v1/crates/${encoded}` };
-    case "go":
-      return { url: `https://proxy.golang.org/${escapeGoModule(name)}/@latest` };
-    case "maven": {
-      const [group, artifact] = name.split(":");
-      if (!group || !artifact) throw new Error('maven names look like "group:artifact"');
-      return { url: `https://repo1.maven.org/maven2/${group.replaceAll(".", "/")}/${artifact}/maven-metadata.xml`, text: true };
-    }
-    case "nuget":
-      return { url: `https://api.nuget.org/v3-flatcontainer/${name.toLowerCase()}/index.json` };
-    case "rubygems":
-      return { url: `https://rubygems.org/api/v1/gems/${encoded}.json` };
-    case "packagist":
-      if (!/^[\w.-]+\/[\w.-]+$/.test(name)) throw new Error('packagist names look like "vendor/package"');
-      return { url: `https://repo.packagist.org/p2/${name.toLowerCase()}.json` };
-    case "pub":
-      return { url: `https://pub.dev/api/packages/${encoded}` };
-    case "hex":
-      return { url: `https://hex.pm/api/packages/${encoded}` };
-    case "eol":
-      return { url: `https://endoflife.date/api/v1/products/${encoded}` };
-    case "scorecard":
-      return { url: `https://api.securityscorecards.dev/projects/${name}` };
-    case "github":
-      if (!/^[\w.-]+\/[\w.-]+$/.test(name)) throw new Error('github names look like "owner/repository"');
-      return { url: `https://api.github.com/repos/${name}/releases/latest` };
-    default:
-      throw new Error(`unknown ecosystem "${ecosystem}"; use one of: ${Object.keys(parsers).join(", ")}`);
-  }
+  const build = REQUEST_BUILDERS[ecosystem];
+  if (!build) throw new Error(`unknown ecosystem "${ecosystem}"; use one of: ${Object.keys(REQUEST_BUILDERS).join(", ")}`);
+  return build(name);
 }
 
 async function lookup(spec) {
@@ -251,5 +263,10 @@ async function main() {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  // Exit quietly when the reader closes the pipe early (for example `| head -1`).
+  process.stdout.on("error", (error) => {
+    if (error.code !== "EPIPE") throw error;
+    process.exit(process.exitCode ?? 0);
+  });
   await main();
 }

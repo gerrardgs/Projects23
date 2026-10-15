@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.5.0: clean code and clean execution, applied to this repository itself (2026-10-16)
+
+The concept is now stated explicitly, and the repository is held to its own standard by CI.
+
+### Audit findings and fixes
+
+| # | Finding | Fix |
+| :- | :--- | :--- |
+| 1 | "Clean execution" was not defined anywhere; its practices were scattered across files | New always-on rule `09-clean-execution` (plan, preview, verify each step, fail cleanly, leave no mess, well-behaved scripts, honest report). `AGENTS.md` opens with the concept: clean code plus clean execution. Imported by `CLAUDE.md`; summarized in the Copilot instructions |
+| 2 | Nine functions in the repository's own code exceeded the spec's limit of cyclomatic complexity 10 (rule 02): `validateSkill` (19), `requestFor` (19), `parseNewUser` (13), `pypi` parser (13), `validateRules` (12), `route` (11), `parseFrontmatter` (11), `compareVersions` (11), `packagist` parser (11) | Refactored: table-driven request builders, small single-purpose helpers, and validation split into pure functions (`skillProblems`, `ruleProblems`) separated from file I/O (rule 01 section 5). Behaviour unchanged: 21 script tests and 12 template tests pass on Node.js 22 and 24 |
+| 3 | Nothing enforced the complexity and nesting limits on the repository's own JavaScript and TypeScript | `tools/lint`: pinned ESLint configuration (complexity 10, depth 3, 4 parameters, 60-line functions, no shadowing) and CI job `clean-code`. Proven to fail on a planted violation. Ruff already enforced the same complexity limit on the Python templates |
+| 4 | Both CLIs crashed with an unhandled `EPIPE` error when their output was piped into a command that closes early (for example `head -1`) | Both exit quietly with their normal exit code |
+| 5 | After editing a template, the `.claude/skills` mirror had not been regenerated (caught by the validator's drift check) | Re-synced; rule 09 now requires regenerating derived files after changing sources |
+| 6 | The product was named "Projects 23" in the README but "UCNA-Spec" in the installer and docs | Unified on "Projects 23"; the README notes the former name. The installer's `UCNA_REF` and `UCNA_SOURCE_DIR` variables are kept for compatibility |
+| 7 | `typescript-eslint` 8 declares the peer range `typescript >=4.8.4 <6.1.0`, which conflicts with the TypeScript 7 the toolchain guide recommends | Documented in the toolchains reference; `tools/lint` uses its own TypeScript 6.0 for parsing, and Dependabot ignores TypeScript 6.1 and later there |
+
+### Added
+
+- Unit tests for the pure validators `skillProblems` and `ruleProblems`.
+- README: clean code and clean execution as the first principle; rule, check and size figures updated.
+
 ## 2.4.0: adopt any technology, with live verification (2026-10-15)
 
 No document can list every tool ever published, and any list goes stale. This release makes every technology usable through one verified procedure and live data.

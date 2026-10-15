@@ -4,9 +4,9 @@
 [![Format: Agent Skills](https://img.shields.io/badge/Format-Agent%20Skills-blue.svg)](https://agentskills.io/specification)
 [![Validate](https://github.com/gerrardgs/Projects23/actions/workflows/validate.yml/badge.svg)](https://github.com/gerrardgs/Projects23/actions/workflows/validate.yml)
 [![Skills: 25](https://img.shields.io/badge/Skills-25%20Verified-success.svg)](.agents/skills/)
-[![Rules: 8](https://img.shields.io/badge/Rules-8%20Core-blueviolet.svg)](.agents/rules/)
+[![Rules: 9](https://img.shields.io/badge/Rules-9%20Core-blueviolet.svg)](.agents/rules/)
 
-A universal, production-ready AI agent coding framework and standard designed to make AI coding models work with the discipline of senior staff software engineers. It reduces erratic, bloated code and hallucinated APIs by enforcing standard-library-first design, strict verification protocols, and clean architectural boundaries across the entire software development lifecycle and 15 technical domains, and gives agents a verified procedure and a live lookup tool for adopting any other technology.
+A universal, production-ready AI agent coding framework and standard (formerly named UCNA-Spec, the Universal Clean Native Agent Specification) designed to make AI coding models work with the discipline of senior staff software engineers. It reduces erratic, bloated code and hallucinated APIs by enforcing standard-library-first design, strict verification protocols, and clean architectural boundaries across the entire software development lifecycle and 15 technical domains, and gives agents a verified procedure and a live lookup tool for adopting any other technology.
 
 Works out of the box with Google Antigravity, Claude Code, OpenAI Codex, Gemini CLI, Cursor, Windsurf/Devin, GitHub Copilot, Cline, Aider, or any chat model you paste it into.
 
@@ -16,11 +16,12 @@ Every command, version, package name, extension identifier, and template in this
 
 ## Why Projects 23
 
-Most AI coding assistants struggle with long-term code quality: they invent non-existent APIs, introduce unnecessary third-party packages, leave incomplete placeholders, and produce hard-to-maintain code. Projects 23 solves this through three core principles:
+Most AI coding assistants struggle with long-term code quality: they invent non-existent APIs, introduce unnecessary third-party packages, leave incomplete placeholders, and produce hard-to-maintain code. Projects 23 is built on one concept, **clean code and clean execution**, applied through four principles:
 
-1. **Native-First, Zero Bloat**: Always utilize platform standard libraries before adding third-party dependencies. When packages are necessary, select minimal, maintained packages with no known unpatched vulnerabilities, checked with a dependency audit.
-2. **Anti-Hallucination Protocol**: A 6-step verification protocol for symbols, package names, versions, CLI flags, and environment variables against the active environment or official registries, backed by `scripts/tech-lookup.mjs` for live registry and end-of-life data.
-3. **Complete Lifecycle and Domain Mastery**: 25 modular skills that guide agents through every phase of software development and across complex domains like ML, distributed systems, and real-time AI.
+1. **Clean Code and Clean Execution**: Code that the next engineer can read, change and trust ([rule 02](.agents/rules/02-clean-code.md)), produced by work that is predictable, minimal, verified step by step, reversible and leaves no mess ([rule 09](.agents/rules/09-clean-execution.md)). This repository holds itself to the same standard: CI enforces cyclomatic complexity of 10 or less and nesting depth of 3 or less on its own code.
+2. **Native-First, Zero Bloat**: Always utilize platform standard libraries before adding third-party dependencies. When packages are necessary, select minimal, maintained packages with no known unpatched vulnerabilities, checked with a dependency audit.
+3. **Anti-Hallucination Protocol**: A 6-step verification protocol for symbols, package names, versions, CLI flags, and environment variables against the active environment or official registries, backed by `scripts/tech-lookup.mjs` for live registry and end-of-life data.
+4. **Complete Lifecycle and Domain Mastery**: 25 modular skills that guide agents through every phase of software development and across complex domains like ML, distributed systems, and real-time AI.
 
 ---
 
@@ -31,16 +32,17 @@ Projects 23 Architecture
 ========================
 
   +-------------------------------------------------------------------------+
-  | Core (Always Loaded): AGENTS.md (~137 lines)                            |
+  | Core (Always Loaded): AGENTS.md (~140 lines)                            |
   | Priorities, non-negotiables, workflow, indexes, operating conditions    |
   +-------------------------------------------------------------------------+
        |                                                 |
        v (links to)                                      v (links to)
   +-----------------------------------+             +-----------------------------------+
   | Rules (.agents/rules/)            |             | Skills (.agents/skills/)          |
-  | 8 normative rules:                |             | 25 on-demand step-by-step guides: |
-  | - 4 Always-On (core, clean code,  |             | - 10 Software Lifecycle Skills    |
-  |   verification, security)         |             | - 15 Mission-Critical Domains     |
+  | 9 normative rules:                |             | 25 on-demand step-by-step guides: |
+  | - 5 Always-On (core, clean code,  |             | - 10 Software Lifecycle Skills    |
+  |   verification, security, clean   |             |                                   |
+  |   execution)                      |             | - 15 Mission-Critical Domains     |
   | - 4 On-Demand (dependencies,      |             |                                   |
   |   errors, testing, git workflow)  |             | + Verified assets, templates, and |
   |                                   |             |   sector reference standards      |
@@ -57,8 +59,8 @@ Projects 23 Architecture
 
 | Layer | Location | Loaded | Contents |
 | :--- | :--- | :--- | :--- |
-| **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 137 lines) |
-| **Rules** | [`.agents/rules/`](.agents/rules/) | Always (4) or when relevant (4) | Principles, clean code, verification, security, dependencies, error handling, testing, Git workflow |
+| **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 140 lines) |
+| **Rules** | [`.agents/rules/`](.agents/rules/) | Always (5) or when relevant (4) | Principles, clean code, verification, security, clean execution, dependencies, error handling, testing, Git workflow |
 | **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 25 step-by-step procedures (10 lifecycle, 15 domain) with verified templates and references |
 | **Adapters** | `CLAUDE.md`, `GEMINI.md`, `.gemini/settings.json`, `.github/copilot-instructions.md`, `.aider.conf.yml` | Per tool | Standard loaders connecting each tool to the single core |
 | **Mirror** | `.claude/skills/` | Generated | Automated copy of skills for Claude Code and Cline; kept in sync via script |
@@ -166,6 +168,7 @@ Projects 23 conforms to the open [Agent Skills specification](https://agentskill
 
 Every commit and pull request to Projects 23 is automatically validated through [.github/workflows/validate.yml](.github/workflows/validate.yml):
 
+- **Clean-Code Lint**: ESLint in `tools/lint` fails the build on any function above cyclomatic complexity 10, nesting depth 3, or 4 parameters in this repository's own scripts and Node.js template; Ruff enforces the same complexity limit in the Python templates.
 - **Validator and Lookup Self-Tests & Spec Checks**: Full frontmatter syntax parsing, size budget verification, link validity across all Markdown files, and mirror drift detection.
 - **Workflow & Shell Security Audits**: ShellCheck for shell scripts, Actionlint for workflow syntax, and offline Zizmor security audits for GitHub Actions workflows.
 - **Runnable Service Templates**:

@@ -26,7 +26,7 @@ Every VS Code extension ID below was checked against the Visual Studio Marketpla
 | :--- | :--- |
 | Runtime and version | Node.js (pin with `.nvmrc` and `engines`); version managers: nvm, fnm, Volta, mise |
 | Package manager | npm (`npm ci` in CI), pnpm, Yarn, or Bun; commit the lockfile |
-| Format and lint | Prettier + ESLint with `typescript-eslint`, or Biome (`@biomejs/biome`) for both |
+| Format and lint | Prettier + ESLint with `typescript-eslint`, or Biome (`@biomejs/biome`) for both. `typescript-eslint` 8 declares the peer range `typescript >=4.8.4 <6.1.0` (checked 2026-10-16), so with TypeScript 7 either use Biome or give the linter its own TypeScript below 6.1 (this repository's `tools/lint` does that) |
 | Types | `typescript` with `strict: true`; `tsc --noEmit` in CI |
 | Tests | `node --test`, Vitest, or Jest; Playwright for browsers |
 | Unused code and dependencies | `knip` |

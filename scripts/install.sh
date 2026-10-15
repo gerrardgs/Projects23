@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs the UCNA-Spec agent rules and skills into a project without overwriting existing files.
+# Installs the Projects 23 agent rules and skills into a project without overwriting existing files.
 #
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/gerrardgs/Projects23/main/scripts/install.sh | bash
@@ -74,14 +74,14 @@ WORK_DIR="$(mktemp -d)"
 trap 'rm -rf "$WORK_DIR"' EXIT
 
 if [ -n "$SOURCE_DIR" ]; then
-  [ -f "$SOURCE_DIR/AGENTS.md" ] || die "--source does not look like a UCNA-Spec checkout: $SOURCE_DIR"
+  [ -f "$SOURCE_DIR/AGENTS.md" ] || die "--source does not look like a Projects 23 checkout: $SOURCE_DIR"
   SOURCE_DIR="$(cd "$SOURCE_DIR" && pwd)"
-  printf 'Installing UCNA-Spec from %s\n' "$SOURCE_DIR"
+  printf 'Installing Projects 23 from %s\n' "$SOURCE_DIR"
 else
   command -v curl >/dev/null 2>&1 || die "curl is required"
   command -v tar >/dev/null 2>&1 || die "tar is required"
   ARCHIVE_URL="https://github.com/${REPOSITORY}/archive/${REF}.tar.gz"
-  printf 'Downloading UCNA-Spec (%s) from %s\n' "$REF" "$ARCHIVE_URL"
+  printf 'Downloading Projects 23 (%s) from %s\n' "$REF" "$ARCHIVE_URL"
   curl -fsSL "$ARCHIVE_URL" -o "$WORK_DIR/spec.tar.gz" || die "download failed; check the --ref value and your network"
   mkdir "$WORK_DIR/extract"
   tar -xzf "$WORK_DIR/spec.tar.gz" -C "$WORK_DIR/extract"

@@ -1,4 +1,4 @@
-# Contributing to UCNA-Spec
+# Contributing to Projects 23
 
 How to add or change rules, skills and templates without breaking any of the tools that load them.
 

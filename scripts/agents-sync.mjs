@@ -56,21 +56,30 @@ export function parseFrontmatter(text) {
   const data = {};
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
-    if (line.trim() === "" || line.trimStart().startsWith("#")) continue;
+    if (isBlankOrComment(line)) continue;
     const pair = /^([A-Za-z0-9_-]+):(?:\s+(.*))?$/.exec(line);
-    if (pair === null) {
-      throw new Error(`unsupported frontmatter line ${index + 1}: "${line}"`);
-    }
+    if (pair === null) throw new Error(`unsupported frontmatter line ${index + 1}: "${line}"`);
     const [, key, rawValue = ""] = pair;
     if (Object.hasOwn(data, key)) throw new Error(`duplicate key "${key}"`);
-    const nested = [];
-    while (index + 1 < lines.length && (/^\s+\S/.test(lines[index + 1]) || lines[index + 1].trim() === "")) {
-      index += 1;
-      nested.push(lines[index]);
-    }
+    const nested = indentedLinesAfter(lines, index);
+    index += nested.length;
     data[key] = parseValue(key, rawValue.trim(), nested);
   }
   return { data, body: text.slice(match[0].length) };
+}
+
+function isBlankOrComment(line) {
+  return line.trim() === "" || line.trimStart().startsWith("#");
+}
+
+/** The indented (or blank) lines that belong to the key on line `index`. */
+function indentedLinesAfter(lines, index) {
+  const nested = [];
+  for (let next = index + 1; next < lines.length; next += 1) {
+    if (!/^\s+\S/.test(lines[next]) && lines[next].trim() !== "") break;
+    nested.push(lines[next]);
+  }
+  return nested;
 }
 
 function parseValue(key, value, nested) {
@@ -207,78 +216,95 @@ async function checkMirror(mirror, skillNames) {
   }
 }
 
-async function validateSkill(name) {
-  const skillFile = path.join(SOURCE_SKILLS, name, "SKILL.md");
-  if (!existsSync(skillFile)) {
-    fail(path.join(SOURCE_SKILLS, name), "missing SKILL.md");
-    return;
-  }
-  let parsed;
-  try {
-    parsed = parseFrontmatter(await readFile(skillFile, "utf8"));
-  } catch (error) {
-    fail(skillFile, `invalid frontmatter: ${error.message}`);
-    return;
-  }
-  const { data, body } = parsed;
-  if (data === null) {
-    fail(skillFile, "missing YAML frontmatter");
-    return;
-  }
-  const skillName = data.name;
-  if (typeof skillName !== "string" || skillName.length === 0 || skillName.length > SKILL_NAME_MAX) {
-    fail(skillFile, `name must be 1-${SKILL_NAME_MAX} characters`);
-  } else if (!SKILL_NAME_PATTERN.test(skillName)) {
-    fail(skillFile, "name may contain only lowercase letters, digits and single hyphens, not at the start or end");
-  } else if (skillName !== name) {
-    fail(skillFile, `name "${skillName}" must match its directory name "${name}"`);
-  }
-  if (typeof data.description !== "string" || data.description.length === 0) {
-    fail(skillFile, "description is required");
-  } else if (data.description.length > SKILL_DESCRIPTION_MAX) {
-    fail(skillFile, `description is ${data.description.length} characters; maximum is ${SKILL_DESCRIPTION_MAX}`);
-  }
-  if (data.compatibility !== undefined && (typeof data.compatibility !== "string" || data.compatibility.length > SKILL_COMPATIBILITY_MAX)) {
-    fail(skillFile, `compatibility must be a string of at most ${SKILL_COMPATIBILITY_MAX} characters`);
+/** Pure check of one skill against the Agent Skills specification. Returns error and warning messages. */
+export function skillProblems(directoryName, data, body) {
+  const problems = [nameProblem(directoryName, data.name), descriptionProblem(data.description)];
+  if (data.compatibility !== undefined && !isShortString(data.compatibility, SKILL_COMPATIBILITY_MAX)) {
+    problems.push(`compatibility must be a string of at most ${SKILL_COMPATIBILITY_MAX} characters`);
   }
   if (data.metadata !== undefined && (typeof data.metadata !== "object" || Array.isArray(data.metadata))) {
-    fail(skillFile, "metadata must be a map of string keys to string values");
+    problems.push("metadata must be a map of string keys to string values");
   }
   const bodyLines = body.split("\n").length;
-  if (bodyLines > SKILL_BODY_MAX_LINES) {
-    warn(skillFile, `SKILL.md body has ${bodyLines} lines; keep it under ${SKILL_BODY_MAX_LINES} and move detail to references/`);
+  const advisories = bodyLines > SKILL_BODY_MAX_LINES
+    ? [`SKILL.md body has ${bodyLines} lines; keep it under ${SKILL_BODY_MAX_LINES} and move detail to references/`]
+    : [];
+  return { errors: problems.filter(Boolean), warnings: advisories };
+}
+
+function isShortString(value, maximum) {
+  return typeof value === "string" && value.length > 0 && value.length <= maximum;
+}
+
+function nameProblem(directoryName, name) {
+  if (!isShortString(name, SKILL_NAME_MAX)) return `name must be 1-${SKILL_NAME_MAX} characters`;
+  if (!SKILL_NAME_PATTERN.test(name)) {
+    return "name may contain only lowercase letters, digits and single hyphens, not at the start or end";
+  }
+  if (name !== directoryName) return `name "${name}" must match its directory name "${directoryName}"`;
+  return undefined;
+}
+
+function descriptionProblem(description) {
+  if (typeof description !== "string" || description.length === 0) return "description is required";
+  if (description.length > SKILL_DESCRIPTION_MAX) {
+    return `description is ${description.length} characters; maximum is ${SKILL_DESCRIPTION_MAX}`;
+  }
+  return undefined;
+}
+
+/** Pure check of one rule's frontmatter and size. */
+export function ruleProblems(data, characterCount) {
+  const problems = [];
+  if (characterCount > RULE_MAX_CHARS) {
+    problems.push(`${characterCount} characters; keep rule files at or under ${RULE_MAX_CHARS}`);
+  }
+  if (data === null || !RULE_TRIGGERS.has(data.trigger)) {
+    problems.push(`needs frontmatter "trigger: ${[...RULE_TRIGGERS].join(" | ")}" (Antigravity silently ignores rules without it)`);
+    return problems;
+  }
+  if (data.trigger === "model_decision" && !data.description) problems.push("model_decision rules need a description");
+  if (data.trigger === "glob" && !data.globs && !data.glob) problems.push("glob rules need globs");
+  return problems;
+}
+
+/** Reads and parses frontmatter, reporting a failure and returning null when that is impossible. */
+async function readFrontmatter(file) {
+  try {
+    return parseFrontmatter(await readFile(file, "utf8"));
+  } catch (error) {
+    fail(file, error.code === "ENOENT" ? "missing" : `invalid frontmatter: ${error.message}`);
+    return null;
   }
 }
 
+async function validateSkill(name) {
+  const skillFile = path.join(SOURCE_SKILLS, name, "SKILL.md");
+  const parsed = await readFrontmatter(skillFile);
+  if (parsed === null) return;
+  if (parsed.data === null) {
+    fail(skillFile, "missing YAML frontmatter");
+    return;
+  }
+  const { errors: skillErrors, warnings: skillWarnings } = skillProblems(name, parsed.data, parsed.body);
+  for (const message of skillErrors) fail(skillFile, message);
+  for (const message of skillWarnings) warn(skillFile, message);
+}
+
 async function validateRules() {
-  let alwaysOnChars = 0;
-  const alwaysOnFiles = [];
-  const ruleFiles = [];
+  const result = { alwaysOnChars: 0, alwaysOnFiles: [], ruleFiles: [] };
   for (const file of (await listFiles(RULES_DIR)).filter((candidate) => candidate.endsWith(".md"))) {
-    const text = await readFile(file, "utf8");
-    if (text.length > RULE_MAX_CHARS) {
-      fail(file, `${text.length} characters; keep rule files at or under ${RULE_MAX_CHARS}`);
-    }
-    let data;
-    try {
-      ({ data } = parseFrontmatter(text));
-    } catch (error) {
-      fail(file, `invalid frontmatter: ${error.message}`);
-      continue;
-    }
-    ruleFiles.push(file);
-    if (data === null || !RULE_TRIGGERS.has(data.trigger)) {
-      fail(file, `needs frontmatter "trigger: ${[...RULE_TRIGGERS].join(" | ")}" (Antigravity silently ignores rules without it)`);
-      continue;
-    }
-    if (data.trigger === "model_decision" && !data.description) fail(file, "model_decision rules need a description");
-    if (data.trigger === "glob" && !data.globs && !data.glob) fail(file, "glob rules need globs");
-    if (data.trigger === "always_on") {
-      alwaysOnChars += text.length;
-      alwaysOnFiles.push(file);
+    const parsed = await readFrontmatter(file);
+    if (parsed === null) continue;
+    result.ruleFiles.push(file);
+    const characterCount = (await readFile(file, "utf8")).length;
+    for (const message of ruleProblems(parsed.data, characterCount)) fail(file, message);
+    if (parsed.data?.trigger === "always_on") {
+      result.alwaysOnChars += characterCount;
+      result.alwaysOnFiles.push(file);
     }
   }
-  return { alwaysOnChars, alwaysOnFiles, ruleFiles };
+  return result;
 }
 
 /** AGENTS.md is the router for tools that do not load .agents/ natively, so it must link every rule and skill. */
@@ -403,5 +429,10 @@ async function main() {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  // Exit quietly when the reader closes the pipe early (for example `| head -1`).
+  process.stdout.on("error", (error) => {
+    if (error.code !== "EPIPE") throw error;
+    process.exit(process.exitCode ?? 0);
+  });
   await main();
 }
