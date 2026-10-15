@@ -1,5 +1,43 @@
 # Changelog
 
+## 2.3.0: API integration for every sector, and back-office IT operations (2026-10-15)
+
+### Added
+
+- `api-integration` skill: authentication per RFC 9700 (OAuth 2.0 security BCP), webhooks (signature, replay window, deduplication, asynchronous processing), safe retries with idempotency keys, rate limits, pagination, data mapping, sandbox and contract testing, monitoring and replay.
+- `api-integration/references/sector-standards.md`: cross-sector building blocks and standards for 13 sectors: payments (PCI DSS v4.0.1), banking and open finance (FAPI 2.0 Final, ISO 20022), healthcare (FHIR R5, SMART App Launch 2.2.0, HL7 v2, DICOM), government identity, accounting and ERP (Peppol BIS Billing 3.0 on EN 16931), retail and logistics (X12, EDIFACT, GS1), telecommunications (CAMARA, TM Forum), education (LTI 1.3), geospatial (OGC API - Features, GeoJSON), IoT and industrial (MQTT 5.0, OPC UA), email and messaging (SPF, DKIM, DMARC), travel and insurance, AI providers.
+- `api-integration/assets/python-integration-kit/`: standard-library-only resilient HTTP client and Standard Webhooks verifier with 18 tests. It passes Ruff, `mypy --strict` and Bandit on Python 3.11, 3.13 and 3.14, and is signature-compatible with the official `standardwebhooks` library 1.1.0 in both directions. CI job `integration-kit` added.
+- `it-operations` skill: identity and SSO, MFA, SCIM joiner-mover-leaver, endpoints and patching, network segmentation and zero trust, certificates (ACME), email authentication, 3-2-1 backups with restore tests, monitoring and SIEM, IT service management, and frameworks (CIS Controls v8.1, NIST CSF 2.0, ISO/IEC 27001, SOC 2).
+- Two more roles in `.agents/domain-coverage.md` (integration engineer; system administrator and IT operations) and an industry-sectors section. Systems administration moved from "domains without a dedicated skill" to the new skill.
+- Security domain standards: OAuth and API integration, payments, and organization-wide IT security rows.
+
+### Facts that changed recently (checked on 2026-10-15)
+
+- DMARC is now RFC 9989, with reporting in RFC 9990 and RFC 9991 (May 2026); RFC 7489 is obsolete.
+- TLS 1.3 is now RFC 9846 (July 2026), which obsoletes RFC 8446.
+- OAuth 2.1 is still an Internet-Draft (version 16). The IETF `Idempotency-Key` header draft expired, and the `RateLimit` header fields are still a draft.
+- Not confirmed from official pages (403 or no version shown), so cited without a version: ITIL, the ISO/IEC 27001 edition, ISO 20022 message versions, TM Forum Open API versions.
+
+## 2.2.0: domain coverage across backend, data, AI, cloud, security and QA (2026-10-15)
+
+### Added
+
+- Thirteen domain skills, each with a checklist, verified tool names and a "done when" list:
+  `backend-engineering` (with API-design and data-store references), `web-frontend-engineering`, `mobile-engineering`, `data-engineering` (with tooling reference), `data-analysis`, `machine-learning` (with tooling reference and a tested scikit-learn baseline template), `llm-applications`, `rag-systems`, `ai-agent-systems`, `computer-vision`, `ml-inference-serving`, `cloud-infrastructure` (with tooling reference) and `quality-assurance`.
+- `security-hardening/references/domain-standards.md`: which standard to apply per system type (OWASP Top 10:2025, ASVS 5.0, API Security Top 10 2023, MASVS, LLM Top 10 2025, Agentic Top 10 for 2026, MCP security best practices, NIST AI RMF and AI 600-1, SLSA 1.2) plus regulation pointers.
+- Toolchains for PHP, Ruby, Swift, Dart/Flutter, SQL and notebooks, shell and PowerShell, and infrastructure code in `project-bootstrap/references/toolchains.md`.
+- `.agents/domain-coverage.md` (installed with the spec, so `AGENTS.md` can link it): 19 roles mapped to skills, and verified starting points for domains without a dedicated skill (embedded and IoT, games, smart contracts, desktop, systems administration, robotics, HPC).
+- `AGENTS.md`: a domain-skills table next to the lifecycle table; the operational manual routes 30 scenarios.
+- CI job `ml-template` and a Dependabot entry for the ML template's pinned requirement.
+
+### Verification for this release
+
+- 110 PyPI packages, 20 npm packages and 90 GitHub repositories checked for existence (3 moved repositories are cited by package name only); 31 additional VS Code extension IDs verified on the Marketplace (`dorzey.vscode-sqlfluff` does not exist and is not used).
+- Standards confirmed on their official pages: OpenAPI 3.2.1, RFC 9457, WCAG 2.2 (12 December 2024), Core Web Vitals thresholds, OWASP API Security Top 10 2023, MASVS control groups, MCP specification 2026-07-28 and its security best practices, OWASP LLM Top 10 2025, OWASP Top 10 for Agentic Applications for 2026, Kubernetes 1.35 to 1.37, NIST AI 100-1 and AI 600-1, SLSA 1.2, Terraform BSL 1.1 and OpenTofu MPL 2.0.
+- Recommendations avoided after checking: TorchServe (archived 7 August 2025). Licence warnings added for `ultralytics` (AGPL-3.0) and Soda Core (proprietary licence metadata).
+- ML baseline template: tests pass on Python 3.11, 3.13 and 3.14 with scikit-learn 1.9.1; Ruff clean.
+- `node scripts/agents-sync.mjs --check --all-markdown`: 22 skills, 0 errors, 0 warnings. Official `agentskills validate`: all 22 valid. PyYAML: all frontmatter valid. All 48 external links in the spec and docs return HTTP 200.
+
 ## 2.1.0: full lifecycle coverage and second audit (2026-10-14)
 
 ### Fixed: defects found in the second audit

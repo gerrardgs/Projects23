@@ -8,7 +8,7 @@ metadata:
 
 # Security Hardening
 
-The always-on baseline is [06-security](../../rules/06-security.md). This skill adds the procedure. Scanner commands are in [references/tools.md](references/tools.md).
+The always-on baseline is [06-security](../../rules/06-security.md). This skill adds the procedure. Scanner commands are in [references/tools.md](references/tools.md); the standard to use for each kind of system (web, API, mobile, LLM, agents, cloud, supply chain) and regulation pointers are in [references/domain-standards.md](references/domain-standards.md).
 
 ## 1. Threat-model before building
 

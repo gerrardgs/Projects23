@@ -1,6 +1,6 @@
 ---
 name: project-bootstrap
-description: Set up a new repository or service from an empty folder with the right runtime version, package manager, formatter, linter, type checker, test runner, security scanning, editor extensions, CI, and documentation, for TypeScript/JavaScript, Python, Go, Rust, Java/Kotlin, C#/.NET or C/C++. Use when starting a new project, adding tooling to a project that has none, choosing a language toolchain, or onboarding a repository to these agent rules.
+description: Set up a new repository or service from an empty folder with the right runtime version, package manager, formatter, linter, type checker, test runner, security scanning, editor extensions, CI, and documentation, for TypeScript/JavaScript, Python, Go, Rust, Java/Kotlin, C#/.NET, C/C++, PHP, Ruby, Swift, Dart/Flutter, SQL, shell or infrastructure code. Use when starting a new project, adding tooling to a project that has none, choosing a language toolchain, or onboarding a repository to these agent rules.
 license: MIT
 metadata:
   version: "1.0.0"

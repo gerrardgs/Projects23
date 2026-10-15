@@ -23,6 +23,21 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 | Commit, pull request, release | rule [08](../.agents/rules/08-git-workflow.md) | |
 | Documentation only | rule [01](../.agents/rules/01-core-principles.md) section 7 | [project-bootstrap assets](../.agents/skills/project-bootstrap/assets/) (README and ADR templates) |
 | Question about the code, no change requested | rule [03](../.agents/rules/03-verification.md) | Answer from the code you read, with file and line references; change nothing |
+| New or changed API endpoint, schema, query or job | [backend-engineering](../.agents/skills/backend-engineering/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md), [security-hardening](../.agents/skills/security-hardening/SKILL.md) |
+| Web page or component | [web-frontend-engineering](../.agents/skills/web-frontend-engineering/SKILL.md) | [quality-assurance](../.agents/skills/quality-assurance/SKILL.md) (accessibility, cross-browser) |
+| Mobile app change or store release | [mobile-engineering](../.agents/skills/mobile-engineering/SKILL.md) | [deploy-and-release](../.agents/skills/deploy-and-release/SKILL.md) |
+| Data pipeline, ETL/ELT, streaming job | [data-engineering](../.agents/skills/data-engineering/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md) |
+| Analysis, metric, experiment or chart | [data-analysis](../.agents/skills/data-analysis/SKILL.md) | |
+| Train, evaluate or improve a model | [machine-learning](../.agents/skills/machine-learning/SKILL.md) | [computer-vision](../.agents/skills/computer-vision/SKILL.md) for images and video |
+| LLM or generative AI feature | [llm-applications](../.agents/skills/llm-applications/SKILL.md) | [rag-systems](../.agents/skills/rag-systems/SKILL.md), [ai-agent-systems](../.agents/skills/ai-agent-systems/SKILL.md) |
+| Chat over documents, semantic search | [rag-systems](../.agents/skills/rag-systems/SKILL.md) | [llm-applications](../.agents/skills/llm-applications/SKILL.md) |
+| Agent, tool calling, MCP server | [ai-agent-systems](../.agents/skills/ai-agent-systems/SKILL.md) | rule [06](../.agents/rules/06-security.md) |
+| Deploy a model, cut inference latency, real-time AI | [ml-inference-serving](../.agents/skills/ml-inference-serving/SKILL.md) | [cloud-infrastructure](../.agents/skills/cloud-infrastructure/SKILL.md) |
+| Infrastructure, Kubernetes, IAM, SLOs, cloud cost | [cloud-infrastructure](../.agents/skills/cloud-infrastructure/SKILL.md) | [ci-cd-pipeline](../.agents/skills/ci-cd-pipeline/SKILL.md) |
+| Test plan, load test, release sign-off | [quality-assurance](../.agents/skills/quality-assurance/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md) |
+| Connect to a third-party API, receive webhooks, build a connector | [api-integration](../.agents/skills/api-integration/SKILL.md) | its [sector standards](../.agents/skills/api-integration/references/sector-standards.md) |
+| Identity, SSO, endpoints, network, email, backup, help desk | [it-operations](../.agents/skills/it-operations/SKILL.md) | [security-hardening](../.agents/skills/security-hardening/SKILL.md) |
+| A domain not listed here | [domain coverage](../.agents/domain-coverage.md) section 4 | The lifecycle skill for the phase |
 
 ## 2. Execution loop for any scenario
 

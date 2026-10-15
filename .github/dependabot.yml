@@ -40,3 +40,15 @@ updates:
     ignore:
       - dependency-name: "node"
         update-types: ["version-update:semver-major"]
+  - package-ecosystem: pip
+    directory: /.agents/skills/machine-learning/assets/baseline-classifier
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+  - package-ecosystem: pip
+    directory: /.agents/skills/api-integration/assets/python-integration-kit
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7

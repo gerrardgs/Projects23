@@ -2,14 +2,29 @@
   "generatedBy": "scripts/agents-sync.mjs",
   "source": ".agents/skills",
   "skills": [
+    "ai-agent-systems",
+    "api-integration",
+    "backend-engineering",
     "change-existing-code",
     "ci-cd-pipeline",
+    "cloud-infrastructure",
+    "computer-vision",
+    "data-analysis",
+    "data-engineering",
     "deploy-and-release",
+    "it-operations",
+    "llm-applications",
+    "machine-learning",
+    "ml-inference-serving",
+    "mobile-engineering",
     "native-from-scratch",
     "project-bootstrap",
+    "quality-assurance",
+    "rag-systems",
     "rigorous-code-audit",
     "security-hardening",
     "systematic-debugging",
-    "test-engineering"
+    "test-engineering",
+    "web-frontend-engineering"
   ]
 }

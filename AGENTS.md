@@ -56,6 +56,8 @@ If your tool does not load these folders automatically, **open the matching file
 
 ## 5. Skills index: pick the procedure for the task
 
+### Lifecycle skills (every kind of software)
+
 | Phase | Skill | Use it when |
 | :--- | :--- | :--- |
 | Start | [project-bootstrap](.agents/skills/project-bootstrap/SKILL.md) | Creating a repository: runtime, toolchain, editor extensions, CI, docs |
@@ -68,7 +70,27 @@ If your tool does not load these folders automatically, **open the matching file
 | Automate | [ci-cd-pipeline](.agents/skills/ci-cd-pipeline/SKILL.md) | CI workflows, release automation, Dependabot |
 | Ship | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Containers, configuration, migrations, rollout, monitoring, rollback |
 
-A task often spans several phases. A bug fix, for example, uses debugging, then testing, then review.
+### Domain skills (load together with the lifecycle skill for the phase)
+
+| Domain | Skill | Use it when |
+| :--- | :--- | :--- |
+| Backend | [backend-engineering](.agents/skills/backend-engineering/SKILL.md) | APIs (REST, GraphQL, gRPC), databases, queues, caching, jobs |
+| Integration | [api-integration](.agents/skills/api-integration/SKILL.md) | Third-party APIs in any sector, OAuth, webhooks, retries, EDI, FHIR, payments |
+| Web | [web-frontend-engineering](.agents/skills/web-frontend-engineering/SKILL.md) | Web UIs: accessibility, Core Web Vitals, browser security |
+| Mobile | [mobile-engineering](.agents/skills/mobile-engineering/SKILL.md) | Android, iOS, Flutter, React Native apps and store releases |
+| Data platform | [data-engineering](.agents/skills/data-engineering/SKILL.md) | Batch and streaming pipelines, big data, lakehouse, data quality |
+| Analytics | [data-analysis](.agents/skills/data-analysis/SKILL.md) | SQL and DataFrame analysis, statistics, experiments, charts |
+| ML / DL | [machine-learning](.agents/skills/machine-learning/SKILL.md) | Data science, model training and evaluation, MLOps |
+| GenAI | [llm-applications](.agents/skills/llm-applications/SKILL.md) | LLM features: prompts, structured output, evals, guardrails |
+| RAG | [rag-systems](.agents/skills/rag-systems/SKILL.md) | Retrieval over documents, vector search, grounded answers |
+| Agents | [ai-agent-systems](.agents/skills/ai-agent-systems/SKILL.md) | Tool-using agents, MCP servers, multi-agent systems |
+| Vision | [computer-vision](.agents/skills/computer-vision/SKILL.md) | Images, video, detection, segmentation, OCR, edge vision |
+| Real-time AI | [ml-inference-serving](.agents/skills/ml-inference-serving/SKILL.md) | Model serving, low latency, streaming, GPUs, edge inference |
+| Cloud / SRE | [cloud-infrastructure](.agents/skills/cloud-infrastructure/SKILL.md) | IaC, Kubernetes, IAM, networking, SLOs, DR, cost |
+| QA | [quality-assurance](.agents/skills/quality-assurance/SKILL.md) | Test strategy, load, accessibility, contract, DAST, release readiness |
+| IT operations | [it-operations](.agents/skills/it-operations/SKILL.md) | Identity and SSO, endpoints, networks, email, backup, ITSM, IT security frameworks |
+
+A task often spans several skills. A bug fix in an API, for example, uses systematic-debugging, backend-engineering, test-engineering, then rigorous-code-audit. [.agents/domain-coverage.md](.agents/domain-coverage.md) maps roles and domains to skills, including domains without a dedicated skill.
 
 ## 6. Operating conditions
 

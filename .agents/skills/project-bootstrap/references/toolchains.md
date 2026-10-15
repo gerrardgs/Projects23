@@ -97,3 +97,49 @@ Every VS Code extension ID below was checked against the Visual Studio Marketpla
 | Runtime checks | AddressSanitizer and UndefinedBehaviorSanitizer (`-fsanitize=address,undefined`) in test builds |
 | Tests | GoogleTest or Catch2, run with `ctest` |
 | VS Code | `llvm-vs-code-extensions.vscode-clangd` or `ms-vscode.cpptools`, `vadimcn.vscode-lldb` |
+
+## PHP
+
+| Need | Tools |
+| :--- | :--- |
+| Packages | Composer (commit `composer.lock`); `composer audit` for known vulnerabilities |
+| Format and lint | PHP-CS-Fixer; static analysis with PHPStan or Psalm |
+| Tests | PHPUnit |
+| VS Code | `bmewburn.vscode-intelephense-client`, `xdebug.php-debug` |
+
+## Ruby
+
+| Need | Tools |
+| :--- | :--- |
+| Packages | Bundler (commit `Gemfile.lock`); `bundler-audit` for known vulnerabilities |
+| Format and lint | RuboCop |
+| Tests | RSpec or Minitest |
+| Security (Rails) | Brakeman |
+| VS Code | `Shopify.ruby-lsp` |
+
+## Swift and Dart / Flutter
+
+| Need | Tools |
+| :--- | :--- |
+| Swift | Swift Package Manager, swift-format, SwiftLint, Swift Testing and XCTest; VS Code `swiftlang.swift-vscode` (Xcode for app development) |
+| Dart / Flutter | `dart format`, `dart analyze` (or `flutter analyze`), `dart test` / `flutter test`; VS Code `Dart-Code.dart-code`, `Dart-Code.flutter` |
+| Mobile specifics | See the [mobile-engineering](../../mobile-engineering/SKILL.md) skill |
+
+## SQL, notebooks and data
+
+| Need | Tools |
+| :--- | :--- |
+| SQL lint and format | SQLFluff |
+| Notebooks | JupyterLab or marimo; `nbstripout` before committing; `nbqa` to run linters on notebooks |
+| VS Code | `ms-toolsai.jupyter`, `ms-toolsai.datawrangler`, `mtxr.sqltools`, `ms-ossdata.vscode-pgsql`, `mechatroner.rainbow-csv` |
+
+## Shell and PowerShell scripts
+
+| Need | Tools |
+| :--- | :--- |
+| Bash / POSIX shell | Start scripts with `set -euo pipefail` (Bash), quote every variable, lint with ShellCheck, format with `shfmt`, test with bats-core |
+| PowerShell | PSScriptAnalyzer for linting, Pester for tests; VS Code `ms-vscode.powershell` |
+
+## Infrastructure as code
+
+Terraform or OpenTofu (`fmt`, `validate`, `tflint`), Kubernetes manifests, Helm and Kustomize: see the [cloud-infrastructure](../../cloud-infrastructure/SKILL.md) skill and its tooling reference.

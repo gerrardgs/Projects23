@@ -3,100 +3,191 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Format: Agent Skills](https://img.shields.io/badge/Format-Agent%20Skills-blue.svg)](https://agentskills.io/specification)
 [![Validate](https://github.com/gerrardgs/Projects23/actions/workflows/validate.yml/badge.svg)](https://github.com/gerrardgs/Projects23/actions/workflows/validate.yml)
+[![Skills: 24](https://img.shields.io/badge/Skills-24%20Verified-success.svg)](.agents/skills/)
+[![Rules: 8](https://img.shields.io/badge/Rules-8%20Core-blueviolet.svg)](.agents/rules/)
 
-Free, model-agnostic rules and skills that make AI coding agents work like an experienced engineer. They cover the whole lifecycle, from an empty folder through testing, debugging, security, CI/CD and deployment, and safe changes to existing code. One source of truth, loaded by Claude Code, Codex, Gemini CLI, Antigravity, Cursor, Windsurf, GitHub Copilot, Cline, Aider, or any chat model you paste it into.
+A universal, production-ready AI agent coding framework and standard designed to make AI coding models work with the discipline of senior staff software engineers. It eliminates erratic, bloated code and hallucinations by enforcing standard-library-first design, strict verification protocols, and clean architectural boundaries across the entire software development lifecycle and 15 technical domains.
 
-Every version, command, package name, extension ID and template in this repository was checked against official sources or by running it. Each time-sensitive fact carries its verification date.
+Works out of the box with Google Antigravity, Claude Code, OpenAI Codex, Gemini CLI, Cursor, Windsurf/Devin, GitHub Copilot, Cline, Aider, or any chat model you paste it into.
 
-## What is inside
+Every command, version, package name, extension identifier, and template in this repository has been verified against official sources or executed in CI.
+
+---
+
+## Why Projects 23
+
+Most AI coding assistants struggle with long-term code quality: they invent non-existent APIs, introduce unnecessary third-party packages, leave incomplete placeholders, and produce hard-to-maintain code. Projects 23 solves this through three core principles:
+
+1. **Native-First, Zero Bloat**: Always utilize platform standard libraries before adding third-party dependencies. When packages are necessary, select minimal, audited, zero-vulnerability packages.
+2. **Anti-Hallucination Protocol**: Strict 5-step verification of all symbols, package names, versions, CLI flags, and environment variables against active environments or official registries.
+3. **Complete Lifecycle and Domain Mastery**: 24 modular skills that guide agents through every phase of software development and across complex domains like ML, distributed systems, and real-time AI.
+
+---
+
+## What Is Inside
+
+```text
+Projects 23 Architecture
+========================
+
+  +-------------------------------------------------------------------------+
+  | Core (Always Loaded): AGENTS.md (~137 lines)                            |
+  | Priorities, non-negotiables, workflow, indexes, operating conditions    |
+  +-------------------------------------------------------------------------+
+       |                                                 |
+       v (links to)                                      v (links to)
+  +-----------------------------------+             +-----------------------------------+
+  | Rules (.agents/rules/)            |             | Skills (.agents/skills/)          |
+  | 8 normative rules:                |             | 24 on-demand step-by-step guides: |
+  | - 4 Always-On (core, clean code,  |             | - 9 Software Lifecycle Skills     |
+  |   verification, security)         |             | - 15 Mission-Critical Domains     |
+  | - 4 On-Demand (dependencies,      |             |                                   |
+  |   errors, testing, git workflow)  |             | + Verified assets, templates, and |
+  |                                   |             |   sector reference standards      |
+  +-----------------------------------+             +-----------------------------------+
+       |                                                 |
+       +-----------------------+-------------------------+
+                               |
+                               v (auto-mirrored to)
+  +-------------------------------------------------------------------------+
+  | Tool Adapters & Mirrors                                                 |
+  | CLAUDE.md, GEMINI.md, .claude/skills/ (auto-sync), Copilot, Aider, etc. |
+  +-------------------------------------------------------------------------+
+```
 
 | Layer | Location | Loaded | Contents |
 | :--- | :--- | :--- | :--- |
-| Core | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 115 lines) |
-| Rules | [`.agents/rules/`](.agents/rules/) | Always (4) or when relevant (4) | Principles, clean code, verification, security, dependencies, error handling, testing, Git workflow |
-| Skills | [`.agents/skills/`](.agents/skills/) | When the task matches | Nine step-by-step procedures with verified templates and references |
-| Adapters | `CLAUDE.md`, `GEMINI.md`, `.gemini/settings.json`, `.github/copilot-instructions.md`, `.aider.conf.yml` | Per tool | Make each tool load the same core |
-| Mirror | `.claude/skills/` | Generated | Copy of the skills for Claude Code and Cline; never edit by hand |
-| Tooling | [`scripts/`](scripts/) | You or CI | Installer, and the sync and validation script |
-| Docs | [`docs/`](docs/) | Reference | Architecture, operational manual, anti-hallucination playbook, contributing guide |
+| **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 137 lines) |
+| **Rules** | [`.agents/rules/`](.agents/rules/) | Always (4) or when relevant (4) | Principles, clean code, verification, security, dependencies, error handling, testing, Git workflow |
+| **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 24 step-by-step procedures (9 lifecycle, 15 domain) with verified templates and references |
+| **Adapters** | `CLAUDE.md`, `GEMINI.md`, `.gemini/settings.json`, `.github/copilot-instructions.md`, `.aider.conf.yml` | Per tool | Standard loaders connecting each tool to the single core |
+| **Mirror** | `.claude/skills/` | Generated | Automated copy of skills for Claude Code and Cline; kept in sync via script |
+| **Tooling** | [`scripts/`](scripts/) | You or CI | Installer script, test runner, and mirror validator |
+| **Documentation** | [`docs/`](docs/) | Reference | Architectural design, operational manual, anti-hallucination playbook, contributing guidelines |
 
-### Skills: one per lifecycle phase
+---
+
+## Skills Catalog
+
+### 1. Software Lifecycle Skills (9 Skills)
+
+Procedures covering software from inception to production operation:
 
 | Phase | Skill | Highlights |
 | :--- | :--- | :--- |
-| Start | [project-bootstrap](.agents/skills/project-bootstrap/SKILL.md) | Toolchains for 7 language families, 32 VS Code extension IDs verified on the Marketplace, `.editorconfig`, `.gitattributes`, pre-commit with secret scanning, README and ADR templates |
-| Build | [native-from-scratch](.agents/skills/native-from-scratch/SKILL.md) | Standard-library-first design; runnable Node.js and Python services with tests, lockfile and Dockerfile |
-| Change | [change-existing-code](.agents/skills/change-existing-code/SKILL.md) | Characterization tests, small verified steps, upgrades, codemods, strangler fig |
-| Test | [test-engineering](.agents/skills/test-engineering/SKILL.md) | Test levels, determinism, property-based, fuzz and mutation testing, tools per language |
-| Debug | [systematic-debugging](.agents/skills/systematic-debugging/SKILL.md) | Reproduce, isolate, `git bisect`, debuggers and profilers, performance, incidents |
-| Review | [rigorous-code-audit](.agents/skills/rigorous-code-audit/SKILL.md) | Toolchain checks, OWASP Top 10:2025 checklist, verified and severity-ranked findings |
-| Secure | [security-hardening](.agents/skills/security-hardening/SKILL.md) | Threat modelling, OWASP ASVS 5.0, secrets, SAST, dependency and container scanning, SBOM |
-| Automate | [ci-cd-pipeline](.agents/skills/ci-cd-pipeline/SKILL.md) | GitHub Actions templates pinned to commit SHAs, least privilege, Dependabot with cooldown |
-| Ship | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Production checklist, containers, rollout strategies, zero-downtime migrations, observability, rollback |
+| **Start** | [project-bootstrap](.agents/skills/project-bootstrap/SKILL.md) | Toolchains for 7 language families, 32 verified VS Code extensions, `.editorconfig`, `.gitattributes`, pre-commit secret scanning, README and ADR templates |
+| **Build** | [native-from-scratch](.agents/skills/native-from-scratch/SKILL.md) | Standard-library-first architecture; runnable Node.js (TypeScript) and Python services with unit tests, lockfiles, and container configs |
+| **Change** | [change-existing-code](.agents/skills/change-existing-code/SKILL.md) | Characterization tests, small verified steps, dependency upgrades, automated codemods, and strangler fig migrations |
+| **Test** | [test-engineering](.agents/skills/test-engineering/SKILL.md) | Test pyramid, determinism, property-based testing, fuzz testing, mutation testing, and language-specific tooling |
+| **Debug** | [systematic-debugging](.agents/skills/systematic-debugging/SKILL.md) | Root cause isolation, `git bisect` recipes, profilers, memory leak detection, and production incident response |
+| **Review** | [rigorous-code-audit](.agents/skills/rigorous-code-audit/SKILL.md) | Toolchain verification, OWASP Top 10:2025 checklist, and severity-ranked audit findings |
+| **Secure** | [security-hardening](.agents/skills/security-hardening/SKILL.md) | Threat modelling, OWASP ASVS 5.0, secret rotation, SAST, dependency audits, container scanning, and SBOM generation |
+| **Automate** | [ci-cd-pipeline](.agents/skills/ci-cd-pipeline/SKILL.md) | GitHub Actions workflows pinned to commit SHAs, least-privilege token permissions, and Dependabot with cooldown timers |
+| **Ship** | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Production launch checklists, zero-downtime database migrations, canary/blue-green rollouts, observability, and rollback plans |
 
-## Install into a project
+### 2. Engineering Domain Skills (15 Skills)
 
-The installer adds only the spec files. It **never overwrites a file that already exists and differs** (it lists those for you to merge), and it never touches your README, LICENSE, CHANGELOG, `.gitignore` or workflows.
+Specialized checklists, design patterns, and runnable reference assets across major disciplines:
+
+| Domain | Skill | Highlights |
+| :--- | :--- | :--- |
+| **Backend** | [backend-engineering](.agents/skills/backend-engineering/SKILL.md) | REST/GraphQL/gRPC contracts (OpenAPI 3.2.1), RFC 9457 errors, OWASP API Security Top 10, idempotency keys, transactional outbox |
+| **Integration** | [api-integration](.agents/skills/api-integration/SKILL.md) | OAuth RFC 9700, signed webhooks, exponential backoff, rate limiting, and 13 sector standards (payments, banking FAPI 2.0, healthcare FHIR, EDI, telecom, IoT) |
+| **Web** | [web-frontend-engineering](.agents/skills/web-frontend-engineering/SKILL.md) | WCAG 2.2 AA accessibility, Core Web Vitals targets (LCP <= 2.5s, INP <= 200ms, CLS <= 0.1), modern browser security headers, responsive design |
+| **Mobile** | [mobile-engineering](.agents/skills/mobile-engineering/SKILL.md) | Kotlin/Compose, Swift/SwiftUI, Flutter, React Native; OWASP MASVS baseline, biometric auth, offline synchronization, app store checklists |
+| **Data Platform** | [data-engineering](.agents/skills/data-engineering/SKILL.md) | Idempotent batch and streaming pipelines, lakehouse architectures (Iceberg/Delta), data contracts, Great Expectations quality gates, data lineage |
+| **Analytics** | [data-analysis](.agents/skills/data-analysis/SKILL.md) | Metric definitions, join validation, hypothesis testing, A/B experimentation, Benjamini-Hochberg corrections, reproducible notebooks |
+| **Machine Learning** | [machine-learning](.agents/skills/machine-learning/SKILL.md) | Leakage-free split validation, baseline comparisons, scikit-learn verified pipeline, reproducibility seeds, fairness metrics, model cards |
+| **GenAI / LLM** | [llm-applications](.agents/skills/llm-applications/SKILL.md) | Structured JSON output schemas, prompt design, deterministic evaluation benchmarks, OWASP LLM Top 10:2025, token budgeting and caching |
+| **RAG Systems** | [rag-systems](.agents/skills/rag-systems/SKILL.md) | Context-aware chunking, hybrid keyword plus dense vector search, cross-encoder reranking, retrieval-time access control, faithfulness evals |
+| **AI Agents** | [ai-agent-systems](.agents/skills/ai-agent-systems/SKILL.md) | Tool design, Model Context Protocol (MCP) security, principle of least privilege, human approval gates, execution sandboxes, OWASP Agentic Top 10 |
+| **Computer Vision** | [computer-vision](.agents/skills/computer-vision/SKILL.md) | Dataset labelling hygiene, scene-level stratification, mAP/IoU metrics, model optimization (ONNX, TensorRT, OpenVINO, Core ML, LiteRT), video feeds |
+| **Real-time Serving** | [ml-inference-serving](.agents/skills/ml-inference-serving/SKILL.md) | High-throughput low-latency inference engines (vLLM, SGLang, Triton, KServe), dynamic batching, AWQ/FP8 quantization, training-serving parity |
+| **Cloud / SRE** | [cloud-infrastructure](.agents/skills/cloud-infrastructure/SKILL.md) | Declarative IaC, immutable infra, zero-trust IAM, Kubernetes production readiness (v1.35 to v1.37), SLO/SLI alerting, disaster recovery, FinOps |
+| **Quality Assurance** | [quality-assurance](.agents/skills/quality-assurance/SKILL.md) | Risk-based testing strategies, contract tests (Pact), distributed load testing, automated a11y sweeps, DAST security scans, release readiness |
+| **IT Operations** | [it-operations](.agents/skills/it-operations/SKILL.md) | Identity management, SSO with MFA, SCIM lifecycle provisioning, zero-trust endpoint hygiene, automated patch baselines, email security (SPF/DKIM/DMARC) |
+
+Additional technical domains without a dedicated skill (such as embedded systems, smart contracts, robotics, and high-performance computing) are mapped in [.agents/domain-coverage.md](.agents/domain-coverage.md).
+
+---
+
+## Quickstart & Installation
+
+Projects 23 can be installed into any existing repository or new project in seconds. The installer only copies spec files and **never overwrites files that already exist and differ**.
+
+### One-Line Install
 
 ```sh
-# Preview first: nothing is written
+# 1. Preview changes safely (dry run)
 curl -fsSL https://raw.githubusercontent.com/gerrardgs/Projects23/main/scripts/install.sh | bash -s -- --dry-run
 
-# Install into the current directory
+# 2. Install into current project
 curl -fsSL https://raw.githubusercontent.com/gerrardgs/Projects23/main/scripts/install.sh | bash
 ```
 
-Options: `--ref <tag-or-commit>` to install a fixed version (recommended for reproducibility), `--force` to overwrite differing files, `--source <dir>` to install from a local clone, and a target directory as the last argument. As with any script piped to a shell, read it first: [scripts/install.sh](scripts/install.sh).
+### Manual Installation
 
-Manual alternative: clone this repository and run `bash scripts/install.sh --source /path/to/clone /path/to/your/project`.
+Alternatively, clone this repository and install locally:
 
-After installing:
+```sh
+git clone https://github.com/gerrardgs/Projects23.git
+bash Projects23/scripts/install.sh --source Projects23 /path/to/your/project
+```
 
-1. Fill in section 8 ("Project profile") of `AGENTS.md` with your real install, lint, test, build and run commands.
-2. If you already had an `AGENTS.md` or `CLAUDE.md`, merge them: `CLAUDE.md` needs the line `@AGENTS.md`, and `AGENTS.md` needs the rules and skills indexes.
-3. Run `node scripts/agents-sync.mjs` (Node.js 22+) and commit the result, including `.claude/skills/`.
+### Configuration Steps After Installation
 
-## Tool compatibility (checked against official docs on 2026-10-14)
+1. **Fill in Section 8 of `AGENTS.md`**: Fill in your project's runtime versions and build/test commands under "Project profile".
+2. **Sync and Validate**: Run `node scripts/agents-sync.mjs` (Node.js 22+) to generate `.claude/skills/` mirrors and confirm all links and metadata are valid.
+3. **Commit**: Add and commit the installed files into your repository.
 
-| Tool | Reads the core | Rules in `.agents/rules/` | Skills | Source |
+---
+
+## Tool Compatibility Matrix
+
+Projects 23 conforms to the open [Agent Skills specification](https://agentskills.io/specification) and is compatible with every major AI agent tool:
+
+| AI Tool | Core Rules Loaded | Rules in `.agents/rules/` | Skills System | Reference Documentation |
 | :--- | :--- | :--- | :--- | :--- |
-| Claude Code | `CLAUDE.md`, which imports `AGENTS.md` and the always-on rules | Always-on rules imported; others via index | `.claude/skills/` (mirror) | [memory](https://code.claude.com/docs/en/memory), [skills](https://code.claude.com/docs/en/skills) |
-| OpenAI Codex | `AGENTS.md` | Via index | `.agents/skills/` | [skills](https://learn.chatgpt.com/docs/build-skills) |
-| Gemini CLI | `GEMINI.md` and `AGENTS.md` (via `.gemini/settings.json`) | Via index | `.agents/skills/` | [context files](https://geminicli.com/docs/cli/gemini-md/), [skills](https://geminicli.com/docs/cli/skills/) |
-| Google Antigravity | `AGENTS.md`, `GEMINI.md` | Native (`trigger` frontmatter) | `.agents/skills/` | [rules](https://antigravity.google/docs/rules), [skills codelab](https://codelabs.developers.google.com/getting-started-with-antigravity-skills) |
-| Cursor | `AGENTS.md` (nested files supported) | Via index | `.agents/skills/` (also reads `.claude/skills/`) | [rules](https://cursor.com/docs/context/rules), [skills](https://cursor.com/docs/context/skills) |
-| Windsurf / Devin Desktop | `AGENTS.md` | Via index | `.agents/skills/` | [rules](https://docs.devin.ai/desktop/cascade/memories), [skills](https://docs.devin.ai/desktop/cascade/skills) |
-| GitHub Copilot | `.github/copilot-instructions.md`, `AGENTS.md` | Via index | `.agents/skills/` (also `.claude/skills/`) | [instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions), [skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) |
-| Cline | `AGENTS.md` (when no `.clinerules/` exists) | Via index | `.claude/skills/` (mirror) | [rules](https://docs.cline.bot/features/cline-rules/overview), [skills](https://docs.cline.bot/customization/skills.md) |
-| Aider | `AGENTS.md` via `.aider.conf.yml` | Via index | Not supported | [conventions](https://aider.chat/docs/usage/conventions.html) |
-| Any chat model | Paste `AGENTS.md`, then the rule or skill for the task | Manual | Manual | [operational manual](docs/AGENT-OPERATIONAL-MANUAL.md) |
+| **Google Antigravity** | `AGENTS.md`, `GEMINI.md` | Native (`trigger` frontmatter) | `.agents/skills/` | [Antigravity Docs](https://antigravity.google/docs/rules) |
+| **Claude Code** | `CLAUDE.md` (imports `AGENTS.md`) | Always-on rules imported; others via index | `.claude/skills/` (mirror) | [Claude Code Memory](https://code.claude.com/docs/en/memory) |
+| **OpenAI Codex / ChatGPT** | `AGENTS.md` | Referenced via index | `.agents/skills/` | [Codex Skills](https://learn.chatgpt.com/docs/build-skills) |
+| **Gemini CLI** | `GEMINI.md`, `AGENTS.md` | Referenced via index | `.agents/skills/` | [Gemini CLI Context](https://geminicli.com/docs/cli/gemini-md/) |
+| **Cursor** | `AGENTS.md` (nested rules supported) | Referenced via index | `.agents/skills/` | [Cursor Context Rules](https://cursor.com/docs/context/rules) |
+| **Windsurf / Devin** | `AGENTS.md` | Referenced via index | `.agents/skills/` | [Cascade Memories](https://docs.devin.ai/desktop/cascade/memories) |
+| **GitHub Copilot** | `.github/copilot-instructions.md`, `AGENTS.md` | Referenced via index | `.agents/skills/` | [Copilot Custom Instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions) |
+| **Cline** | `AGENTS.md` | Referenced via index | `.claude/skills/` (mirror) | [Cline Rules](https://docs.cline.bot/features/cline-rules/overview) |
+| **Aider** | `AGENTS.md` (via `.aider.conf.yml`) | Referenced via index | Not supported | [Aider Conventions](https://aider.chat/docs/usage/conventions.html) |
+| **Any Chat LLM** | Paste `AGENTS.md` + matching skill | Manual prompt injection | Manual | [Operational Manual](docs/AGENT-OPERATIONAL-MANUAL.md) |
 
-"Via index" means the tool does not load the folder itself; `AGENTS.md` tells the agent which file to open.
+---
 
-## Quality checks
+## Continuous Quality & Automated Verification
 
-[`.github/workflows/validate.yml`](.github/workflows/validate.yml) runs on every push and pull request:
+Every commit and pull request to Projects 23 is automatically validated through [.github/workflows/validate.yml](.github/workflows/validate.yml):
 
-- Validator self-tests, then `node scripts/agents-sync.mjs --check --all-markdown`: skill and rule frontmatter (strict YAML), size limits, indexes, mirror drift, broken links.
-- A second YAML check with PyYAML, `shellcheck` on the installer, `actionlint` and `zizmor` on the workflows.
-- Installer tests: existing files are preserved, and a fresh install validates cleanly.
-- Both templates: Node.js 22, 24 and 26 (`npm ci`, type-check, tests, `npm audit`), and Python 3.11 to 3.14 (Ruff, mypy, tests, `pip-audit`).
+- **Validator Self-Tests & Spec Checks**: Full frontmatter syntax parsing, size budget verification, link validity across all Markdown files, and mirror drift detection.
+- **Workflow & Shell Security Audits**: ShellCheck for shell scripts, Actionlint for workflow syntax, and offline Zizmor security audits for GitHub Actions workflows.
+- **Runnable Service Templates**:
+  - Node.js HTTP service: tested across Node.js 22, 24, and 26 (`npm ci`, type-checking, test execution, high-severity npm audit).
+  - Python HTTP service: tested across Python 3.11, 3.12, 3.13, and 3.14 (Ruff formatting, Ruff linter, strict MyPy, test execution, strict pip-audit).
+- **Domain Template Test Suites**:
+  - Machine Learning baseline: tested on Python 3.11 and 3.14 (leakage-free cross-validation and prediction pipeline).
+  - API Integration kit: tested on Python 3.11 and 3.14 (resilient HTTP client, backoff policies, signature verification).
 
-Run the same checks locally with the commands in [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md).
-
-## Limits
-
-- Rules guide a model; they cannot force it. For hard guarantees, use what the tools enforce: CI checks, branch protection, pre-commit hooks, and agent hooks such as Claude Code's `PreToolUse`.
-- Tools that read both `.agents/skills/` and `.claude/skills/` list each skill twice, with identical content. If nobody uses Claude Code or Cline, delete `.claude/skills/` and remove it from `MIRRORS` in the sync script.
-- Versions, action SHAs and tool locations are dated. Dependabot updates the pinned actions and images; re-check the rest when tools release major versions.
+---
 
 ## Documentation
 
-- [Architecture](docs/ARCHITECTURE.md): the design, the research behind it, and how each tool loads the files.
-- [Agent operational manual](docs/AGENT-OPERATIONAL-MANUAL.md): which rule and skill to use for each scenario.
-- [Anti-hallucination playbook](docs/ANTI-HALLUCINATION-PLAYBOOK.md): failure modes and how the verification protocol catches them.
-- [Contributing](docs/CONTRIBUTING.md): authoring rules for rules, skills and templates.
-- [Changelog](CHANGELOG.md).
+Detailed architectural and procedural documentation is available in `docs/`:
+
+- [Architecture Guide](docs/ARCHITECTURE.md): Design rationale, context budget calculations, and model cognitive constraints.
+- [Domain Coverage Matrix](.agents/domain-coverage.md): Detailed mappings of technical roles and specialized sectors to skills.
+- [Agent Operational Manual](docs/AGENT-OPERATIONAL-MANUAL.md): Step-by-step mapping of common engineering scenarios to specific rules and skills.
+- [Anti-Hallucination Playbook](docs/ANTI-HALLUCINATION-PLAYBOOK.md): Common AI hallucination failure modes and how the verification protocol catches them.
+- [Contributing Guidelines](docs/CONTRIBUTING.md): Quality checklist for authoring new rules, skills, and runnable templates.
+- [Changelog](CHANGELOG.md): History of updates, additions, and verified enhancements.
+
+---
 
 ## License
 
