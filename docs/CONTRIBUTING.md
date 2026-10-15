@@ -4,7 +4,7 @@ How to add or change rules, skills and templates without breaking any of the too
 
 ## 1. Golden rules
 
-- **Verify every fact you add.** Versions, flags, paths, package names and extension IDs must come from official documentation, a registry, `--help` output, or running the tool. Write the verification date next to time-sensitive facts.
+- **Verify every fact you add.** Versions, flags, paths, package names and extension IDs must come from official documentation, a registry, `--help` output, or running the tool. `node scripts/tech-lookup.mjs <ecosystem>:<name>` checks package names, latest stable versions, licences and end-of-life dates in one step. Write the verification date next to time-sensitive facts.
 - **Every template must run.** Code in `assets/` is executed in CI. Do not add code that you have not run.
 - **Edit sources, not copies.** Edit `AGENTS.md`, `.agents/rules/` and `.agents/skills/`. Never edit `.claude/skills/` by hand.
 
@@ -50,7 +50,7 @@ metadata:
 ## 4. Before you commit
 
 ```sh
-node --test "scripts/*.test.mjs"                  # validator self-tests
+node --test "scripts/*.test.mjs"                  # validator and lookup self-tests
 node scripts/agents-sync.mjs                      # regenerate .claude/skills and validate
 node scripts/agents-sync.mjs --check --all-markdown  # what CI runs
 ```

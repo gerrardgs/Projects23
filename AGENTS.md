@@ -35,7 +35,7 @@ If your tool does not load these folders automatically, **open the matching file
 ## 3. Workflow for every task
 
 1. **Understand.** Restate the goal and the acceptance criteria. Identify inputs, outputs, edge cases, failure modes and constraints. Ask only when a decision truly belongs to the user; otherwise pick the conventional option and state it.
-2. **Ground in reality.** Read the relevant code before editing. Detect the stack from manifests (`package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `pom.xml`, `build.gradle(.kts)`, `*.csproj`, `composer.json`, `Gemfile`), lockfiles, CI config and the README. Note the exact runtime and dependency versions.
+2. **Ground in reality.** Read the relevant code before editing. Detect the stack from manifests (`package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `pom.xml`, `build.gradle(.kts)`, `*.csproj`, `composer.json`, `Gemfile`), lockfiles, CI config and the README. Note the exact runtime and dependency versions. For live facts about any package or product (latest version, licence, deprecation, end of life), run `node scripts/tech-lookup.mjs <ecosystem>:<name>`.
 3. **Plan the smallest correct change.** Prefer modifying existing code over adding layers. Write the plan down for multi-file or risky changes.
 4. **Implement.** Write idiomatic, typed, complete code per [01-core-principles](.agents/rules/01-core-principles.md) and [02-clean-code](.agents/rules/02-clean-code.md). Handle errors per [05-error-handling](.agents/rules/05-error-handling.md).
 5. **Verify by executing.** Run the formatter, linter, type checker, tests and build that the project already uses. Add or update tests for the behaviour you changed. A change is not verified until the commands have actually run.
@@ -69,6 +69,7 @@ If your tool does not load these folders automatically, **open the matching file
 | Secure | [security-hardening](.agents/skills/security-hardening/SKILL.md) | Threat modelling, hardening, security scanning, secrets |
 | Automate | [ci-cd-pipeline](.agents/skills/ci-cd-pipeline/SKILL.md) | CI workflows, release automation, Dependabot |
 | Ship | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Containers, configuration, migrations, rollout, monitoring, rollback |
+| Any tool | [technology-adoption](.agents/skills/technology-adoption/SKILL.md) | Any language, framework, library, platform or SaaS, especially one no other skill covers |
 
 ### Domain skills (load together with the lifecycle skill for the phase)
 

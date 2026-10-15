@@ -13,7 +13,8 @@
 #   -h, --help        show this help
 #
 # Installed: AGENTS.md, CLAUDE.md, GEMINI.md, .aider.conf.yml, .gemini/settings.json,
-#            .github/copilot-instructions.md, .agents/ (rules and skills), scripts/agents-sync.mjs.
+#            .github/copilot-instructions.md, .agents/ (rules and skills), scripts/agents-sync.mjs,
+#            scripts/tech-lookup.mjs.
 # Never installed: README, LICENSE, CHANGELOG, .gitignore, docs or workflows. Those belong to your project.
 
 set -euo pipefail
@@ -33,11 +34,12 @@ SPEC_FILES=(
   ".gemini/settings.json"
   ".github/copilot-instructions.md"
   "scripts/agents-sync.mjs"
+  "scripts/tech-lookup.mjs"
 )
 SPEC_DIRECTORIES=(".agents")
 
 usage() {
-  sed -n '2,18p' "$0" 2>/dev/null | sed 's/^# \{0,1\}//' || true
+  sed -n '2,19p' "$0" 2>/dev/null | sed 's/^# \{0,1\}//' || true
 }
 
 die() {

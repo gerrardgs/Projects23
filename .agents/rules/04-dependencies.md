@@ -28,7 +28,7 @@ When a package is justified, prefer one that is actively maintained, widely used
 
 ## 3. Version baseline (verified 2026-10-14; re-check before relying on it)
 
-Currently supported release lines: **Node.js 22, 24, 26** (Node 20 reached end of life on 2026-04-30), **Python 3.11 to 3.15** (3.15 is the newest bugfix line), **Go 1.26 and 1.27**. Sources: [Node.js release schedule](https://github.com/nodejs/Release/blob/main/schedule.json), [Python release cycle](https://devguide.python.org/versions/), [Go downloads](https://go.dev/dl/). New projects should start on a currently supported LTS or stable release.
+Currently supported release lines: **Node.js 22, 24, 26** (Node 20 reached end of life on 2026-04-30), **Python 3.11 to 3.15** (3.15 is the newest bugfix line), **Go 1.26 and 1.27**. Sources: [Node.js release schedule](https://github.com/nodejs/Release/blob/main/schedule.json), [Python release cycle](https://devguide.python.org/versions/), [Go downloads](https://go.dev/dl/). New projects should start on a currently supported LTS or stable release. Get today's supported cycles with `node scripts/tech-lookup.mjs eol:<product>` (for example `eol:nodejs`, `eol:python`, `eol:postgresql`).
 
 ## 4. Node.js / TypeScript: built-in replacements
 

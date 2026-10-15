@@ -1,5 +1,28 @@
 # Changelog
 
+## 2.4.0: adopt any technology, with live verification (2026-10-15)
+
+No document can list every tool ever published, and any list goes stale. This release makes every technology usable through one verified procedure and live data.
+
+### Added
+
+- `technology-adoption` skill: identify the exact version, get live facts, read the version-specific official documentation, evaluate maintenance, licence, security, fit and exit cost, learn the idioms, integrate into the toolchain, keep it healthy, and handle commercial SaaS.
+- `technology-adoption/references/technology-catalog.md`: widely used tools across 19 categories (languages, backend and frontend frameworks, mobile and desktop, ORMs, databases, messaging and workflows, APIs and gateways, identity, build tools, testing, observability, containers and CI/CD, infrastructure as code, cloud platforms, data and BI, AI/ML/LLM frameworks, content and commerce, collaboration). 177 package names confirmed in their registries, 101 projects confirmed on GitHub with archived status checked, commercial platforms confirmed by their official sites.
+- `scripts/tech-lookup.mjs`: zero-dependency, read-only lookup of the latest stable version, release date, licence, repository, deprecation or yanked status (npm, PyPI, Go module proxy, crates.io, Maven Central, NuGet, RubyGems, Packagist, pub.dev, Hex, GitHub releases), supported release cycles with end-of-life dates (endoflife.date) and OpenSSF Scorecard scores. It exits with code 1 for names that do not exist. 19 unit tests; live-tested against all 13 sources. Shipped by the installer.
+- `AGENTS.md`, rules 03 and 04, the domain coverage map, the operational manual and the Copilot instructions now point to the skill and the lookup tool.
+
+### Found and handled during verification
+
+- `minio/minio` is archived on GitHub; the catalog flags it instead of recommending it.
+- Licences that need attention are listed in the catalog: `ansible-core` (GPL-3.0-or-later), Terraform (BSL 1.1), `ultralytics` (AGPL-3.0), Strapi (own licence file), Soda Core (proprietary metadata).
+- endoflife.date marks releases as "maintained" while paid extended support continues after upstream end of life (Node.js 20, 18, 16...). The lookup counts a cycle as supported only when it is not end-of-life, and lists extended-support-only cycles as a warning.
+- Maven's `<release>` metadata can point to a milestone (Spring Boot showed 4.2.0-M2); the lookup selects the highest stable version instead (4.1.1).
+- Java has no `java` product on endoflife.date; the JDK is tracked per distribution (`eclipse-temurin`, `amazon-corretto`, `oracle-jdk` and others).
+
+### Corrected
+
+- README: "5-step" protocol (rule 03 has 6 steps), "zero-vulnerability packages" and "eliminates hallucinations" (overclaims), "7 language families" (now 14), "AWQ/FP8 quantization" (not in the skill, which covers FP16, INT8 and 4-bit), "manual prompt injection" for chat models (prompt injection names an attack; the intended meaning is pasting), and "compatible with every major AI agent tool" (replaced by the dated, sourced compatibility table).
+
 ## 2.3.0: API integration for every sector, and back-office IT operations (2026-10-15)
 
 ### Added

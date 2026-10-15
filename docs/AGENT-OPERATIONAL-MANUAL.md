@@ -37,6 +37,7 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 | Test plan, load test, release sign-off | [quality-assurance](../.agents/skills/quality-assurance/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md) |
 | Connect to a third-party API, receive webhooks, build a connector | [api-integration](../.agents/skills/api-integration/SKILL.md) | its [sector standards](../.agents/skills/api-integration/references/sector-standards.md) |
 | Identity, SSO, endpoints, network, email, backup, help desk | [it-operations](../.agents/skills/it-operations/SKILL.md) | [security-hardening](../.agents/skills/security-hardening/SKILL.md) |
+| Use, choose or upgrade any tool, framework, platform or SaaS | [technology-adoption](../.agents/skills/technology-adoption/SKILL.md) | its [technology catalog](../.agents/skills/technology-adoption/references/technology-catalog.md) |
 | A domain not listed here | [domain coverage](../.agents/domain-coverage.md) section 4 | The lifecycle skill for the phase |
 
 ## 2. Execution loop for any scenario
