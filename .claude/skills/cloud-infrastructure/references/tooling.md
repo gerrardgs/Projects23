@@ -15,7 +15,7 @@ Checked on 2026-10-15 against the projects' repositories, licence files and the 
 | Supply chain | Sigstore cosign or Notation (image signing), SLSA (provenance; specification version 1.2 is current), in-toto attestations | Enforce signatures at admission with Kyverno `verifyImages` rules or the Sigstore policy-controller |
 | Observability | Prometheus, Grafana, OpenTelemetry Collector, Jaeger, kube-state-metrics | |
 | Cost estimation | Infracost | |
-| Chaos engineering | Chaos Mesh, LitmusChaos, cloud fault-injection services | Run only with approval, starting in non-production |
+| Chaos engineering | Chaos Mesh, LitmusChaos, AWS Fault Injection Service, Azure Chaos Studio, Chaos Toolkit | Run only with approval, starting in non-production ([chaos-engineering](../../chaos-engineering/SKILL.md)) |
 
 ## Editor support (VS Code extension IDs, checked on the Marketplace)
 

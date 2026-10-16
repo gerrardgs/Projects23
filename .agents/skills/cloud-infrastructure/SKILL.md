@@ -51,6 +51,9 @@ Deliver with GitOps (Argo CD or Flux) or a pipeline; package with Helm or Kustom
 - Observability: metrics (Prometheus or the cloud equivalent), logs, traces (OpenTelemetry Collector), dashboards (Grafana or equivalent), and alerts on SLO burn rate rather than on every cause.
 - Incident response: on-call rotation, runbooks, severity levels, status communication, and blameless post-incident reviews ([systematic-debugging](../systematic-debugging/SKILL.md)).
 - Capacity: load-test before launches; autoscaling with upper bounds; quotas checked.
+- Monitor every user-facing service with the [four golden signals](https://sre.google/sre-book/monitoring-distributed-systems/) (latency, traffic, errors, saturation); RED (rate, errors, duration) for request-driven services and USE (utilization, saturation, errors) for resources are compact variants.
+- Reduce toil, the operational work that is "manual, repetitive, automatable, tactical" and "scales linearly as a service grows"; Google's SRE teams aim to keep it below 50% of each engineer's time ([Eliminating toil](https://sre.google/sre-book/eliminating-toil/)).
+- Prove that redundancy, failover and alerts work by injecting faults and running game days ([chaos-engineering](../chaos-engineering/SKILL.md)).
 
 ## 6. Backup and disaster recovery
 

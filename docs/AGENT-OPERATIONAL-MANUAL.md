@@ -7,6 +7,7 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 | Scenario | Read first | Then |
 | :--- | :--- | :--- |
 | Large, vague or multi-component feature request | [feature-specification](../.agents/skills/feature-specification/SKILL.md) | then the skills for each task |
+| Design a system, choose an architecture, split or merge services | [software-architecture](../.agents/skills/software-architecture/SKILL.md) | [feature-specification](../.agents/skills/feature-specification/SKILL.md), [project-bootstrap ADR template](../.agents/skills/project-bootstrap/assets/adr-template.md) |
 | New repository from an empty folder | [project-bootstrap](../.agents/skills/project-bootstrap/SKILL.md) | [native-from-scratch](../.agents/skills/native-from-scratch/SKILL.md), [ci-cd-pipeline](../.agents/skills/ci-cd-pipeline/SKILL.md) |
 | New feature in an existing project | [change-existing-code](../.agents/skills/change-existing-code/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md), rule [05](../.agents/rules/05-error-handling.md) |
 | Bug report or failing behaviour | [systematic-debugging](../.agents/skills/systematic-debugging/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md) for the regression test |
@@ -35,11 +36,13 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 | Agent, tool calling, MCP server | [ai-agent-systems](../.agents/skills/ai-agent-systems/SKILL.md) | rule [06](../.agents/rules/06-security.md) |
 | Deploy a model, cut inference latency, real-time AI | [ml-inference-serving](../.agents/skills/ml-inference-serving/SKILL.md) | [cloud-infrastructure](../.agents/skills/cloud-infrastructure/SKILL.md) |
 | Infrastructure, Kubernetes, IAM, SLOs, cloud cost | [cloud-infrastructure](../.agents/skills/cloud-infrastructure/SKILL.md) | [ci-cd-pipeline](../.agents/skills/ci-cd-pipeline/SKILL.md) |
+| Resilience check, fault injection, chaos experiment, game day | [chaos-engineering](../.agents/skills/chaos-engineering/SKILL.md) | [cloud-infrastructure](../.agents/skills/cloud-infrastructure/SKILL.md) section 5, [quality-assurance](../.agents/skills/quality-assurance/SKILL.md) |
 | Test plan, load test, release sign-off | [quality-assurance](../.agents/skills/quality-assurance/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md) |
 | Connect to a third-party API, receive webhooks, build a connector | [api-integration](../.agents/skills/api-integration/SKILL.md) | its [sector standards](../.agents/skills/api-integration/references/sector-standards.md) |
 | Identity, SSO, endpoints, network, email, backup, help desk | [it-operations](../.agents/skills/it-operations/SKILL.md) | [security-hardening](../.agents/skills/security-hardening/SKILL.md) |
 | Use, choose or upgrade any tool, framework, platform or SaaS | [technology-adoption](../.agents/skills/technology-adoption/SKILL.md) | its [technology catalog](../.agents/skills/technology-adoption/references/technology-catalog.md) |
 | A domain not listed here | [domain coverage](../.agents/domain-coverage.md) section 4 | The lifecycle skill for the phase |
+| An engineering concept, principle or pattern (SOLID, CAP, SLOs, TDD, ...) | [engineering concepts](../.agents/engineering-concepts.md) | The skill it points to |
 
 ## 2. Execution loop for any scenario
 

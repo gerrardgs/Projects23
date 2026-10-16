@@ -65,6 +65,7 @@ If your tool does not load these folders automatically, **open the matching file
 | Phase | Skill | Use it when |
 | :--- | :--- | :--- |
 | Specify | [feature-specification](.agents/skills/feature-specification/SKILL.md) | Turning a request into goals, acceptance criteria, a plan and ordered tasks before coding |
+| Design | [software-architecture](.agents/skills/software-architecture/SKILL.md) | System design, quality attributes, architecture styles, distributed-systems trade-offs, resilience patterns, ADRs |
 | Start | [project-bootstrap](.agents/skills/project-bootstrap/SKILL.md) | Creating a repository: runtime, toolchain, editor extensions, CI, docs |
 | Build | [native-from-scratch](.agents/skills/native-from-scratch/SKILL.md) | Writing a new service, CLI or module, standard library first |
 | Change | [change-existing-code](.agents/skills/change-existing-code/SKILL.md) | Modifying, refactoring, upgrading or migrating existing code |
@@ -74,6 +75,7 @@ If your tool does not load these folders automatically, **open the matching file
 | Secure | [security-hardening](.agents/skills/security-hardening/SKILL.md) | Threat modelling, hardening, security scanning, secrets |
 | Automate | [ci-cd-pipeline](.agents/skills/ci-cd-pipeline/SKILL.md) | CI workflows, release automation, Dependabot |
 | Ship | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Containers, configuration, migrations, rollout, monitoring, rollback |
+| Prove resilience | [chaos-engineering](.agents/skills/chaos-engineering/SKILL.md) | Fault-injection experiments, game days, verifying timeouts, fallbacks, failover and alerts |
 | Document | [technical-documentation](.agents/skills/technical-documentation/SKILL.md) | READMEs, guides, API and configuration reference, ADRs, changelogs, runbooks |
 | Any tool | [technology-adoption](.agents/skills/technology-adoption/SKILL.md) | Any language, framework, library, platform or SaaS, especially one no other skill covers |
 
@@ -97,7 +99,7 @@ If your tool does not load these folders automatically, **open the matching file
 | QA | [quality-assurance](.agents/skills/quality-assurance/SKILL.md) | Test strategy, load, accessibility, contract, DAST, release readiness |
 | IT operations | [it-operations](.agents/skills/it-operations/SKILL.md) | Identity and SSO, endpoints, networks, email, backup, ITSM, IT security frameworks |
 
-A task often spans several skills. A bug fix in an API, for example, uses systematic-debugging, backend-engineering, test-engineering, then rigorous-code-audit. [.agents/domain-coverage.md](.agents/domain-coverage.md) maps roles and domains to skills, including domains without a dedicated skill.
+A task often spans several skills. A bug fix in an API, for example, uses systematic-debugging, backend-engineering, test-engineering, then rigorous-code-audit. [.agents/domain-coverage.md](.agents/domain-coverage.md) maps roles and domains to skills, including domains without a dedicated skill; [.agents/engineering-concepts.md](.agents/engineering-concepts.md) maps engineering concepts and the SWEBOK knowledge areas to the rules and skills that apply them.
 
 ## 6. Operating conditions
 

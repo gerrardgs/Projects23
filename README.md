@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Format: Agent Skills](https://img.shields.io/badge/Format-Agent%20Skills-blue.svg)](https://agentskills.io/specification)
 [![Validate](https://github.com/gerrardgs/Projects23/actions/workflows/validate.yml/badge.svg)](https://github.com/gerrardgs/Projects23/actions/workflows/validate.yml)
-[![Skills: 27](https://img.shields.io/badge/Skills-27%20Verified-success.svg)](.agents/skills/)
+[![Skills: 29](https://img.shields.io/badge/Skills-29%20Verified-success.svg)](.agents/skills/)
 [![Rules: 9](https://img.shields.io/badge/Rules-9%20Core-blueviolet.svg)](.agents/rules/)
 
 A universal, production-ready AI agent coding framework and standard (formerly named UCNA-Spec, the Universal Clean Native Agent Specification) designed to make AI coding models work with the discipline of senior staff software engineers. It reduces erratic, bloated code and hallucinated APIs by enforcing standard-library-first design, strict verification protocols, and clean architectural boundaries across the entire software development lifecycle and 15 technical domains, and gives agents a verified procedure and a live lookup tool for adopting any other technology.
@@ -21,7 +21,7 @@ Most AI coding assistants struggle with long-term code quality: they invent non-
 1. **Clean Code and Clean Execution**: Code that the next engineer can read, change and trust ([rule 02](.agents/rules/02-clean-code.md)), produced by work that is predictable, minimal, verified step by step, reversible and leaves no mess ([rule 09](.agents/rules/09-clean-execution.md)). This repository holds itself to the same standard: CI enforces cyclomatic complexity of 10 or less and nesting depth of 3 or less on its own code.
 2. **Native-First, Zero Bloat**: Always utilize platform standard libraries before adding third-party dependencies. When packages are necessary, select minimal, maintained packages with no known unpatched vulnerabilities, checked with a dependency audit.
 3. **Anti-Hallucination Protocol**: A 6-step verification protocol for symbols, package names, versions, CLI flags, and environment variables against the active environment or official registries, backed by `scripts/tech-lookup.mjs` for live registry and end-of-life data.
-4. **Complete Lifecycle and Domain Mastery**: 27 modular skills that guide agents through every phase of software development and across complex domains like ML, distributed systems, and real-time AI.
+4. **Complete Lifecycle and Domain Mastery**: 29 modular skills that guide agents through every phase of software development, from specification and architecture to chaos engineering, and across complex domains like ML, distributed systems, and real-time AI. An [engineering concepts index](.agents/engineering-concepts.md) maps all 18 SWEBOK V4.0a knowledge areas and the named concepts engineers use daily to the rules and skills that apply them.
 
 ---
 
@@ -39,8 +39,8 @@ Projects 23 Architecture
        v (links to)                                      v (links to)
   +-----------------------------------+             +-----------------------------------+
   | Rules (.agents/rules/)            |             | Skills (.agents/skills/)          |
-  | 9 normative rules:                |             | 27 on-demand step-by-step guides: |
-  | - 5 Always-On (core, clean code,  |             | - 12 Software Lifecycle Skills    |
+  | 9 normative rules:                |             | 29 on-demand step-by-step guides: |
+  | - 5 Always-On (core, clean code,  |             | - 14 Software Lifecycle Skills    |
   |   verification, security, clean   |             |                                   |
   |   execution)                      |             | - 15 Mission-Critical Domains     |
   | - 4 On-Demand (dependencies,      |             |                                   |
@@ -61,7 +61,7 @@ Projects 23 Architecture
 | :--- | :--- | :--- | :--- |
 | **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 147 lines) |
 | **Rules** | [`.agents/rules/`](.agents/rules/) | Always (5) or when relevant (4) | Principles, clean code, verification, security, clean execution, dependencies, error handling, testing, Git workflow |
-| **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 27 step-by-step procedures (12 lifecycle, 15 domain) with verified templates and references |
+| **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 29 step-by-step procedures (14 lifecycle, 15 domain) with verified templates and references |
 | **Adapters** | `CLAUDE.md`, `GEMINI.md`, `.gemini/settings.json`, `.github/copilot-instructions.md`, `.aider.conf.yml` | Per tool | Standard loaders connecting each tool to the single core |
 | **Mirror** | `.claude/skills/` | Generated | Automated copy of skills for Claude Code and Cline; kept in sync via script |
 | **Tooling** | [`scripts/`](scripts/) | You, agents or CI | Installer, mirror sync and validator, and `tech-lookup.mjs` (live versions, licences, deprecations, end-of-life dates and security scores from 12 registries and data sources) |
@@ -78,6 +78,7 @@ Procedures covering software from inception to production operation:
 | Phase | Skill | Highlights |
 | :--- | :--- | :--- |
 | **Specify** | [feature-specification](.agents/skills/feature-specification/SKILL.md) | Spec-driven development: goals, non-goals, Given/When/Then acceptance criteria, edge cases, non-functional requirements, plan and ordered tasks |
+| **Design** | [software-architecture](.agents/skills/software-architecture/SKILL.md) | ISO/IEC 25010 quality attributes, architecture styles (modular monolith first), domain-driven design, CAP/PACELC, idempotency, outbox and sagas, resilience patterns (circuit breaker, bulkhead, load shedding, static stability, cells), ADRs, C4, fitness functions |
 | **Start** | [project-bootstrap](.agents/skills/project-bootstrap/SKILL.md) | Toolchains for 14 language and tool families, verified VS Code extension IDs, `.editorconfig`, `.gitattributes`, pre-commit secret scanning, README and ADR templates |
 | **Build** | [native-from-scratch](.agents/skills/native-from-scratch/SKILL.md) | Standard-library-first architecture; runnable Node.js (TypeScript) and Python services with unit tests, lockfiles, and container configs |
 | **Change** | [change-existing-code](.agents/skills/change-existing-code/SKILL.md) | Characterization tests, small verified steps, dependency upgrades, automated codemods, and strangler fig migrations |
@@ -87,6 +88,7 @@ Procedures covering software from inception to production operation:
 | **Secure** | [security-hardening](.agents/skills/security-hardening/SKILL.md) | Threat modelling, OWASP ASVS 5.0, secret rotation, SAST, dependency audits, container scanning, and SBOM generation |
 | **Automate** | [ci-cd-pipeline](.agents/skills/ci-cd-pipeline/SKILL.md) | GitHub Actions workflows pinned to commit SHAs, least-privilege token permissions, and Dependabot with cooldown timers |
 | **Ship** | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Production launch checklists, zero-downtime database migrations, canary/blue-green rollouts, observability, and rollback plans |
+| **Prove resilience** | [chaos-engineering](.agents/skills/chaos-engineering/SKILL.md) | Principles of Chaos Engineering, AWS REL12-BP04 and Azure RE:08: steady-state hypotheses, fault catalogue by layer, blast radius, stop conditions, rollback, game days; runnable standard-library experiment kit (runner, fault-injecting proxy, 19 tests) |
 | **Document** | [technical-documentation](.agents/skills/technical-documentation/SKILL.md) | Diátaxis (tutorial, how-to, reference, explanation), README, API and configuration reference, ADRs, changelog, runbooks, docs as code |
 | **Any tool** | [technology-adoption](.agents/skills/technology-adoption/SKILL.md) | One procedure for any language, framework, library, platform or SaaS: exact version, official docs, live licence, security and end-of-life checks, idioms, toolchain integration; catalog of widely used tools with 177 registry-verified packages and 101 GitHub-verified projects |
 
@@ -202,6 +204,7 @@ Detailed architectural and procedural documentation is available in `docs/`:
 
 - [Architecture Guide](docs/ARCHITECTURE.md): Design rationale, context budget calculations, and model cognitive constraints.
 - [Domain Coverage Matrix](.agents/domain-coverage.md): Detailed mappings of technical roles and specialized sectors to skills.
+- [Engineering Concepts Index](.agents/engineering-concepts.md): SWEBOK V4.0a knowledge areas and named engineering concepts (design principles, architecture, distributed systems, resilience and chaos engineering, SRE, delivery, testing, security, data and AI, process) mapped to rules, skills and primary sources.
 - [Agent Operational Manual](docs/AGENT-OPERATIONAL-MANUAL.md): Step-by-step mapping of common engineering scenarios to specific rules and skills.
 - [Anti-Hallucination Playbook](docs/ANTI-HALLUCINATION-PLAYBOOK.md): Common AI hallucination failure modes and how the verification protocol catches them.
 - [Contributing Guidelines](docs/CONTRIBUTING.md): Quality checklist for authoring new rules, skills, and runnable templates.

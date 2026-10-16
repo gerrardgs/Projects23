@@ -22,7 +22,8 @@ No written specification can contain every fact of every field. Any language, fr
 | Computer vision engineer | [computer-vision](skills/computer-vision/SKILL.md) | [machine-learning](skills/machine-learning/SKILL.md), [ml-inference-serving](skills/ml-inference-serving/SKILL.md) |
 | Real-time AI engineer | [ml-inference-serving](skills/ml-inference-serving/SKILL.md) | [computer-vision](skills/computer-vision/SKILL.md) (video), [data-engineering](skills/data-engineering/SKILL.md) (streaming) |
 | Cloud engineer, DevOps, platform engineer | [cloud-infrastructure](skills/cloud-infrastructure/SKILL.md), [ci-cd-pipeline](skills/ci-cd-pipeline/SKILL.md) | [deploy-and-release](skills/deploy-and-release/SKILL.md) |
-| Site reliability engineer | [cloud-infrastructure](skills/cloud-infrastructure/SKILL.md) (SRE section), [deploy-and-release](skills/deploy-and-release/SKILL.md) | [systematic-debugging](skills/systematic-debugging/SKILL.md) (incidents) |
+| Site reliability engineer, chaos engineer | [cloud-infrastructure](skills/cloud-infrastructure/SKILL.md) (SRE section), [chaos-engineering](skills/chaos-engineering/SKILL.md), [deploy-and-release](skills/deploy-and-release/SKILL.md) | [systematic-debugging](skills/systematic-debugging/SKILL.md) (incidents), [software-architecture](skills/software-architecture/SKILL.md) (resilience patterns) |
+| Software or solution architect | [software-architecture](skills/software-architecture/SKILL.md) | [feature-specification](skills/feature-specification/SKILL.md), [cloud-infrastructure](skills/cloud-infrastructure/SKILL.md), [security-hardening](skills/security-hardening/SKILL.md) |
 | Security engineer, AppSec | [security-hardening](skills/security-hardening/SKILL.md) and its [domain standards](skills/security-hardening/references/domain-standards.md) | [rigorous-code-audit](skills/rigorous-code-audit/SKILL.md), [ci-cd-pipeline](skills/ci-cd-pipeline/SKILL.md) |
 | QA engineer, SDET | [quality-assurance](skills/quality-assurance/SKILL.md), [test-engineering](skills/test-engineering/SKILL.md) | [web-frontend-engineering](skills/web-frontend-engineering/SKILL.md), [mobile-engineering](skills/mobile-engineering/SKILL.md) |
 | Integration engineer, middleware or connector developer | [api-integration](skills/api-integration/SKILL.md) and its [sector standards](skills/api-integration/references/sector-standards.md) | [backend-engineering](skills/backend-engineering/SKILL.md), [security-hardening](skills/security-hardening/SKILL.md) |
@@ -42,6 +43,7 @@ Every domain moves through the same phases. Load the lifecycle skill for the pha
 | Phase | Lifecycle skill |
 | :--- | :--- |
 | Specify a feature | [feature-specification](skills/feature-specification/SKILL.md) |
+| Design the system | [software-architecture](skills/software-architecture/SKILL.md) |
 | Set up a repository | [project-bootstrap](skills/project-bootstrap/SKILL.md) (toolchains for 14 language and tool families) |
 | Build something new | [native-from-scratch](skills/native-from-scratch/SKILL.md) |
 | Change existing code | [change-existing-code](skills/change-existing-code/SKILL.md) |
@@ -52,6 +54,9 @@ Every domain moves through the same phases. Load the lifecycle skill for the pha
 | Automate | [ci-cd-pipeline](skills/ci-cd-pipeline/SKILL.md) |
 | Document | [technical-documentation](skills/technical-documentation/SKILL.md) |
 | Release and operate | [deploy-and-release](skills/deploy-and-release/SKILL.md), [cloud-infrastructure](skills/cloud-infrastructure/SKILL.md) |
+| Prove resilience | [chaos-engineering](skills/chaos-engineering/SKILL.md) |
+
+For engineering concepts and principles rather than roles or domains, see [engineering-concepts.md](engineering-concepts.md).
 
 ## 4. Domains without a dedicated skill
 

@@ -29,6 +29,7 @@ description: "Apply when committing, branching, writing commit messages or pull 
 
 - Title states the change. Description covers: what and why, how it was verified (commands and results), risks, rollback plan, and screenshots for UI changes.
 - Keep PRs small and focused. Split refactors from behaviour changes.
+- Keep branches short-lived and merge to the default branch often ([trunk-based development](https://trunkbaseddevelopment.com/)); hide unfinished work behind a feature flag instead of a long-lived branch.
 - CI must be green before merge. Address every review comment, or reply with reasoning.
 
 ## 5. Versions and releases

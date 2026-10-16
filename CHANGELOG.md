@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.9.0: engineering concepts, software architecture and chaos engineering (2026-10-16)
+
+Every engineering concept that applies to this specification now has a place, anchored to the field's own reference rather than to an open-ended list. Sources were checked on 2026-10-16; tool versions come from `scripts/tech-lookup.mjs`.
+
+### New skills (29 in total)
+
+- `chaos-engineering`: the Principles of Chaos Engineering (steady state, hypothesis, real-world events, production with care, automation, minimal blast radius), AWS Well-Architected REL12-BP04 and REL12-BP05 (hypothesis template, stop conditions, rollback, game days, experiments as regression tests in CI/CD), Azure Well-Architected RE:08 (failure mode analysis, partial failures, baselines), and the Chaos Toolkit rule that an experiment bails out when the system is not in its steady state. Safety rules for agents come first: no fault injection in production or shared environments without explicit approval, only systems the user owns, known weaknesses fixed first. It has a fault catalogue by layer (application, dependencies, network, infrastructure, zone or region, data, load, AI providers, clients, people and process) and a tool table with verified versions: Chaos Mesh v2.8.5 and LitmusChaos 3.33.0 (both CNCF incubating), Chaos Toolkit 1.21.4, Toxiproxy v2.13.0, Chaos Monkey v2.1.3, AWS FIS, Azure Chaos Studio, Gremlin.
+- `software-architecture`: quality attributes from ISO/IEC 25010:2023 as measurable scenarios, architecture styles and when each fits (Azure Architecture Center), modular monolith first (Fowler), hexagonal architecture (Cockburn), domain-driven design, Conway's law and Team Topologies, CAP and PACELC (Abadi, IEEE Computer 2012), consistency models (Jepsen), Raft, idempotency, transactional outbox, sagas, CQRS, event sourcing, RFC 9413 and Hyrum's law for contracts, resilience patterns (retry at a single point in the stack, circuit breaker, bulkhead, load shedding, static stability, cells, shuffle sharding), the AWS position on fallbacks, Little's and Amdahl's laws, FinOps and Software Carbon Intensity (ISO/IEC 21031:2024), ADRs, C4, arc42 and fitness functions (ArchUnit 1.5.1, dependency-cruiser 18.6.0, import-linter 2.15).
+
+### Runnable chaos experiment kit
+
+`chaos-engineering/assets/chaos-experiment-kit/`, Python 3.11+ standard library only: an experiment runner (steady-state probes with tolerances, bail-out, stop conditions, rollback guaranteed on errors and interrupts, recovery check, JSON journal), a TCP proxy that injects latency or drops connections on `127.0.0.1`, and an example that tests a client with a timeout and fallback against a slow and an unreachable dependency. 19 tests pass on Python 3.11 and 3.14, including one that shows the same experiments catch a client without a fallback; ruff and mypy `--strict` are clean. A new CI job runs it on Python 3.11 and 3.14, and Dependabot watches its development pins.
+
+### Engineering concepts index
+
+`.agents/engineering-concepts.md` maps the 18 knowledge areas of the IEEE Computer Society's SWEBOK Guide V4.0a to the rules and skills that apply them, then lists named concepts by family (code design, architecture and distributed systems, reliability and chaos engineering, SRE and observability, delivery, quality and testing, security and privacy, data and AI, people, process and sustainability) with where each is applied and a primary source. It also covers neighbouring disciplines and a procedure for any concept that is not listed. `AGENTS.md`, `domain-coverage.md` and the operational manual link to it.
+
+### Additions to existing skills and rules
+
+- `cloud-infrastructure`: the four golden signals (latency, traffic, errors, saturation) with RED and USE, toil and Google's 50% budget, and fault injection plus game days to prove redundancy and alerts; the tooling reference names AWS FIS, Azure Chaos Studio and Chaos Toolkit.
+- `test-engineering`: test-driven development ("Red - Green - Refactor").
+- `quality-assurance`: the resilience row links the chaos-engineering procedure and adds Toxiproxy.
+- Rule 08: short-lived branches merged often (trunk-based development), unfinished work behind feature flags.
+
 ## 2.8.0: research-driven additions from public standards and open source (2026-10-16)
 
 A gap analysis of the whole specification against authoritative public sources. Each addition below is cited to its official source, checked on 2026-10-16.

@@ -35,7 +35,7 @@ Run time-boxed sessions with a charter ("explore checkout with expired cards and
 | Performance and load | Define the workload model and targets (throughput, p95/p99 latency, error rate) first; ramp up, sustain (soak), spike, and find the breaking point; test in a production-like environment | k6, Locust, Apache JMeter, Gatling |
 | Accessibility | Automated scans plus keyboard and screen-reader testing against WCAG 2.2 AA | axe-core (`@axe-core/playwright`), Lighthouse, manual checks |
 | Security (dynamic) | Scan running test environments, never production without approval | ZAP (by Checkmarx, free and open source) |
-| Resilience | Inject failures (dependency down, latency, node loss) and verify graceful degradation and recovery | Chaos Mesh, LitmusChaos, cloud fault-injection services |
+| Resilience | Inject failures (dependency down, latency, node loss) and verify graceful degradation and recovery; procedure and safety rules in [chaos-engineering](../chaos-engineering/SKILL.md) | Chaos Mesh, LitmusChaos, Toxiproxy, cloud fault-injection services |
 | Visual | Screenshot comparison for design-critical pages | Playwright screenshot assertions, Storybook-based tools |
 | Mobile | Real devices and emulators across OS versions | See [mobile-engineering](../mobile-engineering/SKILL.md) |
 | AI features | Evaluation suites with adversarial cases | See [llm-applications](../llm-applications/SKILL.md) |

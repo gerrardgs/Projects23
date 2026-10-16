@@ -40,6 +40,8 @@ Most tests should be unit tests, with fewer integration tests and only a handful
 5. **Cover the edges**: work through the list in [07-testing](../../rules/07-testing.md) section 2. Use table-driven or parametrized tests for many similar cases.
 6. **Bug fix**: write the test that reproduces the bug, run it, and **watch it fail** for the right reason before you fix the code.
 
+Test-driven development applies the same loop to new behaviour: write a test for the next bit of functionality, make it pass, then refactor ("Red - Green - Refactor", [Fowler](https://martinfowler.com/bliki/TestDrivenDevelopment.html)). It works best when the expected behaviour can be stated before the code exists.
+
 ## 4. Make it deterministic
 
 | Source of flakiness | Fix |

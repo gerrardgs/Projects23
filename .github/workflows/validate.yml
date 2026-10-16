@@ -179,6 +179,32 @@ jobs:
       - run: mypy webhooks.py http_client.py test_integration_kit.py
       - run: python -m unittest -v
 
+  chaos-kit:
+    name: Chaos experiment kit (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.14"]
+    defaults:
+      run:
+        working-directory: .agents/skills/chaos-engineering/assets/chaos-experiment-kit
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install --group dev
+      - run: ruff format --check .
+      - run: ruff check .
+      - run: mypy chaos.py fault_proxy.py example_experiment.py test_chaos_kit.py
+      - run: python -m unittest -v
+      - run: python example_experiment.py
+
   clean-code:
     name: Clean-code lint (complexity <= 10, nesting <= 3)
     runs-on: ubuntu-latest
