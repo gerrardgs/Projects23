@@ -24,11 +24,12 @@ Set up the project so that the first commit already builds, lints, type-checks, 
 3. Initialise the package manager and **commit the lockfile**.
 4. Add the files from [assets/](assets/):
    - [`.editorconfig`](assets/editorconfig) (rename to `.editorconfig`) and [`.gitattributes`](assets/gitattributes) (rename to `.gitattributes`)
-   - `.gitignore` from the official [github/gitignore](https://github.com/github/gitignore) template for the language, plus `.env` and `.env.*` with `!.env.example`
+   - `.gitignore` from the official [github/gitignore](https://github.com/github/gitignore) template for the language, plus `.env` and `.env.*` with `!.env.example`, keys and certificates (`*.pem`, `*.key`, `*.p12`), credential files, Terraform state and `*.tfvars`, kubeconfigs and database dumps
    - [`.env.example`](assets/env.example) (rename to `.env.example`) listing every variable, with no real values
    - [`.vscode/extensions.json`](assets/vscode-extensions.json) (rename and trim to the stack)
    - [`.pre-commit-config.yaml`](assets/pre-commit-config.yaml) with secret scanning and basic hygiene hooks
    - [`README.md`](assets/README.template.md) and an [ADR](assets/adr-template.md) folder (`docs/adr/`) for significant decisions
+   - [`SECURITY.md`](assets/SECURITY.template.md) (rename to `SECURITY.md`) with a private vulnerability-reporting channel; for public repositories also turn on secret scanning with push protection and use a private no-reply commit email
 5. Configure the formatter, linter and type checker at their strictest practical settings, and make them pass on the empty project.
 6. Add one real test and make `test` pass.
 7. Add CI from [ci-cd-pipeline](../ci-cd-pipeline/SKILL.md) and Dependabot.

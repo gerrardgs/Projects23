@@ -17,6 +17,7 @@ description: "Apply when committing, branching, writing commit messages or pull 
 - One logical change per commit, small enough to review and revert on its own.
 - Use the project's message convention. If none exists, use [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/): `type(scope): summary`, for example `fix(auth): reject expired refresh tokens`. Common types are `feat`, `fix`, `docs`, `refactor`, `test`, `perf`, `build`, `ci`, `chore`. Mark breaking changes with `!` or a `BREAKING CHANGE:` footer.
 - The summary uses the imperative mood ("add", not "added"), in about 50 characters. The body explains *why*, and links issues.
+- Follow the project's policy on disclosing AI assistance (for example a commit trailer naming the tool). Disclosure helps reviewers and later security audits know where extra scrutiny is useful.
 
 ## 3. History safety
 

@@ -12,6 +12,7 @@
     "data-analysis",
     "data-engineering",
     "deploy-and-release",
+    "feature-specification",
     "it-operations",
     "llm-applications",
     "machine-learning",
@@ -24,6 +25,7 @@
     "rigorous-code-audit",
     "security-hardening",
     "systematic-debugging",
+    "technical-documentation",
     "technology-adoption",
     "test-engineering",
     "web-frontend-engineering"

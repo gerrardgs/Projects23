@@ -6,6 +6,7 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 
 | Scenario | Read first | Then |
 | :--- | :--- | :--- |
+| Large, vague or multi-component feature request | [feature-specification](../.agents/skills/feature-specification/SKILL.md) | then the skills for each task |
 | New repository from an empty folder | [project-bootstrap](../.agents/skills/project-bootstrap/SKILL.md) | [native-from-scratch](../.agents/skills/native-from-scratch/SKILL.md), [ci-cd-pipeline](../.agents/skills/ci-cd-pipeline/SKILL.md) |
 | New feature in an existing project | [change-existing-code](../.agents/skills/change-existing-code/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md), rule [05](../.agents/rules/05-error-handling.md) |
 | Bug report or failing behaviour | [systematic-debugging](../.agents/skills/systematic-debugging/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md) for the regression test |
@@ -21,7 +22,7 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 | Database schema change | [deploy-and-release](../.agents/skills/deploy-and-release/SKILL.md) section 4 | [change-existing-code](../.agents/skills/change-existing-code/SKILL.md) |
 | Production incident | [systematic-debugging](../.agents/skills/systematic-debugging/SKILL.md) "Production incidents" | [deploy-and-release](../.agents/skills/deploy-and-release/SKILL.md) section 6 |
 | Commit, pull request, release | rule [08](../.agents/rules/08-git-workflow.md) | |
-| Documentation only | rule [01](../.agents/rules/01-core-principles.md) section 7 | [project-bootstrap assets](../.agents/skills/project-bootstrap/assets/) (README and ADR templates) |
+| Documentation only | [technical-documentation](../.agents/skills/technical-documentation/SKILL.md) | [project-bootstrap assets](../.agents/skills/project-bootstrap/assets/) (README, ADR and SECURITY templates) |
 | Question about the code, no change requested | rule [03](../.agents/rules/03-verification.md) | Answer from the code you read, with file and line references; change nothing |
 | New or changed API endpoint, schema, query or job | [backend-engineering](../.agents/skills/backend-engineering/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md), [security-hardening](../.agents/skills/security-hardening/SKILL.md) |
 | Web page or component | [web-frontend-engineering](../.agents/skills/web-frontend-engineering/SKILL.md) | [quality-assurance](../.agents/skills/quality-assurance/SKILL.md) (accessibility, cross-browser) |

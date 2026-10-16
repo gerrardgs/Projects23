@@ -92,7 +92,7 @@ class HttpServiceTest(unittest.TestCase):
         )
 
     def test_oversized_body_is_413(self) -> None:
-        status, _, _ = self.post_json("/users", {"name": "x" * 20_000, "email": "a@b.co"})
+        status, _, _ = self.post_json("/users", {"name": "x" * 20_000, "email": "a@example.com"})
         self.assertEqual(status, 413)
 
     def test_wrong_content_type_is_415(self) -> None:

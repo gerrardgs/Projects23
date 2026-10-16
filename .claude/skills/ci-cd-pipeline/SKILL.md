@@ -21,12 +21,13 @@ A pipeline turns "it works on my machine" into "it works, every time, for everyo
 
 Use the project's own scripts (`npm test`, `make test`, `nox`, ...) in CI so local and CI runs match.
 
-## 2. Templates (verified with actionlint 1.7.12 and zizmor 1.30.1 on 2026-10-14)
+## 2. Templates (verified with actionlint 1.7.12 and zizmor 1.31.1, auditor persona, on 2026-10-16)
 
 - [assets/github-actions/ci-node.yml](assets/github-actions/ci-node.yml): Node.js matrix (22, 24, 26): `npm ci`, lint, type-check, test, `npm audit`.
 - [assets/github-actions/ci-python.yml](assets/github-actions/ci-python.yml): Python matrix (3.11 to 3.14): install with a PEP 735 `dev` dependency group, Ruff, mypy, pytest, pip-audit.
 - [assets/github-actions/release-container.yml](assets/github-actions/release-container.yml): on a version tag, build and push an image to GitHub Container Registry with SBOM and signed build provenance.
 - [assets/github-actions/dependabot.yml](assets/github-actions/dependabot.yml): weekly updates for actions and npm, with a 7-day cooldown.
+- [assets/github-actions/codeql.yml](assets/github-actions/codeql.yml): CodeQL security analysis (`security-extended` queries) on pull requests, pushes and a weekly schedule.
 
 The action versions are pinned to full commit SHAs, with the version in a comment. These SHAs were resolved from the actions' release tags on 2026-10-14. Dependabot keeps the SHAs and comments updated.
 
@@ -39,6 +40,8 @@ The action versions are pinned to full commit SHAs, with the version in a commen
 - **Pull requests from forks** get no secrets. Avoid `pull_request_target` and `workflow_run` with checkout of untrusted code; if unavoidable, never run that code with secrets.
 - Prefer OIDC federation (`id-token: write`) to long-lived cloud credentials.
 - Set `timeout-minutes` on every job and `concurrency` to cancel superseded runs.
+- Run security checks on a **schedule** as well (weekly `cron`), so vulnerabilities published after the last commit are still found.
+- Keep tool versions that CI installs in a requirements or manifest file, not inline in `run:` commands, so Dependabot can update them.
 - Lint workflows with `actionlint` and audit them with `zizmor` (see [security-hardening tools](../security-hardening/references/tools.md)).
 
 ## 4. Speed and reliability
@@ -49,11 +52,15 @@ The action versions are pinned to full commit SHAs, with the version in a commen
 - A flaky check is a bug: fix it, don't retry it blindly.
 - Make required status checks mandatory with branch protection, so nothing merges red.
 
-## 5. Other CI systems
+## 5. Measure delivery performance
+
+Track the [DORA metrics](https://dora.dev/guides/dora-metrics-four-keys/) to see whether changes to the pipeline help: **change lead time** (commit to production), **deployment frequency**, **failed deployment recovery time**, **change fail rate** (deployments needing immediate intervention) and **deployment rework rate** (unplanned deployments caused by production incidents). Improve throughput and stability together; speed that raises the fail rate is not progress.
+
+## 6. Other CI systems
 
 The same principles apply to GitLab CI (`.gitlab-ci.yml`), Azure Pipelines, CircleCI, Jenkins and Buildkite: reproducible installs, least-privilege tokens, pinned images and plugins, protected secrets for protected branches only, and one build promoted through environments. Check the platform's documentation for exact syntax; do not translate GitHub Actions syntax by guesswork.
 
-## 6. Checklist
+## 7. Checklist
 
 - [ ] Every pull request runs format, lint, type-check, tests, dependency audit and secret scan
 - [ ] Top-level `permissions: contents: read`; extra scopes only per job, commented

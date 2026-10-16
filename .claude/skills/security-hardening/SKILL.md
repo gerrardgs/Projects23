@@ -57,7 +57,41 @@ Apply the [OWASP Top 10 for LLM Applications 2025](https://genai.owasp.org/llm-t
 - Production: a secret manager (cloud provider secret manager, HashiCorp Vault, or Kubernetes Secrets with encryption at rest), rotated regularly.
 - Leaked secret: revoke and rotate immediately, then remove it from history, and check access logs for misuse.
 
-## 6. Verify
+## 6. Public exposure audit
+
+Run before a repository becomes public, before a release, and after any incident. Rule [06-security](../../rules/06-security.md) section 8 lists where data leaks; this is the procedure:
+
+1. **Repository and history**: `gitleaks git --log-opts="--all" --redact .` scans every commit on every branch; `gitleaks dir --redact .` scans the working tree. Search tracked files for personal data, internal hostnames and local paths (`git grep -n -I -E "<pattern>"`). Check that `.gitignore` covers `.env*`, keys and certificates, credential files, Terraform state and variable files, kubeconfigs, database dumps and backups.
+2. **Commit identity**: `git log --all --format="%an <%ae>" | sort -u` shows the email addresses that are public in a public repository. Switch future commits to the platform's private no-reply address; rewriting existing history is irreversible and needs the owner's approval.
+3. **Hosting settings** (owner action): secret scanning with push protection, private vulnerability reporting, a `SECURITY.md`, branch protection or rulesets on the default branch, required reviews for workflow changes, and approval before workflows run for first-time contributors from forks.
+4. **Build outputs**: list what a package or image will contain before publishing (`npm pack --dry-run`, `docker history` and the image's file list, `python -m build` then inspect the archive); confirm no secrets, `.env` files or real data.
+5. **Running systems**: scan public endpoints for exposed `.git`, `.env`, debug and admin paths, directory listings and verbose errors (for example with ZAP against a test environment); confirm that storage and databases are not reachable from the internet; review CORS and authentication on every public route.
+6. **Cloud accounts**: enforce public-access blocks at account or organization level (Amazon S3 Block Public Access; Azure Storage `AllowBlobPublicAccess` false, noting that the `$web` static-website container is always public; Google Cloud Storage public access prevention via the `storage.publicAccessPrevention` organization policy constraint), and run the provider's access analysis (for example IAM Access Analyzer for S3).
+
+Report each exposure with what was exposed, since when, to whom, and the remediation (revoke and rotate secrets, make resources private, notify as required).
+
+## 7. Keep security current
+
+No system is impossible to attack: new vulnerabilities are published every day, including in security tools. What can be guaranteed is that known vulnerabilities are found and fixed quickly, and that each layer limits the damage of a failure in another.
+
+1. **Automate updates** for every pinned thing: dependencies, lockfiles, GitHub Actions SHAs, container base-image digests and CI tool pins (Dependabot or Renovate). Pins written inside workflow `run:` commands are not updated by Dependabot: keep them in a requirements or manifest file it can read.
+2. **Use a short cooldown** (for example 7 days) for routine updates, so a compromised release has time to be detected and pulled before you adopt it.
+3. **Patch actively exploited vulnerabilities first, without waiting for the cooldown.** Check findings against the [CISA Known Exploited Vulnerabilities catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) and use [EPSS](https://www.first.org/epss/) scores to rank the rest. For an emergency update, confirm the fix comes from the official project (release notes, advisory, checksum or signature) before applying it.
+4. **Scan on a schedule, not only on change**: a weekly CI run of the dependency audit, secret scan, image scan and static analysis (CodeQL or Semgrep) finds vulnerabilities published after your last commit.
+5. **Shrink what can be attacked**: minimal runtime images (distroless or scratch) without shell or package manager, only production dependencies, unused features and ports disabled.
+6. **Rebuild images regularly**, even without code changes, to pick up patched base layers, and rescan the result.
+7. **Track end of life**: `node scripts/tech-lookup.mjs eol:<product>` for runtimes, databases and operating systems; plan upgrades before support ends.
+8. **Practise the response**: know who rotates which secret, how to roll back, and how to notify users; an incident plan that was never exercised will not work under pressure.
+
+## 8. Guardrails for AI agents themselves
+
+Instruction files guide an agent; only the tool's own controls enforce. Use both:
+
+- Give agents least privilege: read-only credentials by default, no production secrets in their environment, sandboxed execution for untrusted code ([ai-agent-systems](../ai-agent-systems/SKILL.md)).
+- Turn on the tool's permission prompts for destructive actions, and keep secrets out of the files an agent can read.
+- **Claude Code**: [assets/claude-code-guardrails/](assets/claude-code-guardrails/) is a tested `PreToolUse` hook (Node.js, no dependencies) that denies reading or editing `.env` files, private keys, cloud and SSH credentials, Terraform state and registry token files, and blocks force-pushes, recursive deletes of the root or home directory, piping downloads into a shell, `--no-verify` commits and `chmod 777`. To enable it, copy `guard.mjs` to `.claude/hooks/guard.mjs` (keep it executable) and merge `settings.example.json` into `.claude/settings.json`. Hooks change every session in the repository, so this is an owner decision. The deny patterns are a safety net, not a complete sandbox.
+
+## 9. Verify
 
 - Run the scanners in [references/tools.md](references/tools.md) and triage every finding: fix it, or document why it is a false positive.
 - Write tests for security requirements: authorization denials, input limits, rejected tokens, rate limits.

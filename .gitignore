@@ -23,3 +23,35 @@ venv/
 .env
 .env.*
 !.env.example
+
+# Keys, certificates and credentials (never commit; use a secret manager)
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa*
+id_ecdsa*
+id_ed25519*
+credentials.json
+service-account*.json
+.npmrc
+.pypirc
+.netrc
+*.kubeconfig
+kubeconfig
+
+# Infrastructure state and variables (may contain secrets)
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/
+
+# Data dumps and local databases
+*.sql.gz
+*.dump
+*.sqlite
+*.sqlite3
+*.db
+*.bak

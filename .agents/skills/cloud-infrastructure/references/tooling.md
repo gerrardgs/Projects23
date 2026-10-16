@@ -12,7 +12,7 @@ Checked on 2026-10-15 against the projects' repositories, licence files and the 
 | Policy as code | Open Policy Agent (OPA, Gatekeeper), Kyverno | |
 | Static analysis of IaC | Checkov, tflint, Trivy (`--scanners misconfig`) | |
 | Kubernetes security posture | Kubescape, kube-bench (CIS Kubernetes Benchmark checks), Falco (runtime threat detection) | |
-| Supply chain | Sigstore cosign (image signing), SLSA (provenance; specification version 1.2 is current) | |
+| Supply chain | Sigstore cosign or Notation (image signing), SLSA (provenance; specification version 1.2 is current), in-toto attestations | Enforce signatures at admission with Kyverno `verifyImages` rules or the Sigstore policy-controller |
 | Observability | Prometheus, Grafana, OpenTelemetry Collector, Jaeger, kube-state-metrics | |
 | Cost estimation | Infracost | |
 | Chaos engineering | Chaos Mesh, LitmusChaos, cloud fault-injection services | Run only with approval, starting in non-production |

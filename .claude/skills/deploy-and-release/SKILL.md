@@ -12,6 +12,8 @@ Deploying should be boring: repeatable, observable and reversible. Never deploy 
 
 ## 1. Production readiness checklist
 
+These items follow [The Twelve-Factor App](https://12factor.net/): one codebase with many deploys, explicit dependencies, configuration in the environment, backing services as attached resources, strictly separated build, release and run stages, stateless processes, port binding, scaling through processes, disposability (fast start, graceful shutdown), dev/prod parity, logs as event streams, and admin tasks as one-off processes.
+
 - [ ] **One artifact**: built once in CI ([ci-cd-pipeline](../ci-cd-pipeline/SKILL.md)) and promoted unchanged through environments, identified by version and digest
 - [ ] **Configuration from the environment**: no environment-specific values or secrets baked into the artifact; all variables documented in `.env.example` and validated at startup
 - [ ] **Health endpoints**: liveness (process is alive) and readiness (can serve traffic: dependencies reachable, migrations applied)
@@ -24,12 +26,12 @@ Deploying should be boring: repeatable, observable and reversible. Never deploy 
 
 ## 2. Container images
 
-Verified examples live next to the service templates: [Node.js Dockerfile](../native-from-scratch/assets/node-http-service/Dockerfile) and [Python Dockerfile](../native-from-scratch/assets/python-http-service/Dockerfile). Both pass `hadolint` 2.15.1. They were not built in the authoring environment because Docker was not installed there, so run `docker build` before relying on them.
+Verified examples live next to the service templates: [Node.js Dockerfile](../native-from-scratch/assets/node-http-service/Dockerfile) and [Python Dockerfile](../native-from-scratch/assets/python-http-service/Dockerfile). Both use distroless runtime images and pass `hadolint` 2.15.1 and Trivy's Dockerfile checks. Switching the Node.js template from `node:24-slim` to distroless removed all 4 critical and 64 high base-image vulnerabilities that Trivy reported on 2026-10-16. They were not built in the authoring environment because Docker was not installed there, so run `docker build` and scan the image before relying on them.
 
 Rules that apply to every Dockerfile:
 
 - Pin the base image by digest (`image:tag@sha256:...`) and let Dependabot or Renovate update it.
-- Use a slim or distroless runtime image; use multi-stage builds when a compile step or build tools are needed, and copy only the output into the final stage.
+- Prefer a distroless or scratch runtime image (no shell or package manager); on 2026-10-16 Trivy reported 253 known vulnerabilities in `node:24-slim` and 172 in `python:3.14-slim`, most of them in packages the application never uses. Use multi-stage builds when a compile step, build tools or dependency installation is needed, and copy only the output into the final stage.
 - Copy the dependency manifest and lockfile first and install, **then** copy the source, so dependency layers are cached.
 - Run as a non-root numeric user (`USER 10001:10001`).
 - Add a `.dockerignore` that excludes `.git`, `.env*`, dependencies, caches and tests.
@@ -43,7 +45,7 @@ Rules that apply to every Dockerfile:
 | Rolling | Replace instances a few at a time, gated on readiness | Default for stateless services with backward-compatible changes |
 | Blue-green | Run the new version beside the old one; switch traffic at once; keep the old one for instant rollback | Fast, complete rollback is required |
 | Canary | Send a small percentage of traffic to the new version, compare error rate and latency, then increase | High-traffic or high-risk changes |
-| Feature flag | Deploy code dark; enable it per user or percentage at runtime | Decouple deploy from release; risky features |
+| Feature flag | Deploy code dark; enable it per user or percentage at runtime | Decouple deploy from release; risky features. [OpenFeature](https://openfeature.dev/) (a CNCF incubating project) is a vendor-neutral flag API; remove flags once fully rolled out |
 
 After every deploy, run smoke tests against the real environment and watch the key metrics (error rate, latency, saturation) for a set period before declaring success.
 

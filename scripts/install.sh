@@ -8,6 +8,7 @@
 # Options:
 #   --ref <ref>       branch, tag or commit to install (default: main; a tag is recommended for reproducibility)
 #   --source <dir>    install from a local checkout instead of downloading
+#   --sha256 <hash>   verify the downloaded archive's SHA-256 before using it (pair with a pinned --ref)
 #   --force           overwrite files that already exist and differ
 #   --dry-run         show what would happen without writing anything
 #   -h, --help        show this help
@@ -22,6 +23,7 @@ set -euo pipefail
 REPOSITORY="gerrardgs/Projects23"
 REF="${UCNA_REF:-main}"
 SOURCE_DIR="${UCNA_SOURCE_DIR:-}"
+EXPECTED_SHA256="${UCNA_SHA256:-}"
 TARGET_DIR="."
 FORCE=0
 DRY_RUN=0
@@ -39,12 +41,21 @@ SPEC_FILES=(
 SPEC_DIRECTORIES=(".agents")
 
 usage() {
-  sed -n '2,19p' "$0" 2>/dev/null | sed 's/^# \{0,1\}//' || true
+  sed -n '2,20p' "$0" 2>/dev/null | sed 's/^# \{0,1\}//' || true
 }
 
 die() {
   printf 'error: %s\n' "$1" >&2
   exit 1
+}
+
+# Prints the file's SHA-256, or nothing when neither sha256sum nor shasum is installed.
+sha256_of() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$1" | cut -d ' ' -f 1
+  elif command -v shasum >/dev/null 2>&1; then
+    shasum -a 256 "$1" | cut -d ' ' -f 1
+  fi
 }
 
 while [ "$#" -gt 0 ]; do
@@ -57,6 +68,11 @@ while [ "$#" -gt 0 ]; do
     --source)
       [ "$#" -ge 2 ] || die "--source needs a directory"
       SOURCE_DIR="$2"
+      shift 2
+      ;;
+    --sha256)
+      [ "$#" -ge 2 ] || die "--sha256 needs a value"
+      EXPECTED_SHA256="$2"
       shift 2
       ;;
     --force) FORCE=1; shift ;;
@@ -73,6 +89,10 @@ TARGET_DIR="$(cd "$TARGET_DIR" && pwd)"
 WORK_DIR="$(mktemp -d)"
 trap 'rm -rf "$WORK_DIR"' EXIT
 
+if [ -n "$SOURCE_DIR" ] && [ -n "$EXPECTED_SHA256" ]; then
+  die "--sha256 applies to downloads only, not to --source"
+fi
+
 if [ -n "$SOURCE_DIR" ]; then
   [ -f "$SOURCE_DIR/AGENTS.md" ] || die "--source does not look like a Projects 23 checkout: $SOURCE_DIR"
   SOURCE_DIR="$(cd "$SOURCE_DIR" && pwd)"
@@ -83,6 +103,15 @@ else
   ARCHIVE_URL="https://github.com/${REPOSITORY}/archive/${REF}.tar.gz"
   printf 'Downloading Projects 23 (%s) from %s\n' "$REF" "$ARCHIVE_URL"
   curl -fsSL "$ARCHIVE_URL" -o "$WORK_DIR/spec.tar.gz" || die "download failed; check the --ref value and your network"
+  ACTUAL_SHA256="$(sha256_of "$WORK_DIR/spec.tar.gz")"
+  if [ -n "$EXPECTED_SHA256" ]; then
+    [ -n "$ACTUAL_SHA256" ] || die "sha256sum or shasum is required to use --sha256"
+    [ "$ACTUAL_SHA256" = "$(printf '%s' "$EXPECTED_SHA256" | tr '[:upper:]' '[:lower:]')" ] ||
+      die "SHA-256 mismatch: expected $EXPECTED_SHA256, got $ACTUAL_SHA256. Nothing was installed; do not use this archive"
+    printf 'Archive SHA-256 verified: %s\n' "$ACTUAL_SHA256"
+  elif [ -n "$ACTUAL_SHA256" ]; then
+    printf 'Archive SHA-256: %s (pass --sha256 with a pinned --ref to verify it next time)\n' "$ACTUAL_SHA256"
+  fi
   mkdir "$WORK_DIR/extract"
   tar -xzf "$WORK_DIR/spec.tar.gz" -C "$WORK_DIR/extract"
   SOURCE_DIR="$(find "$WORK_DIR/extract" -mindepth 1 -maxdepth 1 -type d | head -n 1)"

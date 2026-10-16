@@ -28,6 +28,7 @@ No written specification can contain every fact of every field. Any language, fr
 | Integration engineer, middleware or connector developer | [api-integration](skills/api-integration/SKILL.md) and its [sector standards](skills/api-integration/references/sector-standards.md) | [backend-engineering](skills/backend-engineering/SKILL.md), [security-hardening](skills/security-hardening/SKILL.md) |
 | System administrator, IT operations, help desk, network and identity engineer | [it-operations](skills/it-operations/SKILL.md) | [cloud-infrastructure](skills/cloud-infrastructure/SKILL.md), [security-hardening](skills/security-hardening/SKILL.md) |
 | Database administrator | [backend-engineering data stores](skills/backend-engineering/references/data-stores.md) | [cloud-infrastructure](skills/cloud-infrastructure/SKILL.md) (backup and DR), [deploy-and-release](skills/deploy-and-release/SKILL.md) (migrations) |
+| Product owner, business analyst, technical writer | [feature-specification](skills/feature-specification/SKILL.md), [technical-documentation](skills/technical-documentation/SKILL.md) | [data-analysis](skills/data-analysis/SKILL.md) |
 | Tech lead, reviewer | [rigorous-code-audit](skills/rigorous-code-audit/SKILL.md) | Rule [08](rules/08-git-workflow.md), [change-existing-code](skills/change-existing-code/SKILL.md) |
 
 ## 2. Industry sectors
@@ -40,6 +41,7 @@ Every domain moves through the same phases. Load the lifecycle skill for the pha
 
 | Phase | Lifecycle skill |
 | :--- | :--- |
+| Specify a feature | [feature-specification](skills/feature-specification/SKILL.md) |
 | Set up a repository | [project-bootstrap](skills/project-bootstrap/SKILL.md) (toolchains for 14 language and tool families) |
 | Build something new | [native-from-scratch](skills/native-from-scratch/SKILL.md) |
 | Change existing code | [change-existing-code](skills/change-existing-code/SKILL.md) |
@@ -48,6 +50,7 @@ Every domain moves through the same phases. Load the lifecycle skill for the pha
 | Review | [rigorous-code-audit](skills/rigorous-code-audit/SKILL.md) |
 | Secure | [security-hardening](skills/security-hardening/SKILL.md) |
 | Automate | [ci-cd-pipeline](skills/ci-cd-pipeline/SKILL.md) |
+| Document | [technical-documentation](skills/technical-documentation/SKILL.md) |
 | Release and operate | [deploy-and-release](skills/deploy-and-release/SKILL.md), [cloud-infrastructure](skills/cloud-infrastructure/SKILL.md) |
 
 ## 4. Domains without a dedicated skill

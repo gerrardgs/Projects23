@@ -62,4 +62,10 @@ updates:
       # typescript-eslint 8 declares the peer range typescript >=4.8.4 <6.1.0.
       - dependency-name: "typescript"
         versions: [">=6.1.0"]
+  - package-ecosystem: pip
+    directory: /tools/ci
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
 

@@ -41,7 +41,8 @@ If your tool does not load these folders automatically, **open the matching file
 3. **Plan the smallest correct change.** Prefer modifying existing code over adding layers. Write the plan down for multi-file or risky changes.
 4. **Implement.** Write idiomatic, typed, complete code per [01-core-principles](.agents/rules/01-core-principles.md) and [02-clean-code](.agents/rules/02-clean-code.md). Handle errors per [05-error-handling](.agents/rules/05-error-handling.md).
 5. **Verify by executing.** Run the formatter, linter, type checker, tests and build that the project already uses. Add or update tests for the behaviour you changed. A change is not verified until the commands have actually run.
-6. **Report.** Use the format in section 7.
+6. **Review your own work.** Re-read the diff against the request and the rules, fix what you find, re-run the checks; repeat for risky changes ([09-clean-execution](.agents/rules/09-clean-execution.md) section 6).
+7. **Report.** Use the format in section 7.
 
 ## 4. Rules index
 
@@ -63,6 +64,7 @@ If your tool does not load these folders automatically, **open the matching file
 
 | Phase | Skill | Use it when |
 | :--- | :--- | :--- |
+| Specify | [feature-specification](.agents/skills/feature-specification/SKILL.md) | Turning a request into goals, acceptance criteria, a plan and ordered tasks before coding |
 | Start | [project-bootstrap](.agents/skills/project-bootstrap/SKILL.md) | Creating a repository: runtime, toolchain, editor extensions, CI, docs |
 | Build | [native-from-scratch](.agents/skills/native-from-scratch/SKILL.md) | Writing a new service, CLI or module, standard library first |
 | Change | [change-existing-code](.agents/skills/change-existing-code/SKILL.md) | Modifying, refactoring, upgrading or migrating existing code |
@@ -72,6 +74,7 @@ If your tool does not load these folders automatically, **open the matching file
 | Secure | [security-hardening](.agents/skills/security-hardening/SKILL.md) | Threat modelling, hardening, security scanning, secrets |
 | Automate | [ci-cd-pipeline](.agents/skills/ci-cd-pipeline/SKILL.md) | CI workflows, release automation, Dependabot |
 | Ship | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Containers, configuration, migrations, rollout, monitoring, rollback |
+| Document | [technical-documentation](.agents/skills/technical-documentation/SKILL.md) | READMEs, guides, API and configuration reference, ADRs, changelogs, runbooks |
 | Any tool | [technology-adoption](.agents/skills/technology-adoption/SKILL.md) | Any language, framework, library, platform or SaaS, especially one no other skill covers |
 
 ### Domain skills (load together with the lifecycle skill for the phase)
@@ -132,9 +135,13 @@ Risks:      <follow-ups, migrations, breaking changes, or "none">
 
 If a field below is empty, detect it from the repository and propose the value to the user. Do not guess.
 
+- Project overview (what it does, main components):
 - Runtime and version:
-- Install:
+- Install / dev environment setup:
 - Format / lint / type-check:
 - Test:
 - Build / run:
+- Code style specifics beyond the formatter:
+- Commit and pull request conventions:
+- Security notes (sensitive areas, data classification, files agents must not touch):
 - Deploy target:

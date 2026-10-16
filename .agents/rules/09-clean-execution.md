@@ -42,6 +42,16 @@ Clean code ([02-clean-code](02-clean-code.md)) is about what the result looks li
 - Safe defaults: preview or confirmation for destructive operations, no secrets in output, timeouts on network calls.
 - Behave well in pipelines and automation: no interactive prompts in non-interactive mode, handle a closed output pipe and interruption without crashing or leaving partial state.
 
-## 6. Report
+## 6. Review your own work before reporting
+
+Self-review catches what a single pass misses. The OpenSSF guide for AI code assistants reports that even two rounds of this "recursive criticism and improvement" substantially improve the security of generated code ([source](https://best.openssf.org/Security-Focused-Guide-for-AI-Code-Assistant-Instructions)).
+
+1. Re-read the full diff against the request, the acceptance criteria and the rules: correctness, edge cases, security (rule [06](06-security.md)), clean code (rule [02](02-clean-code.md)), leftovers (section 4).
+2. Write down the concrete problems you find, fix them, and re-run the checks.
+3. Repeat once more for risky changes (security, data, money, concurrency, migrations). Stop when a round finds nothing new.
+
+Self-review complements real tools and human review; it never replaces running the linter, tests and scanners.
+
+## 7. Report
 
 State what was changed, which commands ran and what they returned, what was not done, and any state left behind (running services, pending migrations, follow-ups), using the format in [AGENTS.md](../../AGENTS.md) section 7.

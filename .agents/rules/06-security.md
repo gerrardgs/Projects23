@@ -26,7 +26,9 @@ Security outranks every other goal ([AGENTS.md](../../AGENTS.md) section 1). The
 - **Output encoding**: let the template engine auto-escape HTML; encode for the actual context (HTML, attribute, URL, JavaScript, CSV, shell).
 - **Files and paths**: resolve user-supplied paths against a fixed base directory and reject anything that escapes it. Limit upload size and type.
 - **Server-side requests**: when fetching user-supplied URLs, allow-list hosts and block internal address ranges (SSRF).
-- **Deserialization**: never deserialize untrusted data with formats that can execute code (Python `pickle`, Java native serialization, YAML full loaders). Use JSON or safe loaders.
+- **Deserialization**: never deserialize untrusted data with formats that can execute code (Python `pickle`, Java native serialization, .NET `BinaryFormatter`, YAML full loaders). Use JSON or safe loaders, and never turn off XML external-entity protection or type checks to make parsing "work".
+- **Temporary files and permissions**: create temporary files with the platform's secure functions (random names, exclusive creation), give files the narrowest permissions, and run services as an unprivileged user, never as root unless unavoidable.
+- **Language-specific pitfalls** (C and C++ memory safety and compiler hardening, `unsafe` Rust, `eval` and shell execution, framework security features): see the [language security reference](../skills/security-hardening/references/language-security.md).
 
 ## 4. Authentication and authorization
 
@@ -46,9 +48,28 @@ Security outranks every other goal ([AGENTS.md](../../AGENTS.md) section 1). The
 
 - Follow [04-dependencies](04-dependencies.md): verify package names, commit lockfiles, install reproducibly, run the vulnerability audit.
 - Pin third-party CI actions and container base images to immutable references (commit SHA, image digest) in release pipelines.
+- Keep everything current: automated updates for every pin, scheduled vulnerability scans even without code changes, and known-exploited vulnerabilities patched first ([security-hardening](../skills/security-hardening/SKILL.md) section 7).
 
 ## 7. Safe failure and privacy
 
 - Fail closed: an error during an authorization or validation check denies the request.
 - Error responses never expose stack traces, queries, internal paths or secrets.
 - Collect and log the minimum personal data needed, and follow the project's data-retention rules.
+
+## 8. No unintended public exposure
+
+Private by default: nothing becomes reachable or readable by the public unless the user explicitly decided it should. Check every place data can leak:
+
+| Where | Rule |
+| :--- | :--- |
+| Source code and Git history | No secrets, personal data, internal hostnames or customer data in any commit. History is public forever once pushed to a public repository; removal requires rotation plus a history rewrite approved by the owner |
+| Commit metadata | Authors' email addresses are part of every commit; use the hosting platform's private no-reply address when the repository is public |
+| CI/CD | Workflow logs and artifacts of public repositories are readable by anyone: never print secrets, environment dumps or customer data; mask values; keep artifacts minimal and short-lived |
+| Packages and images | Published packages and container images contain only intended files (`files` allow-list or `.npmignore`, `.dockerignore`, multi-stage builds); no `.env`, keys, tests with real data, or source maps unless intended. Mark internal packages private (`"private": true`) |
+| Client bundles and apps | Everything shipped to browsers and mobile apps is public, including environment variables a framework marks public (for example `NEXT_PUBLIC_*`, `VITE_*`) and API keys in app binaries. Keep secrets server-side |
+| Web servers and APIs | No directory listing, exposed `.git`/`.env`, debug or admin endpoints, default credentials, or verbose errors on public interfaces; authentication on every non-public route; restrictive CORS |
+| Cloud storage and databases | Block public access at account or organization level (Amazon S3 Block Public Access, Azure Storage `AllowBlobPublicAccess` set to false, Google Cloud Storage public access prevention); databases and caches on private networks only; share files through short-lived signed URLs |
+| Backups, exports and logs | Encrypted, access-controlled, never in public buckets, repositories, tickets, chats or paste sites; redact personal data in logs |
+| Third-party services, including AI tools | Send personal, confidential or customer data to an external service only when policy and the user allow it |
+
+When you find an exposure, stop and tell the user. Exposed secrets must be revoked and rotated; exposed personal data may trigger legal notification duties.

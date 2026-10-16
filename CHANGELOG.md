@@ -1,5 +1,88 @@
 # Changelog
 
+## 2.8.0: research-driven additions from public standards and open source (2026-10-16)
+
+A gap analysis of the whole specification against authoritative public sources. Each addition below is cited to its official source, checked on 2026-10-16.
+
+### From the OpenSSF Security-Focused Guide for AI Code Assistant Instructions (2025)
+
+- **Self-review before reporting** (rule 09 section 6, workflow step 6 in `AGENTS.md`): the guide reports that two rounds of "recursive criticism and improvement" substantially improve the security of generated code.
+- **No persona framing** in instructions (`docs/CONTRIBUTING.md`): the guide does not recommend "act as an expert" prompts because some experiments found they make results worse. This specification already avoided them; the authoring rule now says why.
+- **Rule 06**: never disable XML external-entity protection or type checks during deserialization, `.NET BinaryFormatter` named (Microsoft: it always throws starting with .NET 9 and "can't be made secure"), secure temporary files and file permissions, run as non-root.
+- **New reference** `security-hardening/references/language-security.md`: C and C++ (OpenSSF compiler-hardening baseline flags, sanitizers), Rust, Go, Python, JavaScript/TypeScript, Java/Kotlin, C#/.NET, and the 2025 CWE Top 25 leaders.
+- **Rule 08**: follow the project's policy on disclosing AI assistance.
+
+### From agents.md
+
+- The `AGENTS.md` project profile now has the fields agents.md recommends: project overview, dev environment setup, code style, commit and pull request conventions, and security notes.
+
+### Other standards and practices
+
+- `rigorous-code-audit`: Google's code review standard (approve when the change improves overall code health; read every line; watch for over-engineering).
+- `deploy-and-release`: The Twelve-Factor App as the readiness frame; OpenFeature (CNCF incubating) for vendor-neutral feature flags.
+- `ci-cd-pipeline`: the five DORA metrics as defined on dora.dev (change lead time, deployment frequency, failed deployment recovery time, change fail rate, deployment rework rate).
+- Security domain standards: NIST SP 800-218 SSDF v1.1, the 2025 CWE Top 25, the OpenSSF AI-assistant guide, signed artefacts with Sigstore cosign or Notation and in-toto attestations; `cloud-infrastructure` admits only signed images (Kyverno `verifyImages` or the Sigstore policy-controller).
+
+### New skills (27 in total)
+
+- `feature-specification`: spec-driven development (specify, plan, tasks, implement, converge), in the same order as GitHub's open-source Spec Kit, with Given/When/Then acceptance criteria and non-functional requirements.
+- `technical-documentation`: the Diátaxis framework (tutorial, how-to, reference, explanation), the documents most projects need, writing rules, and docs as code.
+
+### Deterministic guardrails
+
+- `security-hardening/assets/claude-code-guardrails/`: a Claude Code `PreToolUse` hook (schema from the official hooks documentation) that denies access to secret files and blocks force-pushes, root or home deletes, `curl | sh`, `--no-verify` commits and `chmod 777`. It fails closed on unreadable input. Five tests run in CI, and the clean-code lint covers it (the lint caught one function at complexity 11, which was split). It is not enabled automatically: hooks change every session in a repository, so enabling it is the owner's decision.
+
+## 2.7.0: security kept current, measured (2026-10-16)
+
+No system can be made impossible to hack. This release makes sure everything in the repository is current, that known vulnerabilities are found automatically even when nothing changes, and that the runtime images expose as little as possible.
+
+### Checked and found current
+
+- All 8 pinned GitHub Actions and gitleaks 8.30.1 are the latest releases (checked with `scripts/tech-lookup.mjs`).
+- `npm audit`: 0 vulnerabilities in all 3 lockfiles. `pip-audit --strict`: no known vulnerabilities in the CI tools, the ML template and both Python dev groups.
+- zizmor 1.31.1 (released 2026-10-15, newer than the pinned 1.30.1) found nothing in the workflows and the CI/CD templates. Its pin, and Ruff 0.17.1, were deliberately not adopted inside the 7-day cooldown, because both releases are under a day old and contain bug fixes only.
+
+### Fixed
+
+| # | Finding | Fix |
+| :- | :--- | :--- |
+| 1 | `node:24-slim` (pinned digest): Trivy 0.75.0 reported 4 critical and 68 high vulnerabilities (3 critical and 11 high with fixes available: `perl-base`, and `brace-expansion` and `undici` bundled with npm). A newer digest still had 4 critical and 64 high | Node.js runtime moved to `gcr.io/distroless/nodejs24-debian13:nonroot` (pinned digest): **0 critical, 0 high** (23 medium, 8 low, none fixable yet) |
+| 2 | `python:3.14-slim`: 48 high, 4 fixable (`setuptools`, `urllib3`, `msgpack` from pip's environment) | Python runtime moved to `gcr.io/distroless/python3-debian13:nonroot` (Python 3.13, within the template's 3.11+ support): 0 critical, 31 high, none with a fix released yet; no pip in the image |
+| 3 | CI tool versions were pinned inside workflow `run:` commands, which Dependabot cannot update, so security tools could silently go stale | Moved to `tools/ci/requirements.txt` with a Dependabot `pip` entry |
+| 4 | Vulnerabilities published after the last commit would go unnoticed until the next change | `validate.yml` now also runs weekly (`schedule`) and on demand (`workflow_dispatch`); the ML job also runs `pip-audit` |
+| 5 | No static security analysis of the code | New `codeql.yml`: `actions`, `javascript-typescript` and `python` with `security-extended` queries, on push, pull request and weekly (CodeQL Action v4.38.3; v4.39.0 is inside the cooldown) |
+
+Both Dockerfiles pass hadolint and all 27 Trivy configuration checks. Their entrypoints and users were read from the images' registry configuration, not assumed.
+
+### Added guidance
+
+- `security-hardening` section 7, "Keep security current": automate every pin, keep CI tool pins where Dependabot can see them, use a cooldown for routine updates, patch known-exploited vulnerabilities first (CISA KEV catalog, EPSS), scan on a schedule, minimise runtime images, rebuild regularly, track end of life, practise the response.
+- Rule 06: keep everything current, with a pointer to that section. `deploy-and-release` now prefers distroless runtime images, with the measured numbers. CodeQL template added to `ci-cd-pipeline`.
+
+### Not added
+
+- OpenSSF Scorecard: its README asks for `scorecard-action` v2.6.0 or later, but the latest published release is v2.5.0, and its publishing mode has restrictions that could not be tested locally. Add it once a matching release exists.
+
+## 2.6.0: data and security private by default (2026-10-16)
+
+### Audit of this repository (it is public on GitHub)
+
+| # | Finding | Action |
+| :- | :--- | :--- |
+| 1 | Secrets: gitleaks 8.30.1 (checksum-verified binary) scanned all 10 commits on all branches and the working tree | No leaks found. No `.env`, key, certificate, credential, state or dump file was ever committed |
+| 2 | The commit author email address is public in every commit of the public history | Not changed: rewriting published history is irreversible and needs the owner's decision. Recommended: GitHub's private no-reply email for future commits and "Block command line pushes that expose my email" |
+| 3 | The local macOS username appeared in one CHANGELOG line and in five lines inside `.archive/phase1-original-2026-10-14.tar.gz` | CHANGELOG line redacted. The archive is left for the owner to keep, replace or remove (it also remains in history) |
+| 4 | Test data used `a@b.co`, an address on a real, registered domain | Replaced with `a@example.com` (domains reserved for documentation by RFC 2606) in both service templates; tests pass |
+| 5 | `.gitignore` covered `.env` files but not other secret-bearing files | Added keys and certificates, SSH keys, credential and registry token files, kubeconfigs, Terraform state and variables, database dumps and local databases; no tracked file is affected |
+| 6 | No security policy | `SECURITY.md` with private vulnerability reporting; a reusable template in `project-bootstrap/assets/` |
+| 7 | The installer could not prove that a downloaded archive was the reviewed one | `--sha256 <hash>` (or `UCNA_SHA256`) verifies the archive before anything is written; the hash is printed on every download. Tested: correct hash accepted, wrong hash aborts with nothing installed |
+| 8 | CI did not scan for secrets | New `secret-scan` job: full history plus working tree on every push and pull request |
+
+### Added guidance
+
+- Rule 06 section 8, "No unintended public exposure" (always on): Git history, commit metadata, CI logs and artifacts, published packages and images, client bundles and app binaries, web servers and APIs, cloud storage and databases (Amazon S3 Block Public Access, Azure `AllowBlobPublicAccess` false, Google Cloud Storage public access prevention, each checked against official documentation), backups and logs, third-party and AI services.
+- `security-hardening` skill section 6, "Public exposure audit": a six-step procedure with commands, from history scanning to cloud account controls.
+
 ## 2.5.0: clean code and clean execution, applied to this repository itself (2026-10-16)
 
 The concept is now stated explicitly, and the repository is held to its own standard by CI.
@@ -120,7 +203,7 @@ The Phase 1 files were backed up to `.archive/phase1-original-2026-10-14.tar.gz`
 | :- | :--- | :--- | :--- |
 | 1 | `.agents/rules/*.md` had no `trigger` frontmatter | Antigravity silently discards rule files without it, so none of the rules loaded there | Every rule now declares `trigger` (`always_on` or `model_decision`) and a `description`; the validator enforces it |
 | 2 | `CLAUDE.md` existed but did not import `AGENTS.md` | When a `CLAUDE.md` exists, Claude Code reads it instead of `AGENTS.md`, so Claude saw a four-line summary rather than the rules | `CLAUDE.md` now starts with `@AGENTS.md` |
-| 3 | Links used `file:///Users/sinitygs/...` and `file:///.agents/...` | Broken on every other machine and on GitHub | Relative links throughout; the validator rejects `file:` links |
+| 3 | Links used `file:///Users/<user>/...` and `file:///.agents/...` | Broken on every other machine and on GitHub | Relative links throughout; the validator rejects `file:` links |
 | 4 | Skills duplicated in a root `skills/` folder | No coding agent loads skills from there; two copies drift apart | `.agents/skills/` is the single source; `.claude/skills/` is generated by the sync script |
 | 5 | `.cursorrules` and `.windsurfrules` repeated the rules | Both tools also read `AGENTS.md`, so instructions loaded twice; `.cursorrules` is the legacy Cursor format | Marked for removal; the validator warns while they exist |
 | 6 | "Node 20+" baseline | Node.js 20 reached end of life on 2026-04-30 | Dated, sourced version baseline in rule 04 |

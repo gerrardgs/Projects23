@@ -4,6 +4,8 @@ How to add or change rules, skills and templates without breaking any of the too
 
 ## 1. Golden rules
 
+- **Write instructions that work.** Following the [OpenSSF guide for AI code assistant instructions](https://best.openssf.org/Security-Focused-Guide-for-AI-Code-Assistant-Instructions): keep each instruction concise, specific and actionable; include only what applies (irrelevant rules make agents produce extraneous or wrong code); state requirements and standards explicitly instead of persona framing such as "act as a security expert", which the guide does not recommend because some experiments found it makes results worse.
+
 - **Verify every fact you add.** Versions, flags, paths, package names and extension IDs must come from official documentation, a registry, `--help` output, or running the tool. `node scripts/tech-lookup.mjs <ecosystem>:<name>` checks package names, latest stable versions, licences and end-of-life dates in one step. Write the verification date next to time-sensitive facts.
 - **Every template must run.** Code in `assets/` is executed in CI. Do not add code that you have not run.
 - **Edit sources, not copies.** Edit `AGENTS.md`, `.agents/rules/` and `.agents/skills/`. Never edit `.claude/skills/` by hand.

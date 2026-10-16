@@ -37,7 +37,7 @@ Supported Kubernetes versions on 2026-10-15: 1.35, 1.36 and 1.37 (the project ma
 - [ ] Resource requests and limits for CPU and memory
 - [ ] Liveness, readiness and (for slow starters) startup probes that check real health
 - [ ] `securityContext`: run as non-root, read-only root filesystem where possible, drop all capabilities, no privilege escalation; namespace enforces the **restricted** Pod Security Standard where feasible
-- [ ] Image pinned by digest, from a trusted registry, scanned
+- [ ] Image pinned by digest, from a trusted registry, scanned, and signed; production clusters admit only signed images (Kyverno `verifyImages` or the Sigstore policy-controller)
 - [ ] At least two replicas, a `PodDisruptionBudget`, and topology spread across zones for production services
 - [ ] Graceful shutdown: the app handles `SIGTERM` within `terminationGracePeriodSeconds`
 - [ ] Configuration in ConfigMaps, secrets from the secret manager (external secrets operator or CSI driver), not hard-coded

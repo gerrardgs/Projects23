@@ -26,7 +26,7 @@ describe("parseNewUser (pure validation)", () => {
   });
 
   test("rejects an over-long name", () => {
-    const result = parseNewUser({ name: "x".repeat(201), email: "a@b.co" });
+    const result = parseNewUser({ name: "x".repeat(201), email: "a@example.com" });
     assert.equal(result.ok, false);
   });
 });
@@ -85,7 +85,7 @@ describe("HTTP service", () => {
   });
 
   test("returns 413 when the body is too large", async () => {
-    const response = await postJson("/users", JSON.stringify({ name: "x".repeat(20_000), email: "a@b.co" }));
+    const response = await postJson("/users", JSON.stringify({ name: "x".repeat(20_000), email: "a@example.com" }));
     assert.equal(response.status, 413);
   });
 

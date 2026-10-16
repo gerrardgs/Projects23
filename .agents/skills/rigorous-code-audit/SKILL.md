@@ -10,6 +10,8 @@ metadata:
 
 A review is only useful if its findings are **real, ranked and actionable**. Run the toolchain first, then read the code with a checklist, then verify every finding before you report it.
 
+The standard for approving, from [Google's engineering practices](https://google.github.io/eng-practices/review/reviewer/standard.html): approve a change once it "definitely improves the overall code health of the system", even if it is not perfect, and never approve one that makes code health worse. Read every line, judge each change in the context of the whole file and system, watch especially for over-engineering, and say what is good as well as what is wrong.
+
 ## 1. Set the scope
 
 - **Diff review** (PR or local change): `git diff <base>...HEAD`, plus enough surrounding code to understand each change. Also check callers of changed functions.
