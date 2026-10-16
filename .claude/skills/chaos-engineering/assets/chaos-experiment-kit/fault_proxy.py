@@ -58,7 +58,7 @@ class FaultProxy:
     @property
     def address(self) -> Address:
         host, port = self._server.server_address[:2]
-        return str(host), int(port)
+        return str(host), port
 
     def set_faults(self, faults: Faults) -> None:
         with self._lock:

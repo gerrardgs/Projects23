@@ -8,7 +8,7 @@ import socketserver
 import threading
 import time
 import unittest
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Generator
 from contextlib import contextmanager
 from typing import Any
 
@@ -186,13 +186,13 @@ class _EchoServer(socketserver.ThreadingTCPServer):
 
 
 @contextmanager
-def echo_server() -> Iterator[tuple[str, int]]:
+def echo_server() -> Generator[tuple[str, int]]:
     server = _EchoServer(("127.0.0.1", 0), _EchoHandler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
         host, port = server.server_address[:2]
-        yield str(host), int(port)
+        yield str(host), port
     finally:
         server.shutdown()
         server.server_close()

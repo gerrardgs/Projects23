@@ -6,7 +6,7 @@ import base64
 import json
 import threading
 import unittest
-from collections.abc import Callable, Iterator, Sequence
+from collections.abc import Callable, Generator, Sequence
 from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import ClassVar
@@ -107,7 +107,7 @@ class ScriptedHandler(BaseHTTPRequestHandler):
 
 
 @contextmanager
-def scripted_server(script: Script) -> Iterator[str]:
+def scripted_server(script: Script) -> Generator[str]:
     ScriptedHandler.script = list(script)
     ScriptedHandler.received = []
     server = ThreadingHTTPServer(("127.0.0.1", 0), ScriptedHandler)

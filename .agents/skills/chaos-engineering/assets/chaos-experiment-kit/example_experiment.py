@@ -17,7 +17,7 @@ import threading
 import time
 import urllib.error
 import urllib.request
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Generator
 from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -57,8 +57,10 @@ class PriceClient:
     def price(self) -> str | None:
         try:
             with urllib.request.urlopen(self._url, timeout=self._timeout) as response:  # noqa: S310  # nosec B310 - fixed local URL
-                self._last_known = response.read().decode()
-                return self._last_known
+                body = response.read()
+                text = body.decode() if isinstance(body, bytes) else str(body)
+                self._last_known = text
+                return text
         except (urllib.error.URLError, http.client.HTTPException, TimeoutError, ConnectionError):
             return self.when_unavailable()
 
@@ -83,13 +85,13 @@ def answered_within_budget(client: PriceClient) -> Callable[[], float]:
 
 
 @contextmanager
-def price_service() -> Iterator[tuple[str, int]]:
+def price_service() -> Generator[tuple[str, int]]:
     server = ThreadingHTTPServer(("127.0.0.1", 0), PriceHandler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
         host, port = server.server_address[:2]
-        yield str(host), int(port)
+        yield str(host), port
     finally:
         server.shutdown()
         server.server_close()
