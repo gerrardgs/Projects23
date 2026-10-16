@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import dataclasses
 import socket
+import socketserver
 import threading
 import time
 import unittest
@@ -167,27 +168,35 @@ class RunExperimentTest(unittest.TestCase):
             experiment_for(FakeSystem(), steady_state=())
 
 
+class _EchoHandler(socketserver.BaseRequestHandler):
+    request: socket.socket
+
+    def handle(self) -> None:
+        try:
+            data = self.request.recv(1024)
+            if data:
+                self.request.sendall(data)
+        except OSError:
+            pass
+
+
+class _EchoServer(socketserver.ThreadingTCPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+
+
 @contextmanager
 def echo_server() -> Iterator[tuple[str, int]]:
-    listener = socket.create_server(("127.0.0.1", 0))
-
-    def serve() -> None:
-        while True:
-            try:
-                connection, _ = listener.accept()
-            except OSError:
-                return
-            with connection:
-                connection.sendall(connection.recv(1024))
-
-    thread = threading.Thread(target=serve, daemon=True)
+    server = _EchoServer(("127.0.0.1", 0), _EchoHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
-        host, port = listener.getsockname()[:2]
+        host, port = server.server_address[:2]
         yield str(host), int(port)
     finally:
-        listener.close()
-        thread.join()
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2.0)
 
 
 def round_trip(address: tuple[str, int], timeout: float = 2.0) -> bytes:

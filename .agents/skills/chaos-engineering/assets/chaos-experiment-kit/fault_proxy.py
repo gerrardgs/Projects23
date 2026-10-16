@@ -73,7 +73,7 @@ class FaultProxy:
     def stop(self) -> None:
         self._server.shutdown()
         self._server.server_close()
-        self._thread.join()
+        self._thread.join(timeout=2.0)
 
     def __enter__(self) -> FaultProxy:
         self.start()

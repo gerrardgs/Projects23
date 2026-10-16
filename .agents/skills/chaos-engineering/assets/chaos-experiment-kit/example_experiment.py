@@ -93,7 +93,7 @@ def price_service() -> Iterator[tuple[str, int]]:
     finally:
         server.shutdown()
         server.server_close()
-        thread.join()
+        thread.join(timeout=2.0)
 
 
 def injector(proxy: FaultProxy, faults: Faults) -> Callable[[], None]:
