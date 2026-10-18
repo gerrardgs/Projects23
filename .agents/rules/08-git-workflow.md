@@ -22,6 +22,7 @@ description: "Apply when committing, branching, writing commit messages or pull 
 ## 3. History safety
 
 - Never force-push to shared branches, rewrite published history, or delete branches and tags without explicit approval.
+- Never discard uncommitted or unpushed work (`git reset --hard`, `git checkout -- <path>`, `git restore`, `git clean`, `git stash drop` or `clear`) without explicit approval; it cannot be recovered from history ([09-clean-execution](09-clean-execution.md) section 2).
 - Prefer `git revert` to undo a published commit. Use `git push --force-with-lease`, never plain `--force`, when a force-push on your own branch is approved.
 - Resolve merge conflicts by understanding both sides. Never accept "ours" or "theirs" wholesale without reading.
 

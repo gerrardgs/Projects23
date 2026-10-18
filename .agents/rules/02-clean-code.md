@@ -67,9 +67,11 @@ type Fetch<T> =
 
 - Comment *why*: constraints, trade-offs, workarounds with links to issues. Do not narrate what the code obviously does.
 - Public APIs get doc comments in the language's format (JSDoc/TSDoc, docstrings, GoDoc, rustdoc, Javadoc/KDoc, XML docs).
-- Delete commented-out code; version control remembers it.
+- Do not leave commented-out code in your changes; version control remembers it. Commented-out code that already exists is reported, not deleted, unless the user agrees ([09-clean-execution](09-clean-execution.md) section 2).
 - Keep comments true. A wrong comment is worse than none, so update comments with the code.
 
-## 7. Code smells to fix when you touch them
+## 7. Code smells to avoid in your code and to report in existing code
 
 Duplicated knowledge, long parameter lists, magic numbers and strings (name them), dead code, feature envy, deeply nested conditionals, broad `catch`/`except` clauses, mutable defaults (Python `def f(x=[])`), and stringly-typed data that should be a type.
+
+Do not introduce them. When you find them in existing code, point them out and propose the fix; change or remove that code only when it is part of the request or the user agrees ([09-clean-execution](09-clean-execution.md) section 2).

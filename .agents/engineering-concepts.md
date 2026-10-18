@@ -41,6 +41,7 @@ No finite document can hold every concept ever named. This index is therefore an
 | Fail fast, validate at the boundary, fail closed | Rules [05](rules/05-error-handling.md), [06](rules/06-security.md) section 7 | |
 | Complexity limits, code smells | Rule [02](rules/02-clean-code.md) sections 3 and 7 | [Code smell](https://martinfowler.com/bliki/CodeSmell.html) |
 | Refactoring in small behaviour-preserving steps | [change-existing-code](skills/change-existing-code/SKILL.md) | [Refactoring catalog](https://refactoring.com/catalog/) |
+| Existing code is preserved: never delete, overwrite or rewrite it on your own; propose, discuss and wait for the decision | [AGENTS.md](../AGENTS.md) non-negotiable 9, rule [09](rules/09-clean-execution.md) section 2, [change-existing-code](skills/change-existing-code/SKILL.md) | |
 | Hyrum's law: "all observable behaviors of your system will be depended on by somebody" | [software-architecture](skills/software-architecture/SKILL.md) section 4 (contracts) | [hyrumslaw.com](https://www.hyrumslaw.com/) |
 
 ### Architecture and distributed systems

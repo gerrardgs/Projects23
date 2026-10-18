@@ -19,7 +19,7 @@ Debugging is the scientific method applied to code: observe, hypothesise, test, 
 ## 2. Reproduce
 
 - Turn the report into a reproduction you can run on demand, ideally an automated failing test ([test-engineering](../test-engineering/SKILL.md)).
-- Shrink it: remove inputs, steps and code until removing anything else makes the failure disappear.
+- Shrink it: remove inputs, steps and code until removing anything else makes the failure disappear. Do this in a scratch copy or a throwaway branch, never by deleting code in the user's working tree.
 - If it does not reproduce, compare environments (versions, configuration, data, timing, concurrency) and add targeted logging. Do not "fix" what you cannot observe.
 
 ## 3. Isolate

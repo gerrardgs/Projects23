@@ -8,7 +8,7 @@ metadata:
 
 # Change Existing Code Safely
 
-Most engineering work happens in code that already exists. The goal is to change exactly what was asked while everything else keeps working.
+Most engineering work happens in code that already exists. The goal is to change exactly what was asked while everything else keeps working. Existing code is never deleted, rewritten or replaced on your own judgement: propose it, discuss it, and wait for the user's decision ([09-clean-execution](../../rules/09-clean-execution.md) section 2).
 
 ## 1. Understand before editing
 
@@ -30,7 +30,7 @@ Most engineering work happens in code that already exists. The goal is to change
 - After each step: build, run the relevant tests, and keep the code working. Never pile up many unverified edits.
 - Common safe refactorings: rename, extract function, inline function, move code, introduce parameter object, replace conditional with polymorphism or a lookup table. Use the editor's or language server's automated refactorings where available.
 - Keep public interfaces stable. To replace one, add the new interface, migrate callers, deprecate the old one with a clear message, and remove it in a later major version.
-- For large replacements, use the **strangler fig** approach: route a slice of traffic or calls to the new implementation, grow the slice, then delete the old code. Use a feature flag when the switch must be reversible at runtime.
+- For large replacements, use the **strangler fig** approach: route a slice of traffic or calls to the new implementation, grow the slice, then remove the old code once the user agrees. Use a feature flag when the switch must be reversible at runtime.
 
 ## 4. Upgrades and migrations
 
@@ -49,12 +49,13 @@ Use expand and contract: add new columns or tables in a backward-compatible way,
 
 ## 5. Finish
 
-- Remove dead code that your change made unused, but only if you are sure nothing else uses it (search again).
+- List code that your change made unused, with the search that shows nothing else uses it, and propose removing it. Remove it only after the user agrees.
 - Update documentation, configuration examples, and the changelog.
 - Report what changed, what stayed deliberately unchanged, how it was verified, and any follow-up risk (see the report format in [AGENTS.md](../../../AGENTS.md)).
 
 ## Warning signs: stop and ask the user
 
+- The change would delete, overwrite, rewrite, disable or move existing code, tests or configuration that the request did not name explicitly.
 - The change requires modifying a public API, a database schema, a file format or a network protocol that other systems use.
 - Tests that encode current behaviour must change for reasons you do not understand.
 - You find security problems or data corruption in nearby code.

@@ -13,6 +13,7 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 | Bug report or failing behaviour | [systematic-debugging](../.agents/skills/systematic-debugging/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md) for the regression test |
 | Flaky test | [test-engineering](../.agents/skills/test-engineering/SKILL.md) section 4 | [systematic-debugging](../.agents/skills/systematic-debugging/SKILL.md) |
 | Refactoring | [change-existing-code](../.agents/skills/change-existing-code/SKILL.md) | rule [02](../.agents/rules/02-clean-code.md) |
+| The task seems to need deleting, rewriting or replacing existing code | rule [09](../.agents/rules/09-clean-execution.md) section 2 | Stop, send the proposal, wait for the user's decision |
 | Dependency or runtime upgrade | [change-existing-code](../.agents/skills/change-existing-code/SKILL.md) section 4 | rule [04](../.agents/rules/04-dependencies.md) |
 | Code review or pull request review | [rigorous-code-audit](../.agents/skills/rigorous-code-audit/SKILL.md) | rule [06](../.agents/rules/06-security.md) |
 | Security review, auth, payments, uploads, personal data | [security-hardening](../.agents/skills/security-hardening/SKILL.md) | [rigorous-code-audit](../.agents/skills/rigorous-code-audit/SKILL.md) |

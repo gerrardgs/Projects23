@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.10.0: existing code is preserved; confirm and discuss first (2026-10-18)
+
+A new always-on concept: agents never delete existing code on their own. Before they delete, overwrite, rewrite, comment out, disable, move or discard anything they did not create in the task, or change existing code beyond the request, they stop, propose the change and wait for the user's decision.
+
+- `AGENTS.md` non-negotiable 9, and item 9 in `.github/copilot-instructions.md` for surfaces that read only that file.
+- Rule 09 section 2, "Existing code is preserved": what needs confirmation and what does not, a proposal template (proposal, why, what depends on it, options, risk and undo, decision), approval limited to what was discussed, silence is not consent, non-interactive runs report instead of deleting, and reversible removal once agreed.
+- Instructions that told agents to delete existing code themselves now ask first: rule 02 (existing commented-out code and code smells are reported, not removed), rule 09 section 4 (clean up only what you added), `change-existing-code` (unused code and strangler-fig leftovers are proposed for removal; a new warning sign), and `systematic-debugging` (shrink reproductions in a scratch copy, not in the user's working tree).
+- Rule 08: never discard uncommitted or unpushed work (`git reset --hard`, `git checkout --`, `git restore`, `git clean`, `git stash drop`) without approval.
+- README principle 4, a scenario in the operational manual, and a row in the engineering concepts index.
+
 ## 2.9.0: engineering concepts, software architecture and chaos engineering (2026-10-16)
 
 Every engineering concept that applies to this specification now has a place, anchored to the field's own reference rather than to an open-ended list. Sources were checked on 2026-10-16; tool versions come from `scripts/tech-lookup.mjs`.
