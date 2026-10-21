@@ -5,7 +5,7 @@
 # and 31 high vulnerabilities, none with a fix released yet, versus 48 high (4 fixable) in
 # python:3.14-slim. Dependabot's "docker" ecosystem keeps the digest current; rescan regularly.
 # http.server suits internal services; put it behind a reverse proxy for internet-facing traffic.
-FROM gcr.io/distroless/python3-debian13:nonroot@sha256:83aa8d4f74a4d7f7cf2d472054139bef71a927b76c680c0f2e1021d6b1d6d732
+FROM gcr.io/distroless/python3-debian13:nonroot@sha256:ed91505d162119a1e46552bc7f471c77737729a525269a7e9b60646807564601
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
