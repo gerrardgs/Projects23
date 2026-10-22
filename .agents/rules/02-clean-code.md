@@ -66,6 +66,7 @@ type Fetch<T> =
 ## 6. Comments and documentation
 
 - Comment *why*: constraints, trade-offs, workarounds with links to issues. Do not narrate what the code obviously does.
+- Keep comments plain and short: one per logical block at most, no decorative banners, emoji, end markers, signature echoes or vague TODOs ([anti-slop](../skills/anti-slop/references/code-comments.md)).
 - Public APIs get doc comments in the language's format (JSDoc/TSDoc, docstrings, GoDoc, rustdoc, Javadoc/KDoc, XML docs).
 - Do not leave commented-out code in your changes; version control remembers it. Commented-out code that already exists is reported, not deleted, unless the user agrees ([09-clean-execution](09-clean-execution.md) section 2).
 - Keep comments true. A wrong comment is worse than none, so update comments with the code.

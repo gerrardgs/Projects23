@@ -53,6 +53,7 @@ Every domain moves through the same phases. Load the lifecycle skill for the pha
 | Secure | [security-hardening](skills/security-hardening/SKILL.md) |
 | Automate | [ci-cd-pipeline](skills/ci-cd-pipeline/SKILL.md) |
 | Document | [technical-documentation](skills/technical-documentation/SKILL.md) |
+| Remove AI slop before delivery | [anti-slop](skills/anti-slop/SKILL.md) |
 | Release and operate | [deploy-and-release](skills/deploy-and-release/SKILL.md), [cloud-infrastructure](skills/cloud-infrastructure/SKILL.md) |
 | Prove resilience | [chaos-engineering](skills/chaos-engineering/SKILL.md) |
 

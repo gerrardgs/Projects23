@@ -38,6 +38,7 @@ The [Diátaxis](https://diataxis.fr/start-here/) framework separates four needs.
 ## 3. Writing rules
 
 - Lead with what the reader needs to do or know; one idea per paragraph; short sentences; active voice; consistent terms.
+- No generated-sounding prose: no buzzwords, inflated significance, chatbot openers or closers, claims without a source, or invented specifics ([anti-slop writing reference](../anti-slop/references/writing.md)).
 - Every command and code sample is copy-pasteable and was actually run; state the versions it was tested with.
 - Use real-looking but synthetic examples (reserved domains such as `example.com`, documentation IP ranges), never real credentials or personal data.
 - Document behaviour and contracts, not implementation details that change often.

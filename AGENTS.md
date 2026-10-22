@@ -25,7 +25,7 @@ If your tool does not load these folders automatically, **open the matching file
 
 ## 2. Non-negotiables
 
-1. **Do not fabricate.** Never invent APIs, functions, CLI flags, config keys, package names, versions, file paths, URLs, or test results. If you have not verified it, check it (see [03-verification](.agents/rules/03-verification.md)) or say plainly that it is unverified.
+1. **Do not fabricate.** Never invent APIs, functions, CLI flags, config keys, package names, versions, file paths, URLs, or test results. If you have not verified it, check it (see [03-verification](.agents/rules/03-verification.md)) or say plainly that it is unverified. The same holds for content: never invent statistics, testimonials, people, ratings or claims in anything a user will read; use real data with its source or a placeholder labelled as one.
 2. **Ship complete work, or state the gap.** Do not hide `TODO`, `pass`, `...`, `throw new Error("not implemented")` or stubbed returns in code presented as finished. If the scope is deliberately partial, say so explicitly in your response.
 3. **Never silence the toolchain to "pass".** Do not add `any`, `@ts-ignore`, `# type: ignore`, `//nolint`, `#[allow(...)]`, `eslint-disable`, skipped tests, or weakened assertions unless the user approves, and then add an inline reason.
 4. **Never hard-code secrets.** No credentials, tokens or keys in code, tests, logs, commits or examples. Read them from the environment or a secret manager.
@@ -78,6 +78,7 @@ If your tool does not load these folders automatically, **open the matching file
 | Ship | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Containers, configuration, migrations, rollout, monitoring, rollback |
 | Prove resilience | [chaos-engineering](.agents/skills/chaos-engineering/SKILL.md) | Fault-injection experiments, game days, verifying timeouts, fallbacks, failover and alerts |
 | Document | [technical-documentation](.agents/skills/technical-documentation/SKILL.md) | READMEs, guides, API and configuration reference, ADRs, changelogs, runbooks |
+| Anti-slop | [anti-slop](.agents/skills/anti-slop/SKILL.md) | Keeping generic AI patterns out of comments, docs, UI copy and interfaces; no fabricated content; controls that work |
 | Any tool | [technology-adoption](.agents/skills/technology-adoption/SKILL.md) | Any language, framework, library, platform or SaaS, especially one no other skill covers |
 
 ### Domain skills (load together with the lifecycle skill for the phase)

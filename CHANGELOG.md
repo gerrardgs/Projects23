@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.15.0: anti-slop (2026-10-23)
+
+Researched [miqdadbadjuber/anti-slop](https://github.com/miqdadbadjuber/anti-slop) (MIT, commit `69416cf`), a filter that stops agents shipping generic AI-generated UI, text and code. Its files were read as data and adapted with attribution; nothing was installed.
+
+- **New skill `anti-slop` (30 in total)**: three hard gates (nothing fabricated, everything shown works, people can use it), the purpose test, judging clusters rather than single tells, a scope guardrail that respects non-negotiable 9 (existing comments and copy are reported, not silently rewritten), and a draft, audit, final procedure with a checklist. References: `code-comments.md` (tells to remove, comments to keep, comments-only edits), `writing.md` (patterns to cut, what is not slop on its own, the fabrication check), `interfaces.md` (hard gates, purpose-required techniques, template shapes to question).
+- **Facts checked at the source**: contrast, non-text contrast, resize, reflow and target-size figures come from the W3C WCAG 2.2 Understanding pages. The source repository describes large text as "18px+"; WCAG defines it as at least 18 point or 14 point bold (about 24 and 18.5 CSS pixels), which is what this specification uses. Its 44 by 44 target corresponds to WCAG's level AAA criterion; the AA minimum is 24 by 24 CSS pixels, and both are given.
+- **Hooks**: `AGENTS.md` non-negotiable 1 now covers fabricated user-facing content; rule 02 section 6 (plain, short comments); `technical-documentation`, `web-frontend-engineering`, `mobile-engineering` (touch targets now have numbers) and `rigorous-code-audit` link the matching reference; the operational manual, domain coverage, engineering concepts and README list the skill.
+- **Not adopted**: the always-on `<EXTREMELY_IMPORTANT>` block and its announced usage modes, the install wizard, the design dials and the `DESIGN.md` requirement (design direction belongs to the project), the bundled contrast-checker MCP server (this specification already uses axe-core and Lighthouse), and the outright em-dash ban (treated here as one tell among many; follow the project's style).
+
 ## 2.14.0: practices from Matt Pocock's skills (2026-10-22)
 
 Researched [mattpocock/skills](https://github.com/mattpocock/skills) (MIT, commit `5beb35b`). Most of its skills are workflows tied to its own issue-tracker setup and slash commands; their engineering discipline was adapted into the matching rules and skills here, with attribution, instead of adding parallel skills that would duplicate this specification. Nothing was installed.

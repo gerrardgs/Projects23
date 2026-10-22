@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Format: Agent Skills](https://img.shields.io/badge/Format-Agent%20Skills-blue.svg)](https://agentskills.io/specification)
 [![Validate](https://github.com/gerrardgs/Projects23/actions/workflows/validate.yml/badge.svg)](https://github.com/gerrardgs/Projects23/actions/workflows/validate.yml)
-[![Skills: 29](https://img.shields.io/badge/Skills-29%20Verified-success.svg)](.agents/skills/)
+[![Skills: 30](https://img.shields.io/badge/Skills-30%20Verified-success.svg)](.agents/skills/)
 [![Rules: 9](https://img.shields.io/badge/Rules-9%20Core-blueviolet.svg)](.agents/rules/)
 
 A universal, production-ready AI agent coding framework and standard (formerly named UCNA-Spec, the Universal Clean Native Agent Specification) designed to make AI coding models work with the discipline of senior staff software engineers. It reduces erratic, bloated code and hallucinated APIs by enforcing standard-library-first design, strict verification protocols, and clean architectural boundaries across the entire software development lifecycle and 15 technical domains, and gives agents a verified procedure and a live lookup tool for adopting any other technology.
@@ -23,7 +23,7 @@ Most AI coding assistants struggle with long-term code quality: they invent non-
 3. **Anti-Hallucination Protocol**: A 6-step verification protocol for symbols, package names, versions, CLI flags, and environment variables against the active environment or official registries, backed by `scripts/tech-lookup.mjs` for live registry and end-of-life data.
 4. **Existing Code Is Preserved**: Agents never delete, overwrite, rewrite or disable existing code on their own. They stop, propose the change with its reason, dependants, alternatives and undo path, and wait for the user's decision ([AGENTS.md](AGENTS.md) non-negotiable 9, [rule 09](.agents/rules/09-clean-execution.md) section 2).
 5. **Think Before Changing**: Before new code, a bug fix or a change, agents state their assumptions, present competing readings, name what is unclear and push back when a simpler or safer path exists; every changed line traces to the request, and tasks become checkable goals ("a test reproduces the bug, then passes"). When evidence contradicts them, they correct their reasoning instead of stacking patches ([rule 01](.agents/rules/01-core-principles.md) section 8, adapted from the [Karpathy-inspired guidelines](https://github.com/multica-ai/andrej-karpathy-skills)).
-6. **Complete Lifecycle and Domain Mastery**: 29 modular skills that guide agents through every phase of software development, from specification and architecture to chaos engineering, and across complex domains like ML, distributed systems, and real-time AI. An [engineering concepts index](.agents/engineering-concepts.md) maps all 18 SWEBOK V4.0a knowledge areas and the named concepts engineers use daily to the rules and skills that apply them.
+6. **Complete Lifecycle and Domain Mastery**: 30 modular skills that guide agents through every phase of software development, from specification and architecture to chaos engineering, and across complex domains like ML, distributed systems, and real-time AI. An [engineering concepts index](.agents/engineering-concepts.md) maps all 18 SWEBOK V4.0a knowledge areas and the named concepts engineers use daily to the rules and skills that apply them.
 
 ---
 
@@ -41,8 +41,8 @@ Projects 23 Architecture
        v (links to)                                      v (links to)
   +-----------------------------------+             +-----------------------------------+
   | Rules (.agents/rules/)            |             | Skills (.agents/skills/)          |
-  | 9 normative rules:                |             | 29 on-demand step-by-step guides: |
-  | - 5 Always-On (core, clean code,  |             | - 14 Software Lifecycle Skills    |
+  | 9 normative rules:                |             | 30 on-demand step-by-step guides: |
+  | - 5 Always-On (core, clean code,  |             | - 15 Software Lifecycle Skills    |
   |   verification, security, clean   |             |                                   |
   |   execution)                      |             | - 15 Mission-Critical Domains     |
   | - 4 On-Demand (dependencies,      |             |                                   |
@@ -63,7 +63,7 @@ Projects 23 Architecture
 | :--- | :--- | :--- | :--- |
 | **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 147 lines) |
 | **Rules** | [`.agents/rules/`](.agents/rules/) | Always (5) or when relevant (4) | Principles, clean code, verification, security, clean execution, dependencies, error handling, testing, Git workflow |
-| **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 29 step-by-step procedures (14 lifecycle, 15 domain) with verified templates and references |
+| **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 30 step-by-step procedures (15 lifecycle, 15 domain) with verified templates and references |
 | **Adapters** | `CLAUDE.md`, `GEMINI.md`, `.gemini/settings.json`, `.github/copilot-instructions.md`, `.aider.conf.yml` | Per tool | Standard loaders connecting each tool to the single core |
 | **Mirror** | `.claude/skills/` | Generated | Automated copy of skills for Claude Code and Cline; kept in sync via script |
 | **Tooling** | [`scripts/`](scripts/) | You, agents or CI | Installer, mirror sync and validator, and `tech-lookup.mjs` (live versions, licences, deprecations, end-of-life dates and security scores from 12 registries and data sources) |
@@ -73,7 +73,7 @@ Projects 23 Architecture
 
 ## Skills Catalog
 
-### 1. Software Lifecycle Skills (12 Skills)
+### 1. Software Lifecycle Skills (15 Skills)
 
 Procedures covering software from inception to production operation:
 
@@ -92,6 +92,7 @@ Procedures covering software from inception to production operation:
 | **Ship** | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Production launch checklists, zero-downtime database migrations, canary/blue-green rollouts, observability, and rollback plans |
 | **Prove resilience** | [chaos-engineering](.agents/skills/chaos-engineering/SKILL.md) | Principles of Chaos Engineering, AWS REL12-BP04 and Azure RE:08: steady-state hypotheses, fault catalogue by layer, blast radius, stop conditions, rollback, game days; runnable standard-library experiment kit (runner, fault-injecting proxy, 19 tests) |
 | **Document** | [technical-documentation](.agents/skills/technical-documentation/SKILL.md) | Diátaxis (tutorial, how-to, reference, explanation), README, API and configuration reference, ADRs, changelog, runbooks, docs as code |
+| **Anti-slop** | [anti-slop](.agents/skills/anti-slop/SKILL.md) | Filter for generic AI output (adapted from [miqdadbadjuber/anti-slop](https://github.com/miqdadbadjuber/anti-slop)): no fabricated statistics, testimonials or data, every control verified to work, plain comments and prose, purpose required for decorative UI, WCAG 2.2 contrast, focus, reflow and touch-target figures checked at the source |
 | **Any tool** | [technology-adoption](.agents/skills/technology-adoption/SKILL.md) | One procedure for any language, framework, library, platform or SaaS: exact version, official docs, live licence, security and end-of-life checks, idioms, toolchain integration; catalog of widely used tools with 177 registry-verified packages and 101 GitHub-verified projects |
 
 ### 2. Engineering Domain Skills (15 Skills)

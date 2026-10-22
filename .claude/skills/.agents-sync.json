@@ -3,6 +3,7 @@
   "source": ".agents/skills",
   "skills": [
     "ai-agent-systems",
+    "anti-slop",
     "api-integration",
     "backend-engineering",
     "change-existing-code",

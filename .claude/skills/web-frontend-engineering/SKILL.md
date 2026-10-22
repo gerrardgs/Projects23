@@ -68,6 +68,7 @@ Also: ship less JavaScript (code splitting, tree shaking, no unused dependencies
 ## Done when
 
 - [ ] Keyboard and screen-reader usable; automated accessibility checks pass
+- [ ] No fabricated content, dead links or controls that do nothing; empty, loading and error states present; decorative effects have a stated purpose ([anti-slop interfaces reference](../anti-slop/references/interfaces.md))
 - [ ] Core Web Vitals within the "good" thresholds for the changed pages (lab and, when available, field data)
 - [ ] No unsanitized HTML injection; CSP not weakened
 - [ ] Loading, empty, error and offline states handled

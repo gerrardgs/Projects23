@@ -75,6 +75,7 @@ Record each command and its result. A tool that cannot run (not installed, broke
 - Every changed line traces to the stated purpose of the change: no drive-by refactors, reformatting or unrelated deletions ([09-clean-execution](../../rules/09-clean-execution.md) section 2).
 - No speculative options, abstractions or configurability; nothing an experienced engineer would call overcomplicated for the problem ([01-core-principles](../../rules/01-core-principles.md) section 2).
 - Assumptions the change relies on are stated in the description or a comment, and the riskiest ones are tested.
+- No comment or user-facing text slop (decorative or restating comments, invented data, buzzwords) in the changed lines ([anti-slop](../anti-slop/SKILL.md)).
 - Placeholder scan: `rg -n "TODO|FIXME|XXX|HACK|NotImplementedError|not implemented"` (or `grep -rnE` with the same pattern). Judge each hit in context: `...` and `pass` are often legitimate syntax.
 
 ## 4. Verify before reporting

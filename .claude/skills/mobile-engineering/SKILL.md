@@ -50,7 +50,7 @@ API keys shipped in an app are public. Anything secret stays on the server.
 
 - Measure startup time, frame rendering (jank), memory and battery with the platform profilers (Android Studio profilers, Xcode Instruments, Flutter DevTools).
 - Lists use lazy or recycled rendering; images are sized and cached.
-- Accessibility: content descriptions or labels, dynamic type and font scaling, sufficient contrast, touch targets of reasonable size, and tests with TalkBack and VoiceOver.
+- Accessibility: content descriptions or labels, dynamic type and font scaling, sufficient contrast, touch targets of at least 24 by 24 CSS pixels or the platform's larger guidance, 44 by 44 for primary controls ([anti-slop interfaces reference](../anti-slop/references/interfaces.md)), and tests with TalkBack and VoiceOver.
 - Crash and error reporting in release builds, without collecting personal data beyond policy.
 
 ## 5. Release
