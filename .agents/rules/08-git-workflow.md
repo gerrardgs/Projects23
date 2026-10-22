@@ -29,6 +29,7 @@ description: "Apply when committing, branching, writing commit messages or pull 
 ## 4. Pull requests
 
 - Title states the change. Description covers: what and why, how it was verified (commands and results), risks, rollback plan, and screenshots for UI changes.
+- Make the description fast to review (shape adapted from Matt Pocock's [pr skill](https://github.com/mattpocock/skills/tree/main/skills/engineering/pr), MIT): summarise with the smallest visual that makes the change clear (a call tree, file tree, short diff sketch or Mermaid diagram); show evidence as before and after (failing then passing test, output, screenshot); and state the merge danger: a **one-way door** (destructive or hard to reverse) or a **two-way door** (cheap to roll back), plus the blast radius (who or what could break).
 - Keep PRs small and focused. Split refactors from behaviour changes.
 - Keep branches short-lived and merge to the default branch often ([trunk-based development](https://trunkbaseddevelopment.com/)); hide unfinished work behind a feature flag instead of a long-lived branch.
 - CI must be green before merge. Address every review comment, or reply with reasoning.

@@ -208,7 +208,8 @@ export function requestFor(ecosystem, name) {
   return build(name);
 }
 
-async function lookup(spec) {
+/** Looks up one `ecosystem:name` spec. Exported for scripts/check-updates.mjs. */
+export async function lookup(spec) {
   const separator = spec.indexOf(":");
   if (separator <= 0) throw new Error(`"${spec}" must look like ecosystem:name`);
   const ecosystem = spec.slice(0, separator);

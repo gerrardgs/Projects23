@@ -87,3 +87,5 @@ Self-review complements real tools and human review; it never replaces running t
 ## 7. Report
 
 State what was changed, which commands ran and what they returned, what was not done, and any state left behind (running services, pending migrations, follow-ups), using the format in [AGENTS.md](../../AGENTS.md) section 7.
+
+When the work continues in another session or with another agent, also write a **handoff note**: the goal, what is done and verified, what remains, decisions made and why, open questions, and pointers to the specs, commits, ADRs and issues that already hold the detail (link them, do not copy them), plus the rules and skills the next agent should load. No secrets or personal data. Keep it outside the repository unless the user wants it committed.

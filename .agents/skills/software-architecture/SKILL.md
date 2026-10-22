@@ -34,12 +34,13 @@ Microsoft's Azure Architecture Center: "Each architecture style has its own trad
 
 - Default to a **modular monolith** for a new product: Martin Fowler advises that you "shouldn't start a new project with microservices" ([MonolithFirst](https://martinfowler.com/bliki/MonolithFirst.html)). Extract a service when a module has a clear reason: separate scaling, separate release cadence, separate team, or isolation of a risky dependency.
 - Keep the core free of framework and infrastructure details (dependency inversion, functional core and imperative shell, [01-core-principles](../../rules/01-core-principles.md) section 5).
+- Make modules **deep**: much behaviour behind a small interface, at a seam where tests cross the same interface as callers. Apply the deletion test before adding a layer, and add a port only when two adapters (usually production and test) need it. Vocabulary, dependency categories and "design it twice": [references/deep-modules.md](references/deep-modules.md).
 
 ## 3. Model the domain
 
 [Domain-driven design](https://www.domainlanguage.com/ddd/reference/) gives the vocabulary for boundaries:
 
-- **Ubiquitous language**: the same terms in conversations, code and data.
+- **Ubiquitous language**: the same terms in conversations, code and data. Write them down in a `GLOSSARY.md` at the repository root ([template](../project-bootstrap/assets/GLOSSARY.template.md)) once the first term is settled: one or two sentences per term, one word per concept with rejected synonyms listed under "Avoid", project-specific terms only, no implementation details. Agents and people then name files, functions and tickets consistently. While designing, challenge any term that conflicts with the glossary, propose a precise word for a vague one, test definitions against concrete edge-case scenarios, and check that the code agrees with what people say it does (practice adapted from Matt Pocock's [domain-modeling skill](https://github.com/mattpocock/skills/tree/main/skills/engineering/domain-modeling), MIT).
 - **Bounded context**: a boundary within which a model and its terms are consistent ([Fowler](https://martinfowler.com/bliki/BoundedContext.html)); service and module boundaries follow bounded contexts, not database tables. Microsoft's [domain analysis guide](https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis) walks through it.
 - **Aggregates** protect invariants inside one transaction; reference other aggregates by ID.
 - **Context mapping**: decide how contexts integrate (shared contract, customer and supplier, published language); put an [anti-corruption layer](https://learn.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer) in front of legacy or third-party models.
@@ -88,10 +89,19 @@ Every remote call can be slow, fail, or succeed without a reply. Patterns, with 
 
 ## 7. Decide, document, and keep it true
 
-- **Decision records**: one [ADR](https://adr.github.io/) per architecturally significant decision ("a justified design choice that addresses a functional or non-functional requirement"), with context, options considered, decision and consequences ([ADR template](../project-bootstrap/assets/adr-template.md)). Separate reversible decisions (decide fast) from irreversible ones (prototype, spike or review first).
+- **Decision records**: one [ADR](https://adr.github.io/) per architecturally significant decision ("a justified design choice that addresses a functional or non-functional requirement"), with context, options considered, decision and consequences ([ADR template](../project-bootstrap/assets/adr-template.md)). Separate reversible decisions (decide fast) from irreversible ones (prototype, spike or review first). Write an ADR when all three hold: the decision is hard to reverse, a future reader would be surprised by it without context, and it resulted from a real trade-off between alternatives.
 - **Diagrams as code**: the [C4 model](https://c4model.com/) gives four levels (system context, container, component, code); most teams need only the first two. Draw them in Mermaid or Structurizr so they are reviewed with the code. [arc42](https://arc42.org/) is a ready template for a full architecture document ([technical-documentation](../technical-documentation/SKILL.md)).
 - **Fitness functions**: automate checks of architectural rules so the design does not erode: dependency rules between modules (ArchUnit 1.5.1 for Java, dependency-cruiser 18.6.0 for JavaScript and TypeScript, import-linter 2.15 for Python; versions checked on 2026-10-16), performance budgets in CI, SLO alerts in production.
 - **Evolve incrementally**: migrate large systems with the [strangler fig](https://learn.microsoft.com/en-us/azure/architecture/patterns/strangler-fig) pattern ([change-existing-code](../change-existing-code/SKILL.md)); track deliberate technical debt and its pay-back plan ([Fowler's technical debt quadrant](https://martinfowler.com/bliki/TechnicalDebtQuadrant.html)).
+
+### Survey an existing codebase for deepening opportunities
+
+Adapted from Matt Pocock's [improve-codebase-architecture skill](https://github.com/mattpocock/skills/tree/main/skills/engineering/improve-codebase-architecture) (MIT). Run it every so often; it finds candidates, it does not untangle a legacy system on its own.
+
+1. **Scope first.** Take the area the user names; otherwise find the hot spots in recent history (`git log --name-only` over a good stretch) and look there, because deepening pays off where code keeps changing. Read `GLOSSARY.md` and the ADRs for the area.
+2. **Note friction**: one concept spread over many small modules, shallow interfaces, logic extracted for testability while the bugs sit in how it is called, coupling that leaks across seams, code that is hard to test through its interface. Apply the deletion test to each suspect.
+3. **Present candidates**, each with the files involved, the problem, the proposed change, the benefit in locality, leverage and testability, a before and after sketch, and a strength (strong, worth exploring, speculative). Flag any that contradict an ADR and say why it is worth reopening. Propose no interfaces yet; let the user pick.
+4. **Resolve the chosen one** with the user (the design-tree interview in [feature-specification](../feature-specification/SKILL.md) section 1), update the glossary as terms settle, design the interface twice ([deep modules](references/deep-modules.md)), and record a rejection with a lasting reason as an ADR so later surveys do not suggest it again. Changing the code follows [change-existing-code](../change-existing-code/SKILL.md) and needs the user's go-ahead ([AGENTS.md](../../../AGENTS.md) non-negotiable 9).
 
 ## 8. Review a design
 

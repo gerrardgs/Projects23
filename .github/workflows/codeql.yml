@@ -5,8 +5,8 @@ on:
   push:
     branches: [main]
   schedule:
-    # Weekly, so newly published CodeQL queries also run when nothing changed.
-    - cron: "23 4 * * 1"
+    # Daily, so newly published CodeQL queries also run when nothing changed.
+    - cron: "23 4 * * *"
 
 permissions:
   contents: read

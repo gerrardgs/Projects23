@@ -42,6 +42,14 @@ Most tests should be unit tests, with fewer integration tests and only a handful
 
 Test-driven development applies the same loop to new behaviour: write a test for the next bit of functionality, make it pass, then refactor ("Red - Green - Refactor", [Fowler](https://martinfowler.com/bliki/TestDrivenDevelopment.html)). It works best when the expected behaviour can be stated before the code exists.
 
+Tests worth keeping (adapted from Matt Pocock's [tdd skill](https://github.com/mattpocock/skills/tree/main/skills/engineering/tdd), MIT):
+
+- **Agree the seams first.** Decide, with the user for anything significant, which public interfaces the tests cross and what each catches; effort goes to critical paths, not to every internal function.
+- **Vertical slices.** One test, the least code that passes it, then the next test. Writing all tests first tests imagined behaviour and locks in a structure before you understand it.
+- **No tautologies.** The expected value comes from an independent source (a literal, a worked example, the specification), never from recomputing it the way the code does: `assert total([10, 5]) == 15`, not `== sum(prices)`.
+- **Coupling check.** A test that breaks when you refactor without changing behaviour is testing the implementation: it mocks internal collaborators, calls private functions, or verifies through a side channel such as querying the database instead of reading back through the interface.
+- **Mockable boundaries.** Give external services one function per operation (`get_user`, `create_order`) rather than one generic request function, so each fake returns one shape without conditional logic.
+
 ## 4. Make it deterministic
 
 | Source of flakiness | Fix |

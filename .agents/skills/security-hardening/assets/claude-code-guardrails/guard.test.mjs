@@ -41,6 +41,18 @@ test("denies destructive or unsafe shell commands", () => {
     "cat .env",
     "cp ~/.ssh/id_rsa /tmp/key",
     "cp .env .env.bak",
+    "git reset --hard",
+    "git reset --hard origin/main",
+    "git clean -fd",
+    "git clean -xdf",
+    "git checkout -- src/app.ts",
+    "git checkout .",
+    "git restore src/app.ts",
+    "git restore .",
+    "git restore --staged --worktree src/app.ts",
+    "git stash drop",
+    "git stash clear",
+    "git branch -D old-feature",
   ]) {
     assert.notEqual(denialReason(bash(command)), undefined, command);
   }
@@ -56,6 +68,15 @@ test("allows ordinary commands, including safe look-alikes", () => {
     "npm test",
     "cat .env.example",
     "grep -rn TODO src",
+    "git reset --soft HEAD~1",
+    "git clean -n",
+    "git checkout -b feature/new",
+    "git checkout main",
+    "git checkout --track origin/feature",
+    "git restore --staged src/app.ts",
+    "git stash",
+    "git stash pop",
+    "git branch -d merged-feature",
   ]) {
     assert.equal(denialReason(bash(command)), undefined, command);
   }

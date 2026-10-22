@@ -30,16 +30,28 @@ Open questions: <decisions only the user or owner can make>
 - Write acceptance criteria as observable behaviour, not implementation. Each becomes at least one test ([test-engineering](../test-engineering/SKILL.md)).
 - Ask the open questions now, before planning ([AGENTS.md](../../../AGENTS.md) section 6, "Ambiguous request").
 
+### Resolve the design tree with the user (grilling)
+
+For a significant or unclear feature, interview the user until nothing is silently assumed (adapted from Matt Pocock's [grilling skill](https://github.com/mattpocock/skills/tree/main/skills/productivity/grilling), MIT):
+
+1. Map the decisions as a tree: each decision opens the decisions that depend on it.
+2. Ask in rounds. A round contains every question whose prerequisites are already settled, numbered, each with your recommended answer, worded so that "yes" accepts the recommendation. A question that depends on an answer still open waits for a later round.
+3. Facts are your job, decisions are the user's: look up anything the code, documentation or tools can answer instead of asking.
+4. Stop when no open question remains, confirm the shared understanding, and only then plan.
+
 ## 2. Plan: how
 
 - Read the existing code and conventions first ([change-existing-code](../change-existing-code/SKILL.md)); reuse before adding.
 - Describe the approach: components touched, data model and contract changes (API, events, schema), migrations, configuration, feature flags, and observability.
 - For a significant choice, compare two or three options with their trade-offs and record the decision ([ADR template](../project-bootstrap/assets/adr-template.md)).
+- When a question is cheaper to answer by building than by debating (does this state model hold, which layout works), build a **throwaway prototype**: clearly named as one, trivial to run, no persistence or polish, showing its state. Keep the validated decision, not the prototype; leave the prototype out of the main branch.
 - List risks with mitigations: security (threat model, [security-hardening](../security-hardening/SKILL.md)), data migration, performance, backward compatibility, rollout and rollback.
 
 ## 3. Tasks: ordered, small and verifiable
 
 - Break the plan into tasks that each leave the system working and can be reviewed on their own: typically under a day each.
+- Prefer **tracer-bullet** tasks: each a thin vertical slice through every layer it needs (schema, logic, interface, tests) that can be demonstrated on its own, rather than one layer at a time. Give each task its blocking tasks; any task whose blockers are done can start.
+- Do preparatory refactoring first (Kent Beck: "make the change easy, then make the easy change"). A wide mechanical change (renaming a shared field or type) is the exception to vertical slicing: expand (add the new form beside the old), migrate callers in batches that each keep CI green, then contract (remove the old form after agreement).
 - Order by dependency and risk: contracts and tests first, risky unknowns early (a spike to learn), polish last.
 - For each task, state its "done" check (a test, a command, an observable result).
 

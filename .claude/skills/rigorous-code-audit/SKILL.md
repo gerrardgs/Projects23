@@ -37,6 +37,10 @@ Record each command and its result. A tool that cannot run (not installed, broke
 
 ## 3. Read the code against this checklist
 
+### Spec conformance (a separate axis)
+- Compare the change with its originating requirement (issue, spec, acceptance criteria): requirements missing or only partly done; behaviour nobody asked for (scope creep); requirements that look implemented but behave wrongly. Quote the requirement for each finding.
+- Report this axis apart from the standards and quality findings below and do not rank one against the other: code can follow every standard and still build the wrong thing, or do exactly what was asked while breaking conventions (two-axis review adapted from Matt Pocock's [code-review skill](https://github.com/mattpocock/skills/tree/main/skills/engineering/code-review), MIT). With no requirement available, say so.
+
 ### Correctness
 - Does the code do what the requirement or PR description says? Check every branch, including the `else` and default cases.
 - Boundaries: empty collections, zero, negative numbers, maximum values, off-by-one, Unicode and multi-byte text, time zones and DST, floating-point money (use integer minor units or decimal types).
@@ -67,7 +71,7 @@ Record each command and its result. A tool that cannot run (not installed, broke
 - Tests are deterministic (no real network, time or randomness without control) and assert behaviour, not implementation details.
 
 ### Maintainability
-- Follows [02-clean-code](../../rules/02-clean-code.md) and the project's conventions; no dead code, debug output or unexplained suppressions.
+- Follows [02-clean-code](../../rules/02-clean-code.md) and the project's conventions; no dead code, debug output or unexplained suppressions. The code smells in rule 02 section 7 are judgement calls labelled as such ("possible feature envy"); a documented project standard overrides them, and anything a tool already enforces is skipped.
 - Every changed line traces to the stated purpose of the change: no drive-by refactors, reformatting or unrelated deletions ([09-clean-execution](../../rules/09-clean-execution.md) section 2).
 - No speculative options, abstractions or configurability; nothing an experienced engineer would call overcomplicated for the problem ([01-core-principles](../../rules/01-core-principles.md) section 2).
 - Assumptions the change relies on are stated in the description or a comment, and the riskiest ones are tested.

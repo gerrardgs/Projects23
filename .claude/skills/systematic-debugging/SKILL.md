@@ -18,7 +18,9 @@ Debugging is the scientific method applied to code: observe, hypothesise, test, 
 
 ## 2. Reproduce
 
-- Turn the report into a reproduction you can run on demand, ideally an automated failing test ([test-engineering](../test-engineering/SKILL.md)).
+- Turn the report into a reproduction you can run on demand, ideally an automated failing test ([test-engineering](../test-engineering/SKILL.md)). This feedback loop is the most important step: with a signal that turns **red** on this bug, the cause will be found; without one, reading code rarely finds it. Do not start forming theories before the loop exists.
+- Build the loop with whatever reaches the bug: a failing test at any level, an HTTP script against a local server, a CLI run diffed against a known-good output, a headless-browser script, a replayed captured request, a minimal harness, a property or fuzz loop, an automated `git bisect run`, or a differential run of old against new. Then tighten it until it is **red-capable** (asserts the user's exact symptom, not merely "no crash"), **deterministic**, **fast** (seconds) and runnable without a human. For intermittent bugs, raise the reproduction rate (repeat, parallelise, add stress) until it is high enough to debug. If no loop is possible, say what you tried and ask for access, a redacted capture or permission to instrument. (Adapted from Matt Pocock's [diagnosing-bugs skill](https://github.com/mattpocock/skills/tree/main/skills/engineering/diagnosing-bugs), MIT.)
+- Redact secrets in every command, output and capture you show; read credentials from environment variables.
 - Shrink it: remove inputs, steps and code until removing anything else makes the failure disappear. Do this in a scratch copy or a throwaway branch, never by deleting code in the user's working tree.
 - If it does not reproduce, compare environments (versions, configuration, data, timing, concurrency) and add targeted logging. Do not "fix" what you cannot observe.
 
@@ -30,12 +32,12 @@ Use one technique at a time:
 - **Binary search in history**: `git bisect` between a known-good and a known-bad commit, automated with a test script.
 - **Binary search in input**: halve the failing input until it is minimal.
 - **Differential**: compare a working case with a failing one and list every difference (input, configuration, version, environment).
-- **Inspect**: a debugger with breakpoints, or temporary structured logs at the boundaries of the suspected component.
+- **Inspect**: a debugger with breakpoints, or temporary structured logs at the boundaries of the suspected component. Change one variable per probe, and tag every temporary log line with a unique prefix (for example `[DEBUG-a4f2]`) so one search removes them all afterwards.
 
 ## 4. Hypothesise and prove
 
 - Write down what you are assuming (which code actually runs, versions, configuration, inputs, environment) and check the cheapest assumptions first; many bugs live in an assumption nobody verified.
-- State one hypothesis that explains **all** the symptoms: "The cache returns stale data because the key omits the tenant ID."
+- List three to five ranked, falsifiable hypotheses before testing any ("if X is the cause, changing Y makes the bug disappear"); a single early hypothesis anchors you. Share the list with the user, who may rule some out at once. Converge on the one hypothesis that explains **all** the symptoms: "The cache returns stale data because the key omits the tenant ID."
 - Design a check that would disprove it, and run it. Keep notes of what you tried and what you saw.
 - Stop when the evidence shows the cause. "It works now" without knowing why is not a root cause.
 - When a check disproves the hypothesis, drop it completely and form a new one from the evidence; do not bend the evidence to fit. After two failed fixes, step back and re-read everything you have ([01-core-principles](../../rules/01-core-principles.md) section 8).
@@ -48,7 +50,8 @@ Use one technique at a time:
 
 ## 6. Prevent the regression
 
-- Keep the reproduction as a permanent test, and confirm it failed before the fix and passes after it.
+- Keep the reproduction as a permanent test, and confirm it failed before the fix and passes after it. Put it at a seam where it exercises the real bug pattern; if no such seam exists, say so, because the design is preventing the bug from being locked down.
+- Re-run the original, un-minimised reproduction after the fix, and state the confirmed cause in the commit or pull request so the next person learns from it.
 - Remove temporary debug logging and breakpoints before committing.
 - If the bug reached production, add the monitoring or alert that would have caught it earlier.
 

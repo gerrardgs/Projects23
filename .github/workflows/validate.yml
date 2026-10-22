@@ -5,9 +5,9 @@ on:
   push:
     branches: [main]
   schedule:
-    # Weekly re-run, so newly published vulnerabilities in pinned dependencies are found
+    # Daily re-run, so newly published vulnerabilities in pinned dependencies are found
     # even when nothing in the repository changed.
-    - cron: "17 3 * * 1"
+    - cron: "17 3 * * *"
   workflow_dispatch:
 
 permissions:

@@ -1,13 +1,14 @@
 # Copy to .github/dependabot.yml. Keeps SHA-pinned actions and dependencies up to date.
-# The cooldown waits 7 days after a release before proposing it, so a compromised release is more likely
-# to be detected and yanked before it reaches you.
+# Checked daily. The cooldown waits 7 days after a release before proposing a version update, so a
+# compromised release is more likely to be detected and yanked before it reaches you. Security updates
+# (enable them in the repository settings) are not delayed by the cooldown.
 # Replace or add package ecosystems to match the project (npm, pip, uv, gomod, cargo, maven, gradle, nuget, docker).
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: daily
     cooldown:
       default-days: 7
     groups:
@@ -16,7 +17,7 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
+      interval: daily
     cooldown:
       default-days: 7
     open-pull-requests-limit: 10

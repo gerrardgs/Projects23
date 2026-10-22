@@ -1,0 +1,37 @@
+name: Freshness
+
+# Daily check of the pins Dependabot cannot update (versions in workflow env blocks and in
+# pyproject.toml dependency groups). The run fails, and GitHub notifies the owner, when a newer
+# stable release has passed the 7-day cooldown. Dependabot handles everything else.
+on:
+  schedule:
+    - cron: "41 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  pins:
+    name: Pins outside Dependabot's reach
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - name: Compare pins with the latest stable releases
+        shell: bash
+        run: |
+          {
+            echo '```text'
+            node scripts/check-updates.mjs
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"

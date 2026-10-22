@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Claude Code PreToolUse hook: deterministically denies tool calls that read or modify secret files
-// or run a small set of destructive shell commands. Instructions ask; this enforces.
+// or run a small set of destructive shell commands, including git commands that discard uncommitted work.
+// Instructions ask; this enforces.
 //
 // Input (stdin, from Claude Code): {"tool_name": "Read" | "Edit" | "Write" | "NotebookEdit" | "Bash", "tool_input": {...}}
 // Output: a "deny" decision as JSON on stdout, or nothing (the normal permission flow continues).
@@ -24,6 +25,14 @@ const DANGEROUS_COMMANDS = [
   { pattern: /\b(curl|wget)\b[^|;&]*\|\s*(sudo\s+)?(ba|z)?sh\b/, reason: "piping a download into a shell runs unreviewed code" },
   { pattern: /\bgit\s+commit\b.*\s--no-verify\b/, reason: "bypassing commit hooks skips secret scanning and checks" },
   { pattern: /\bchmod\s+(-R\s+)?0?777\b/, reason: "world-writable permissions" },
+  // Commands that discard uncommitted work or delete branches (rule 08 section 3, rule 09 section 2).
+  { pattern: /\bgit\s+reset\b[^|;&]*\s--hard\b/, reason: "git reset --hard discards uncommitted work" },
+  { pattern: /\bgit\s+clean\b[^|;&]*\s(-[a-zA-Z]*f|--force\b)/, reason: "git clean -f deletes untracked files" },
+  { pattern: /\bgit\s+checkout\b[^|;&]*\s(--|\.)(\s|$)/, reason: "git checkout -- <path> or . discards uncommitted changes" },
+  { pattern: /\bgit\s+restore\b(?![^|;&]*\s(--staged|-S)\b)/, reason: "git restore discards uncommitted changes" },
+  { pattern: /\bgit\s+restore\b[^|;&]*\s(--worktree|-W)\b/, reason: "git restore --worktree discards uncommitted changes" },
+  { pattern: /\bgit\s+stash\s+(drop|clear)\b/, reason: "git stash drop or clear deletes stashed work" },
+  { pattern: /\bgit\s+branch\b[^|;&]*\s(-D|--delete\b[^|;&]*--force)(\s|$)/, reason: "deleting a branch that may not be merged" },
 ];
 
 /** True when a path points at a file that commonly holds secrets. Pure; exported for tests. */

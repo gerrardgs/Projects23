@@ -7,6 +7,7 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 | Scenario | Read first | Then |
 | :--- | :--- | :--- |
 | Large, vague or multi-component feature request | [feature-specification](../.agents/skills/feature-specification/SKILL.md) | then the skills for each task |
+| Unclear plan or design that needs the user's decisions first | [feature-specification](../.agents/skills/feature-specification/SKILL.md) "Resolve the design tree with the user" | [software-architecture](../.agents/skills/software-architecture/SKILL.md) section 3 (glossary) |
 | Design a system, choose an architecture, split or merge services | [software-architecture](../.agents/skills/software-architecture/SKILL.md) | [feature-specification](../.agents/skills/feature-specification/SKILL.md), [project-bootstrap ADR template](../.agents/skills/project-bootstrap/assets/adr-template.md) |
 | New repository from an empty folder | [project-bootstrap](../.agents/skills/project-bootstrap/SKILL.md) | [native-from-scratch](../.agents/skills/native-from-scratch/SKILL.md), [ci-cd-pipeline](../.agents/skills/ci-cd-pipeline/SKILL.md) |
 | New feature in an existing project | [change-existing-code](../.agents/skills/change-existing-code/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md), rule [05](../.agents/rules/05-error-handling.md) |
@@ -25,6 +26,7 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 | Database schema change | [deploy-and-release](../.agents/skills/deploy-and-release/SKILL.md) section 4 | [change-existing-code](../.agents/skills/change-existing-code/SKILL.md) |
 | Production incident | [systematic-debugging](../.agents/skills/systematic-debugging/SKILL.md) "Production incidents" | [deploy-and-release](../.agents/skills/deploy-and-release/SKILL.md) section 6 |
 | Commit, pull request, release | rule [08](../.agents/rules/08-git-workflow.md) | |
+| Hand work over to another session or agent | rule [09](../.agents/rules/09-clean-execution.md) section 7 (handoff note) | |
 | Documentation only | [technical-documentation](../.agents/skills/technical-documentation/SKILL.md) | [project-bootstrap assets](../.agents/skills/project-bootstrap/assets/) (README, ADR and SECURITY templates) |
 | Question about the code, no change requested | rule [03](../.agents/rules/03-verification.md) | Answer from the code you read, with file and line references; change nothing |
 | New or changed API endpoint, schema, query or job | [backend-engineering](../.agents/skills/backend-engineering/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md), [security-hardening](../.agents/skills/security-hardening/SKILL.md) |

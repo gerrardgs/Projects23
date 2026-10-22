@@ -110,7 +110,7 @@ A task often spans several skills. A bug fix in an API, for example, uses system
 - **No network**: rely on the installed code, lockfiles and local documentation; do not guess versions or APIs you cannot check.
 - **Non-interactive** (CI, scheduled or background agents): never wait for input. Make only safe, reversible changes, and report blockers instead of guessing past them.
 - **Monorepo or nested instructions**: the `AGENTS.md` nearest to the file being edited takes precedence for that directory. Explicit user instructions override this file, except where they would break section 2 or the security rules; then explain the conflict.
-- **Several agents or sub-agents**: give each one a self-contained task with the relevant rule and skill links. Review and verify their results before reporting them as done.
+- **Several agents or sub-agents**: give each one a self-contained task with the relevant rule and skill links. Review and verify their results before reporting them as done. For a spec split into tasks with blocking edges, run the ready tasks in parallel, each in its own branch or worktree based on one integration branch, merge each finished task back, start the tasks it unblocks, then review the whole integration branch once ([rigorous-code-audit](.agents/skills/rigorous-code-audit/SKILL.md)).
 - **Unfamiliar language or framework**: read the official documentation and the existing code first, and follow the platform's idioms, not habits from another language.
 - **Production or shared environments**: read-only by default. Never change data, infrastructure or deployments without explicit approval.
 
