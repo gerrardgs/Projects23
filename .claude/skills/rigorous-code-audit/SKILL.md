@@ -79,8 +79,25 @@ For each candidate finding:
 
 1. Trace the actual code path from input to the problem. Read the called functions; do not assume what they do.
 2. Construct a concrete failing scenario: specific input, state, result. Write a failing test or a reproduction when feasible.
-3. Drop it if you cannot build a plausible scenario, or label it **unconfirmed** if it is still worth raising.
+3. Drop it if you cannot build a plausible scenario. If it is grounded in the source but a decisive fact is outside it (a deployment setting, proxy or provider behaviour, identity policy, network topology), mark it **needs validation** with that exact fact and a safe way for the owner to check it. Do not assume the missing control is present or absent.
 4. Do not report style preferences as bugs. Do not report issues the linter already enforces unless the linter is not running.
+
+### Security findings: prove the boundary and the result
+
+Adapted from Cloudflare's [security-audit skill](https://github.com/cloudflare/security-audit-skill) (MIT). A confirmed security finding names all of:
+
+- the lower-trust principal and the input or action it controls;
+- the control that should have stopped it, and the trust boundary that was crossed;
+- the affected principal or resource; and
+- the concrete result observed, with source evidence or a bounded local reproduction (a wrong return value, another tenant's dummy record read, a sanitizer report).
+
+Then apply these rules:
+
+- A deviation from a checklist or best practice is a **hardening note**, not a vulnerability. If one layer already prevents the attack, the missing second layer is a defence-in-depth note.
+- Intended same-principal authority and self-impact do not cross a boundary.
+- Report the effect you observed, never a stronger one you expect.
+- The finder does not confirm its own finding: another reviewer, or a fresh agent given only the claim and the source, tries to disprove it. Keep disproved candidates as **rejected** with the reason, so later reviews do not raise them again without new evidence.
+- Recommend the smallest change that enforces the violated invariant at the last trusted decision point, plus a regression test. A review describes fixes; it changes the code only when that is part of the request ([AGENTS.md](../../../AGENTS.md) non-negotiable 9).
 
 ## 5. Report
 
@@ -90,14 +107,26 @@ Order findings by severity, most severe first. One entry per finding:
 [Severity] path/to/file.ext:LINE: one-sentence statement of the defect
   Scenario: concrete input/state → wrong result or impact
   Fix:      the specific change recommended
-  Status:   confirmed (test/repro) | unconfirmed (reasoning only)
+  Status:   confirmed (test/repro) | needs validation (the missing fact and how to check it) | rejected (disproved, with the reason)
 ```
 
 Severity guide:
 
-- **Critical**: exploitable security flaw, data loss or corruption, or an outage in a core path.
+- **Critical**: exploitable security flaw at the critical level below, data loss or corruption, or an outage in a core path.
 - **High**: wrong results in normal use, or a security weakness that needs specific conditions.
 - **Medium**: an edge-case bug, a missing timeout or limit, or an important missing test.
 - **Low**: maintainability or clarity problems that make future bugs likely.
+
+Security severity follows the demonstrated impact and never exceeds it (calibration from Cloudflare's skill). Findings marked needs validation get no severity.
+
+- **Critical**: an unauthenticated actor gains code execution, full data-store access, or takeover of arbitrary accounts.
+- **High**: an explicit control is fully defeated with real consequences: authentication bypass, cross-tenant read or write, stored script execution affecting other users, authenticated code execution, or an unauthenticated remote stop of a shared service.
+- **Medium**: a real boundary violation with limited blast radius, uncommon preconditions, or effects confined to a narrow set of resources.
+- **Low**: disclosure of non-secret internals, or an effect that needs sustained effort for minimal gain.
+- **Informational**: confirmed but minimal impact, mainly useful as a step in a larger chain.
+
+If the result fully defeats an explicit control for an action with real consequences, it is high; if it only weakens the control, medium. If you cannot state the concrete damage, the severity is lower than it feels.
+
+List hardening notes separately from vulnerabilities, and end with a coverage statement: what was reviewed, what was not, and why. One pass is never complete; in Cloudflare's runs a single pass found roughly half of the vulnerabilities that repeated runs found.
 
 Finish with the commands you ran and their results, and anything you could not check.

@@ -74,3 +74,9 @@ Private by default: nothing becomes reachable or readable by the public unless t
 | Third-party services, including AI tools | Send personal, confidential or customer data to an external service only when policy and the user allow it |
 
 When you find an exposure, stop and tell the user. Exposed secrets must be revoked and rotated; exposed personal data may trigger legal notification duties.
+
+## 9. Security testing and findings
+
+- Test only systems and data the user owns and has authorized, locally or in a test environment. Never probe production, third-party services or other people's data, and never test availability against shared systems, without explicit approval.
+- Run code under review (builds, tests, fuzzers, fixtures) only in a sandbox without external network, credentials or access to your home directory ([security-hardening](../skills/security-hardening/SKILL.md) section 9).
+- Report what the evidence shows: a vulnerability names the boundary crossed and the observed result; a missing fact makes it "needs validation", and a missing best practice is a hardening note ([rigorous-code-audit](../skills/rigorous-code-audit/SKILL.md) section 4).

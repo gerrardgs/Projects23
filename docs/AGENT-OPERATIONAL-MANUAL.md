@@ -17,6 +17,7 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 | Dependency or runtime upgrade | [change-existing-code](../.agents/skills/change-existing-code/SKILL.md) section 4 | rule [04](../.agents/rules/04-dependencies.md) |
 | Code review or pull request review | [rigorous-code-audit](../.agents/skills/rigorous-code-audit/SKILL.md) | rule [06](../.agents/rules/06-security.md) |
 | Security review, auth, payments, uploads, personal data | [security-hardening](../.agents/skills/security-hardening/SKILL.md) | [rigorous-code-audit](../.agents/skills/rigorous-code-audit/SKILL.md) |
+| Security audit or vulnerability hunt of a codebase | [security-hardening](../.agents/skills/security-hardening/SKILL.md) section 9 and its [attack classes](../.agents/skills/security-hardening/references/attack-classes.md) | [rigorous-code-audit](../.agents/skills/rigorous-code-audit/SKILL.md) section 4 (boundary and result, independent validation), rule [06](../.agents/rules/06-security.md) section 9 |
 | Slow code or high memory | [systematic-debugging](../.agents/skills/systematic-debugging/SKILL.md) "Performance problems" | its [tools reference](../.agents/skills/systematic-debugging/references/tools.md) |
 | CI is failing | [systematic-debugging](../.agents/skills/systematic-debugging/SKILL.md) | [ci-cd-pipeline](../.agents/skills/ci-cd-pipeline/SKILL.md) |
 | Set up or harden CI/CD | [ci-cd-pipeline](../.agents/skills/ci-cd-pipeline/SKILL.md) | [security-hardening](../.agents/skills/security-hardening/SKILL.md) section 4 |

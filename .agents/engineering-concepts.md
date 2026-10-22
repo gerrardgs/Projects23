@@ -111,6 +111,7 @@ No finite document can hold every concept ever named. This index is therefore an
 | :--- | :--- | :--- |
 | Secure by design and by default | Rule [06](rules/06-security.md) | [CISA Secure by Design](https://www.cisa.gov/securebydesign) |
 | Threat modelling (STRIDE) | [security-hardening](skills/security-hardening/SKILL.md) | [OWASP threat modeling cheat sheet](https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html) |
+| Vulnerability auditing: attack classes, boundary-and-result evidence, independent validation, severity calibration, coverage | [security-hardening](skills/security-hardening/SKILL.md) section 9, [attack classes](skills/security-hardening/references/attack-classes.md), [rigorous-code-audit](skills/rigorous-code-audit/SKILL.md) sections 4 and 5, rule [06](rules/06-security.md) section 9 | [Cloudflare security-audit skill](https://github.com/cloudflare/security-audit-skill) |
 | Least privilege, deny by default, zero trust | Rule [06](rules/06-security.md) section 4, [it-operations](skills/it-operations/SKILL.md) | [NIST SP 800-207](https://csrc.nist.gov/pubs/sp/800/207/final) |
 | Secure development lifecycle | [security domain standards](skills/security-hardening/references/domain-standards.md) | [NIST SP 800-218 SSDF](https://csrc.nist.gov/pubs/sp/800/218/final) |
 | Privacy by design, data minimisation | [security domain standards](skills/security-hardening/references/domain-standards.md), rule [06](rules/06-security.md) section 7 | [GDPR Article 25](https://gdpr-info.eu/art-25-gdpr/) |

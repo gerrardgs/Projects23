@@ -1,6 +1,6 @@
 ---
 name: security-hardening
-description: Threat-model a feature, review and harden code and configuration against OWASP Top 10:2025 and OWASP ASVS 5.0, and set up secret scanning, static analysis, dependency and container scanning, and SBOM generation. Use when building authentication, authorization, payments, file uploads or anything handling personal data, before a release, after a security finding, or when asked to make code or infrastructure secure.
+description: Threat-model a feature, review and harden code and configuration against OWASP Top 10:2025 and OWASP ASVS 5.0, and set up secret scanning, static analysis, dependency and container scanning, and SBOM generation. Also audits an existing codebase for vulnerabilities by attack class, with sandboxed execution. Use when building authentication, authorization, payments, file uploads or anything handling personal data, before a release, after a security finding, when asked for a security audit or vulnerability hunt, or when asked to make code or infrastructure secure.
 license: MIT
 metadata:
   version: "1.0.0"
@@ -8,7 +8,7 @@ metadata:
 
 # Security Hardening
 
-The always-on baseline is [06-security](../../rules/06-security.md). This skill adds the procedure. Scanner commands are in [references/tools.md](references/tools.md); the standard to use for each kind of system (web, API, mobile, LLM, agents, cloud, supply chain) and regulation pointers are in [references/domain-standards.md](references/domain-standards.md).
+The always-on baseline is [06-security](../../rules/06-security.md). This skill adds the procedure. Scanner commands are in [references/tools.md](references/tools.md); what to hunt for, by domain, is in [references/attack-classes.md](references/attack-classes.md); the standard to use for each kind of system (web, API, mobile, LLM, agents, cloud, supply chain) and regulation pointers are in [references/domain-standards.md](references/domain-standards.md).
 
 ## 1. Threat-model before building
 
@@ -91,7 +91,21 @@ Instruction files guide an agent; only the tool's own controls enforce. Use both
 - Turn on the tool's permission prompts for destructive actions, and keep secrets out of the files an agent can read.
 - **Claude Code**: [assets/claude-code-guardrails/](assets/claude-code-guardrails/) is a tested `PreToolUse` hook (Node.js, no dependencies) that denies reading or editing `.env` files, private keys, cloud and SSH credentials, Terraform state and registry token files, and blocks force-pushes, recursive deletes of the root or home directory, piping downloads into a shell, `--no-verify` commits and `chmod 777`. To enable it, copy `guard.mjs` to `.claude/hooks/guard.mjs` (keep it executable) and merge `settings.example.json` into `.claude/settings.json`. Hooks change every session in the repository, so this is an owner decision. The deny patterns are a safety net, not a complete sandbox.
 
-## 9. Verify
+## 9. Audit an existing codebase for vulnerabilities
+
+For a focused question, use only the parts you need; run the whole procedure only when the user asks for an audit, a penetration test of the code, or a full review. Ask if the scope is unclear.
+
+1. **Map it**: architecture, entry points, trust boundaries, principals and tenants, and the input surfaces (HTTP, RPC, queues, files, webhooks, IPC, model output). Note controls that live outside the repository (proxy, identity provider, cloud policy).
+2. **Plan coverage**: list units of surface × boundary × [attack class](references/attack-classes.md), including the domain companions the architecture needs, and record for each one what was checked. A scoped or quick review says it is partial.
+3. **Hunt** each unit with source evidence, and run the obvious-things sweep from the attack-class reference.
+4. **Validate** every candidate as in [rigorous-code-audit](../rigorous-code-audit/SKILL.md) section 4: boundary and result, a disproving pass by someone other than the finder, then confirmed, needs validation or rejected.
+5. **Report** with that skill's format and security severity, hardening notes apart, and the coverage statement.
+
+**Execution safety.** Reading source is safe; running the target's code is not. Run builds, tests, fuzzers, browsers or fixtures from the code under review only in a sandbox with no external network, an empty environment filled from an allow-list, the source read-only with writes limited to a scratch directory, and CPU, memory, process and time limits. Do not install or fetch dependencies for it. Use dummy users, tenants and secrets. Never probe deployed endpoints, production identities, external services or other people's data, never test availability against a shared system, and never spend paid quota. If you cannot enforce the sandbox, do not execute: mark the lead needs validation and give a safe plan. Write audit output outside the repository, or in a directory version control ignores.
+
+**Full multi-agent audit.** Cloudflare's open-source [security-audit skill](https://github.com/cloudflare/security-audit-skill) (MIT) automates this as six phases with isolated hunters, independent verifiers, a coverage ledger and JSON findings checked by two zero-dependency validators (its 65 validator tests passed on Node.js on 2026-10-22). It needs a client with parallel sub-agents and the OS-enforced sandbox above. Installing it is the owner's decision: review the files first (the reviewed commit was `c1c8a8c`), then for example `npx skills@1.7.2 add https://github.com/cloudflare/security-audit-skill --skill security-audit`. The `skills` CLI (vercel-labs) states in its help that it sends an install telemetry event, and the install follows the repository's current branch, so re-review after updates.
+
+## 10. Verify
 
 - Run the scanners in [references/tools.md](references/tools.md) and triage every finding: fix it, or document why it is a false positive.
 - Write tests for security requirements: authorization denials, input limits, rejected tokens, rate limits.
