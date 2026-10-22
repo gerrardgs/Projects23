@@ -48,6 +48,7 @@ Security outranks every other goal ([AGENTS.md](../../AGENTS.md) section 1). The
 
 - Follow [04-dependencies](04-dependencies.md): verify package names, commit lockfiles, install reproducibly, run the vulnerability audit.
 - Pin third-party CI actions and container base images to immutable references (commit SHA, image digest) in release pipelines.
+- MCP servers, agent plugins and editor or AI-tool extensions run with your permissions and feed text to the model: vet the publisher and code, pin the version, give them least-privilege credentials, keep tool confirmations on, and never mark a third-party server as trusted to skip approvals ([MCP servers reference](../skills/ai-agent-systems/references/mcp-servers.md)).
 - Keep everything current: automated updates for every pin, scheduled vulnerability scans even without code changes, and known-exploited vulnerabilities patched first ([security-hardening](../skills/security-hardening/SKILL.md) section 7).
 
 ## 7. Safe failure and privacy

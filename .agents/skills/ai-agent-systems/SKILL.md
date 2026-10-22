@@ -1,6 +1,6 @@
 ---
 name: ai-agent-systems
-description: Design, build, secure and evaluate AI agents and multi-agent systems that plan and call tools - tool and MCP server design, permissions and human approval, sandboxing, memory and state, loop and cost limits, error recovery, tracing, and task-level evaluation - against the OWASP Top 10 for LLM Applications and for Agentic Applications. Use when building an agent, an MCP server or client, a tool-calling workflow, a coding or browsing agent, or an orchestrator of sub-agents, or when an agent misbehaves, loops, overspends or takes unsafe actions.
+description: Design, build, secure and evaluate AI agents and multi-agent systems that plan and call tools - tool and MCP server design, connecting and vetting third-party MCP servers (including MCP Toolbox for Databases), permissions and human approval, sandboxing, memory and state, loop and cost limits, error recovery, tracing, and task-level evaluation - against the OWASP Top 10 for LLM Applications and for Agentic Applications. Use when building an agent, an MCP server or client, a tool-calling workflow, a coding or browsing agent, or an orchestrator of sub-agents, or when an agent misbehaves, loops, overspends or takes unsafe actions.
 license: MIT
 metadata:
   version: "1.0.0"
@@ -30,6 +30,8 @@ Builds on [llm-applications](../llm-applications/SKILL.md). Sources checked on 2
   - possession of a state handle is never authentication;
   - clients guard against SSRF when following URLs supplied by a server;
   - local servers run sandboxed, and only after the user approves the exact command.
+- To connect existing MCP servers (from the [official registry](https://registry.modelcontextprotocol.io/), vendors, or community lists such as punkpeye/awesome-mcp-servers and wong2/awesome-mcp-servers), follow the [MCP servers reference](references/mcp-servers.md): a list entry is not a review, so vet, pin, contain and configure each one per client.
+- Give agents database access through fixed, parameterized tools, never free-form SQL against production: [MCP Toolbox for Databases](https://github.com/googleapis/mcp-toolbox) does this, and [assets/mcp-toolbox-sqlite](assets/mcp-toolbox-sqlite/) is a tested read-only example with an end-to-end MCP test.
 
 ## 3. Permissions and human control (excessive agency, OWASP LLM06:2025)
 

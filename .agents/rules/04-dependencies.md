@@ -24,6 +24,7 @@ When a package is justified, prefer one that is actively maintained, widely used
 - Install reproducibly in CI: `npm ci`, `pnpm install --frozen-lockfile`, `uv sync --locked`, `pip install --require-hashes -r requirements.txt`, `go mod download` with `go.sum` checked, `cargo build --locked`.
 - Audit for known vulnerabilities: `npm audit`, `pip-audit`, `govulncheck ./...`, `cargo audit` (the `cargo-audit` crate), `dotnet list package --vulnerable`, OSV-Scanner for any ecosystem.
 - Do not run untrusted install scripts blindly. Review new packages with install hooks.
+- MCP servers and agent extensions are dependencies too: the same checks apply, plus an exact version (never `@latest` or an unpinned `npx -y`) and a verified checksum for downloaded binaries ([MCP servers reference](../skills/ai-agent-systems/references/mcp-servers.md)).
 - Upgrade deliberately: one major version at a time, read the changelog, run the full test suite.
 
 ## 3. Version baseline (verified 2026-10-14; re-check before relying on it)

@@ -109,7 +109,7 @@ Apache Spark, Apache Flink, dbt, DuckDB, Polars, pandas, NumPy, Apache Superset,
 
 ## AI, ML and LLM frameworks
 
-Machine learning: scikit-learn, PyTorch, TensorFlow and Keras, JAX, XGBoost, LightGBM, Hugging Face. LLM application and agent frameworks: LangChain and LangGraph, LlamaIndex, Haystack, Semantic Kernel, AutoGen, CrewAI, DSPy, Pydantic AI, the Model Context Protocol SDKs; demos with Gradio and Streamlit; serving with vLLM, SGLang, Ollama, llama.cpp. Prefer the simplest design that works before adopting a framework ([ai-agent-systems](../../ai-agent-systems/SKILL.md) section 1).
+Machine learning: scikit-learn, PyTorch, TensorFlow and Keras, JAX, XGBoost, LightGBM, Hugging Face. LLM application and agent frameworks: LangChain and LangGraph, LlamaIndex, Haystack, Semantic Kernel, AutoGen, CrewAI, DSPy, Pydantic AI, the Model Context Protocol SDKs, MCP servers from the [official registry](https://registry.modelcontextprotocol.io/) or vendors (for example MCP Toolbox for Databases), tested with the MCP Inspector and vetted per the [MCP servers reference](../../ai-agent-systems/references/mcp-servers.md); demos with Gradio and Streamlit; serving with vLLM, SGLang, Ollama, llama.cpp. Prefer the simplest design that works before adopting a framework ([ai-agent-systems](../../ai-agent-systems/SKILL.md) section 1).
 
 ## Content, commerce and business applications
 

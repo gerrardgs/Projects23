@@ -22,6 +22,7 @@ Choose by access pattern, consistency need and operational capacity. A relationa
 - **Query plans**: read `EXPLAIN (ANALYZE, BUFFERS)` in PostgreSQL or `EXPLAIN ANALYZE` in MySQL before and after an optimization.
 - **Migrations**: tools such as Flyway, Liquibase, Alembic, Prisma Migrate, Django and Rails migrations, golang-migrate. Lock-heavy operations (adding a non-null column with a default on old versions, building non-concurrent indexes, type changes on large tables) need a zero-downtime plan.
 - **Backups**: automated, encrypted, tested by restoring regularly; point-in-time recovery for production.
+- **AI agent access**: give agents fixed, parameterized queries through a dedicated least-privilege database user (read-only where possible), not free-form SQL; [MCP Toolbox for Databases](https://github.com/googleapis/mcp-toolbox) serves such tools over MCP ([example and safety notes](../../ai-agent-systems/references/mcp-servers.md)).
 
 ## Editor support (VS Code extension IDs, checked on the Marketplace)
 

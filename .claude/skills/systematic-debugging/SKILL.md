@@ -34,15 +34,17 @@ Use one technique at a time:
 
 ## 4. Hypothesise and prove
 
+- Write down what you are assuming (which code actually runs, versions, configuration, inputs, environment) and check the cheapest assumptions first; many bugs live in an assumption nobody verified.
 - State one hypothesis that explains **all** the symptoms: "The cache returns stale data because the key omits the tenant ID."
 - Design a check that would disprove it, and run it. Keep notes of what you tried and what you saw.
 - Stop when the evidence shows the cause. "It works now" without knowing why is not a root cause.
+- When a check disproves the hypothesis, drop it completely and form a new one from the evidence; do not bend the evidence to fit. After two failed fixes, step back and re-read everything you have ([01-core-principles](../../rules/01-core-principles.md) section 8).
 
 ## 5. Fix the root cause
 
 - Fix the cause, not the symptom. A `try/catch` that hides the error, a `sleep` that hides a race, or a null check that hides bad data are not fixes.
 - Look for the same defect elsewhere: other callers, similar code, the same pattern.
-- Keep the fix minimal. Refactor separately.
+- Keep the fix minimal: every changed line traces to the root cause. Refactor separately, and report other problems you notice instead of fixing them in the same change.
 
 ## 6. Prevent the regression
 

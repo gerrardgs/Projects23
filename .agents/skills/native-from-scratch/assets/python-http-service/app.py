@@ -104,10 +104,10 @@ class RequestHandler(BaseHTTPRequestHandler):
     server_version = "python-http-service"
     sys_version = ""
 
-    def do_GET(self) -> None:
+    def do_GET(self) -> None:  # noqa: N802 - method name is fixed by BaseHTTPRequestHandler
         self._dispatch("GET")
 
-    def do_POST(self) -> None:
+    def do_POST(self) -> None:  # noqa: N802 - method name is fixed by BaseHTTPRequestHandler
         self._dispatch("POST")
 
     def log_message(self, format: str, *args: Any) -> None:  # noqa: A002

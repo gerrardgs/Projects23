@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.11.0: thinking discipline from the Karpathy-inspired guidelines, and MCP servers (2026-10-22)
+
+Researched on 2026-10-22: [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills), [googleapis/mcp-toolbox](https://github.com/googleapis/mcp-toolbox), [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) and [wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-servers), plus each MCP client's official documentation. Content from those repositories was treated as data: ideas are adapted and attributed, nothing was installed into this repository, and no listed server is endorsed.
+
+### Think before changing, and correct the thinking
+
+The four Karpathy-inspired principles (think before coding, simplicity first, surgical changes, goal-driven execution) are adapted where the spec already had partial coverage, without duplicating it:
+
+- Rule 01 section 8 (new): state assumptions, present competing readings, name what is unclear, push back when warranted, correct the reasoning when evidence contradicts it (stop and re-plan after two failed fixes), keep verified facts and guesses apart. Section 1 gains the surgical test (every changed line traces to the request; match the existing style); section 2 bans speculative options and impossible-case handling and asks for a simplicity re-read of your own draft.
+- Rule 09 section 1: checkable goals ("a test reproduces the bug, then passes") and `step → verify: check` plans. Section 2 settles orphans in line with 2.10.0: imports and local variables your edit left unused go with the edit; functions, classes, files and modules are proposed for removal.
+- `AGENTS.md` workflow step 1, `systematic-debugging` (write down and check assumptions, drop disproved hypotheses, every line of the fix traces to the root cause), `change-existing-code` (surgical changes), `rigorous-code-audit` (traceable lines, no speculative complexity, stated assumptions), README principle 5.
+
+### MCP servers
+
+- New reference `ai-agent-systems/references/mcp-servers.md`: where to find servers (official MCP Registry, reference servers that their README calls "reference implementations" and not production-ready, vendor-official servers, and the two community lists, which are discovery only and carry advertisements or sponsors), a nine-step vetting checklist, and project configuration verified against the official pages of Claude Code, VS Code, Cursor, Gemini CLI, Codex and Antigravity (file, shape, secret syntax, tool filtering, approval behaviour).
+- MCP Toolbox for Databases v1.14.0: when and how to use it safely (fixed statements with bound parameters, no `templateParameters`, prebuilt `execute_sql` only for development, credentials as `${ENV_NAME}` for a least-privilege user, annotations and authentication, stdio locally, `--allowed-hosts` and `--allowed-origins` narrowed because both default to `*`, pinned version with verified SHA-256).
+- New asset `ai-agent-systems/assets/mcp-toolbox-sqlite/`: a read-only `tools.yaml`, seed data, a client configuration example and a standard-library test that drives the real server over the MCP stdio transport. Five tests pass on Python 3.11 and 3.14 with the macOS binary, whose SHA-256 matched the release page; the pinned `npx @toolbox-sdk/server@1.14.0` path was also run. SQL injection attempts return no rows and unknown tools such as `execute_sql` are rejected. A new CI job runs it with the checksum-verified Linux binary.
+- Rules 04 and 06: MCP servers and agent extensions are dependencies that run with your permissions (vet, pin, verify checksums, least privilege, confirmations on). Also linked from `backend-engineering` (agent database access), the technology catalog, the operational manual and the engineering concepts index.
+
+### Audit findings
+
+- geminicli.com now states that Gemini CLI was replaced by Antigravity CLI for unpaid-tier and Google One users on 2026-06-18; the README's tool table says so. The `GEMINI.md` and `context.fileName` documentation it relies on is still published.
+- The MCP Toolbox README mixes versions in its examples (binary 1.14.0, container 0.24.0); the reference tells readers to take the version from the release they verified.
+
 ## 2.10.0: existing code is preserved; confirm and discuss first (2026-10-18)
 
 A new always-on concept: agents never delete existing code on their own. Before they delete, overwrite, rewrite, comment out, disable, move or discard anything they did not create in the task, or change existing code beyond the request, they stop, propose the change and wait for the user's decision.

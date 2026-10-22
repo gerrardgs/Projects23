@@ -42,6 +42,7 @@ No finite document can hold every concept ever named. This index is therefore an
 | Complexity limits, code smells | Rule [02](rules/02-clean-code.md) sections 3 and 7 | [Code smell](https://martinfowler.com/bliki/CodeSmell.html) |
 | Refactoring in small behaviour-preserving steps | [change-existing-code](skills/change-existing-code/SKILL.md) | [Refactoring catalog](https://refactoring.com/catalog/) |
 | Existing code is preserved: never delete, overwrite or rewrite it on your own; propose, discuss and wait for the decision | [AGENTS.md](../AGENTS.md) non-negotiable 9, rule [09](rules/09-clean-execution.md) section 2, [change-existing-code](skills/change-existing-code/SKILL.md) | |
+| Think before coding, surgical changes, goal-driven execution, correcting your own reasoning | Rule [01](rules/01-core-principles.md) sections 1, 2 and 8, rule [09](rules/09-clean-execution.md) section 1, [systematic-debugging](skills/systematic-debugging/SKILL.md) | [Karpathy-inspired guidelines](https://github.com/multica-ai/andrej-karpathy-skills) |
 | Hyrum's law: "all observable behaviors of your system will be depended on by somebody" | [software-architecture](skills/software-architecture/SKILL.md) section 4 (contracts) | [hyrumslaw.com](https://www.hyrumslaw.com/) |
 
 ### Architecture and distributed systems
@@ -121,6 +122,7 @@ No finite document can hold every concept ever named. This index is therefore an
 | Idempotent pipelines, data contracts, lineage, data quality | [data-engineering](skills/data-engineering/SKILL.md) | [Data Contract](https://datacontract.com/), [OpenLineage](https://openlineage.io/) |
 | Experiment design, statistical testing | [data-analysis](skills/data-analysis/SKILL.md) | |
 | MLOps, reproducibility, drift monitoring, model cards | [machine-learning](skills/machine-learning/SKILL.md), [ml-inference-serving](skills/ml-inference-serving/SKILL.md) | [ml-ops.org](https://ml-ops.org/), [Model cards](https://modelcards.withgoogle.com/) |
+| Model Context Protocol: building servers, and finding, vetting and configuring existing ones | [ai-agent-systems](skills/ai-agent-systems/SKILL.md) and its [MCP servers reference](skills/ai-agent-systems/references/mcp-servers.md), rules [04](rules/04-dependencies.md) and [06](rules/06-security.md) | [MCP security best practices](https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices), [MCP Registry](https://registry.modelcontextprotocol.io/) |
 | LLM evaluation, retrieval grounding, agent guardrails, AI risk management | [llm-applications](skills/llm-applications/SKILL.md), [rag-systems](skills/rag-systems/SKILL.md), [ai-agent-systems](skills/ai-agent-systems/SKILL.md) | [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework) |
 
 ### People, process and sustainability

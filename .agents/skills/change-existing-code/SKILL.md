@@ -26,6 +26,7 @@ Most engineering work happens in code that already exists. The goal is to change
 
 ## 3. Change in small, verified steps
 
+- Make surgical changes: every changed line traces to the request, and the surrounding code keeps its style and structure. Report other problems you notice instead of fixing them on the side ([01-core-principles](../../rules/01-core-principles.md) section 1).
 - Separate **refactoring** (structure changes, behaviour identical) from **behaviour changes**. Do them in different commits.
 - After each step: build, run the relevant tests, and keep the code working. Never pile up many unverified edits.
 - Common safe refactorings: rename, extract function, inline function, move code, introduce parameter object, replace conditional with polymorphism or a lookup table. Use the editor's or language server's automated refactorings where available.
@@ -49,7 +50,7 @@ Use expand and contract: add new columns or tables in a backward-compatible way,
 
 ## 5. Finish
 
-- List code that your change made unused, with the search that shows nothing else uses it, and propose removing it. Remove it only after the user agrees.
+- Imports and local variables that your edit left unused go with that edit. List functions, classes, files or modules that your change made unused, with the search that shows nothing else uses them, and propose removing them; remove them only after the user agrees.
 - Update documentation, configuration examples, and the changelog.
 - Report what changed, what stayed deliberately unchanged, how it was verified, and any follow-up risk (see the report format in [AGENTS.md](../../../AGENTS.md)).
 

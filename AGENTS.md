@@ -37,7 +37,7 @@ If your tool does not load these folders automatically, **open the matching file
 
 ## 3. Workflow for every task
 
-1. **Understand.** Restate the goal and the acceptance criteria. Identify inputs, outputs, edge cases, failure modes and constraints. Ask only when a decision truly belongs to the user; otherwise pick the conventional option and state it.
+1. **Understand.** Restate the goal and the acceptance criteria. Identify inputs, outputs, edge cases, failure modes and constraints. State your assumptions; when the request has several readings with different results, present them instead of choosing silently ([01-core-principles](.agents/rules/01-core-principles.md) section 8). Ask only when a decision truly belongs to the user; otherwise pick the conventional option and state it.
 2. **Ground in reality.** Read the relevant code before editing. Detect the stack from manifests (`package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `pom.xml`, `build.gradle(.kts)`, `*.csproj`, `composer.json`, `Gemfile`), lockfiles, CI config and the README. Note the exact runtime and dependency versions. For live facts about any package or product (latest version, licence, deprecation, end of life), run `node scripts/tech-lookup.mjs <ecosystem>:<name>`.
 3. **Plan the smallest correct change.** Prefer modifying existing code over adding layers. Write the plan down for multi-file or risky changes.
 4. **Implement.** Write idiomatic, typed, complete code per [01-core-principles](.agents/rules/01-core-principles.md) and [02-clean-code](.agents/rules/02-clean-code.md). Handle errors per [05-error-handling](.agents/rules/05-error-handling.md).

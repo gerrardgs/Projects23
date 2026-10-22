@@ -205,6 +205,36 @@ jobs:
       - run: python -m unittest -v
       - run: python example_experiment.py
 
+  mcp-toolbox-example:
+    name: MCP Toolbox example (real server over MCP stdio)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: .agents/skills/ai-agent-systems/assets/mcp-toolbox-sqlite
+    env:
+      TOOLBOX_VERSION: "1.14.0"
+      # SHA-256 of linux/amd64 v1.14.0 from https://github.com/googleapis/mcp-toolbox/releases/tag/v1.14.0
+      TOOLBOX_SHA256: 8ff7c6034d792e2754999e101116ac63b8a9fb926dd2f736065d8e0ef85ead22
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install --group dev
+      - run: ruff format --check .
+      - run: ruff check .
+      - run: mypy test_toolbox_smoke.py
+      - name: Download the pinned Toolbox binary and verify its checksum
+        run: |
+          curl -sSfL -o "$RUNNER_TEMP/toolbox" "https://storage.googleapis.com/mcp-toolbox-for-databases/v${TOOLBOX_VERSION}/linux/amd64/toolbox"
+          echo "${TOOLBOX_SHA256}  $RUNNER_TEMP/toolbox" | sha256sum -c
+          chmod +x "$RUNNER_TEMP/toolbox"
+      - run: TOOLBOX_BIN="$RUNNER_TEMP/toolbox" python -m unittest -v
+
   clean-code:
     name: Clean-code lint (complexity <= 10, nesting <= 3)
     runs-on: ubuntu-latest

@@ -10,7 +10,8 @@ Clean code ([02-clean-code](02-clean-code.md)) is about what the result looks li
 ## 1. Before acting
 
 - Understand the request and read the code, configuration and commands involved ([AGENTS.md](../../AGENTS.md) section 3).
-- Plan the smallest change that solves it. For multi-step work, write the steps and the check that proves each one.
+- Plan the smallest change that solves it. For multi-step work, write the steps and the check that proves each one, as `1. <step> → verify: <check>`.
+- Turn the task into a goal you can check, so you can loop until it is met instead of guessing when you are done: "fix the bug" becomes "a test reproduces it, then passes"; "add validation" becomes "tests for invalid inputs fail, then pass"; "refactor" becomes "the same tests pass before and after".
 - Prefer a preview: dry-run flags (`--dry-run`, `--check`, `plan`, `diff`, `-WhatIf`), a scratch copy, or a test, before the real action.
 
 ## 2. While acting
@@ -35,7 +36,7 @@ Code that already exists was written for a reason you may not see. Never delete 
 - Discarding work: `git reset --hard`, `git checkout -- <path>`, `git restore`, `git clean`, `git stash drop` or `clear`, or deleting branches.
 - Any change to existing code beyond what the user asked for, even when it looks like an improvement ([01-core-principles](01-core-principles.md) section 1).
 
-**Needs no confirmation:** reading and analysing; adding new code; editing the lines the request is about, in the way it asks; removing temporary files, logs and debug output that you created yourself in this task.
+**Needs no confirmation:** reading and analysing; adding new code; editing the lines the request is about, in the way it asks; removing imports and local variables that your own edit left unused in those lines; removing temporary files, logs and debug output that you created yourself in this task. Functions, classes, files or modules that your change left unused are proposed for removal, not deleted.
 
 **How to ask.** Stop before the change and present a proposal, then wait:
 
