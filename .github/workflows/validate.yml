@@ -36,6 +36,8 @@ jobs:
         run: node --test "scripts/*.test.mjs"
       - name: Agent guardrail hook tests
         run: node --test ".agents/skills/security-hardening/assets/claude-code-guardrails/*.test.mjs"
+      - name: Documentation checker tests
+        run: node --test ".agents/skills/technical-documentation/assets/*.test.mjs"
       - name: Validate rules, skills, mirror and links
         run: node scripts/agents-sync.mjs --check --all-markdown
       - name: Install lint tools
