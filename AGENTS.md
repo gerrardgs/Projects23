@@ -123,7 +123,7 @@ A task is done when all of these hold:
 - [ ] Formatter, linter, type checker and tests pass, using the project's own commands
 - [ ] New or changed behaviour covered by tests, including failure paths
 - [ ] No secrets, debug leftovers, commented-out code or unexplained suppressions
-- [ ] Public interfaces, configuration and environment variables documented
+- [ ] Public interfaces, configuration and environment variables documented; the project's `docs/` set is complete and current ([technical-documentation](.agents/skills/technical-documentation/SKILL.md) section 5)
 - [ ] Commands, flags and APIs used were verified, not assumed
 
 End every task with a short report:

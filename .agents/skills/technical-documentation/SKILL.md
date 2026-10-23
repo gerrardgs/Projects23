@@ -1,6 +1,6 @@
 ---
 name: technical-documentation
-description: Write and maintain documentation that people can use - READMEs, tutorials, how-to guides, API and configuration reference, architecture explanations, decision records, changelogs, runbooks, docstrings and code comments - organised with the Diátaxis framework, kept next to the code, reviewed and tested like code. Use when creating or updating any documentation, documenting an API, CLI, library or service, writing a README or migration guide, or when users keep asking the same questions.
+description: Write and maintain documentation that people can use - the complete project docs/ set (PRD, architecture, tech stack, code style, rules, configuration, API, integrations, database, schema, privacy, design, design system, assets, security, testing, debugging, deployment, operations) with templates and a completeness check, READMEs, tutorials, how-to guides, API and configuration reference, architecture explanations, decision records, changelogs, runbooks, docstrings and code comments - organised with the Diátaxis framework, kept next to the code, reviewed and tested like code. Use when creating or updating any documentation, documenting an API, CLI, library or service, writing a README or migration guide, or when users keep asking the same questions.
 license: MIT
 metadata:
   version: "1.0.0"
@@ -52,9 +52,52 @@ The [Diátaxis](https://diataxis.fr/start-here/) framework separates four needs.
 - Generate reference material from the source of truth (schemas, type definitions, CLI help) instead of copying it by hand.
 - Mark the version a page applies to, and remove or update pages for removed features.
 
+## 5. The project documentation set (`docs/`)
+
+Every project keeps a complete `docs/` folder. Each document below exists and is filled in, or is listed in `docs/README.md` as "not applicable" with the reason (a CLI tool has no `DESIGN_SYSTEM.md`; a stateless service has no `DATABASE.md`). Templates with the required sections are in [assets/docs/](assets/docs/): copy `NAME.template.md` to `docs/NAME.md`. The 23 documents keep one subject each, so every fact has exactly one home.
+
+| Document | Answers | Required |
+| :--- | :--- | :--- |
+| `README.md` | What is in this folder, who owns each document, what is not applicable and why | Always |
+| `AGENTS.md`, `CLAUDE.md` | How agents edit the documentation (agents read the nearest `AGENTS.md`; Claude Code loads a subfolder's `CLAUDE.md` when it works there). Project-wide rules stay in the root files | Always |
+| `PRD.md` | What is built, for whom, why, with testable requirements and success metrics | Always |
+| `ARCHITECTURE.md` | How the system is built: context and container diagrams, data flow, trust boundaries, quality attributes, ADR links | Always |
+| `TECHSTACKS.md` | Exact runtime, framework, service and tool versions, end-of-life dates, upgrade policy; the only place versions are written | Always |
+| `CODE_STYLE.md` | Conventions beyond what the formatter and linter enforce | Always |
+| `RULES.md` | Business invariants, compliance constraints, protected areas, approvals | Always |
+| `TESTING.md` | Strategy, levels, exact commands, quality gates | Always |
+| `DEBUGGING.md` | Running locally, logs and traces, known failure modes with fixes | Always |
+| `DEPLOYMENT.md` | Environments, pipeline, configuration, migrations, rollout, rollback, release health | Anything that is deployed or released |
+| `CONFIGURATION.md` | Every environment variable, configuration file and feature flag: meaning, type, default, required, secret or not; the only place variables are listed | The project reads any configuration |
+| `OPERATIONS.md` | SLOs and error budget, alerts and on-call, incident management, capacity, backup and disaster recovery, routine maintenance, cost | The system runs in production |
+| `SECURITY.md` | Reporting, threat model, authentication, data protection, secrets, supply chain, incident response | Always. GitHub shows the first `SECURITY.md` it finds in `.github/`, the root, then `docs/`; keep one reporting policy and link it |
+| `DOCUMENTATION.md` | How the docs are organised, written, owned and kept current | Always |
+| `API.md` | Contract location, authentication, versioning, errors, limits, idempotency, endpoints, events | The project offers an API |
+| `INTEGRATIONS.md` | Third-party services it depends on: data sent, credentials, limits, webhooks, failure behaviour, sandboxes, contacts | The project calls external services or receives their webhooks ([api-integration](../api-integration/SKILL.md)) |
+| `PRIVACY.md` | Personal data inventory, legal basis, recipients and transfers, retention and deletion, data subject requests, impact assessments, breach response | The project processes personal data |
+| `DATABASE.md` | Engine, configuration, migrations, roles, backup and restore, retention | The project stores data |
+| `SCHEMA.md` | Entities, fields, relationships, invariants, data classification | The project stores data |
+| `DESIGN.md` | Design direction, flows, screens, tone, accessibility targets | The project has a user interface |
+| `DESIGN_SYSTEM.md` | Tokens with contrast ratios, components with all states, themes | The project has a user interface |
+| `ASSETS.md` | Images, icons, fonts and media with source, licence and delivery | The project ships assets |
+
+**At the repository root**, next to `docs/`: `README.md` ([template](../project-bootstrap/assets/README.template.md)), `AGENTS.md` and `CLAUDE.md` (project-wide agent rules), `CONTRIBUTING.md` ([template](../project-bootstrap/assets/CONTRIBUTING.template.md)), `CHANGELOG.md` ([Keep a Changelog](https://keepachangelog.com/en/1.1.0/)), `LICENSE` ([choosealicense.com](https://choosealicense.com/)), `GLOSSARY.md` for the domain language ([template](../project-bootstrap/assets/GLOSSARY.template.md)), ADRs in `docs/adr/` ([template](../project-bootstrap/assets/adr-template.md)), and post-incident reviews in `docs/postmortems/`. Public repositories also add a code of conduct and a support policy. Per-model documentation lives with the model ([model cards](../machine-learning/SKILL.md)).
+
+**What makes a document substantial, not just present:**
+
+- Every section holds facts about **this** project, verified at the source: commands that were run, versions read from manifests or `scripts/tech-lookup.mjs`, diagrams as code (Mermaid) that match the code, links that resolve. Template text, generic advice and filler are not content ([anti-slop](../anti-slop/SKILL.md)).
+- A section that does not apply says so in one line with the reason; it is never left empty or padded.
+- One fact, one place: versions only in `TECHSTACKS.md`, variables only in `CONFIGURATION.md`, decisions as ADRs linked from `ARCHITECTURE.md`, data structure only in `SCHEMA.md`. Other documents link instead of copying, so nothing contradicts.
+- Generated where possible: API reference from the contract, schema from migrations; the document says how to regenerate it.
+- Names of environment variables, roles and secrets only, never their values; synthetic examples only.
+- Each document has an owner and a last-reviewed date in `docs/README.md`, and changes in the same pull request as the behaviour it describes.
+
+**Check it in CI.** [assets/check-docs.mjs](assets/check-docs.mjs) (Node.js 22+, no dependencies) fails when a standard document is missing and not marked not applicable, when a template section is missing or empty, or when a `{{placeholder}}` remains: `node check-docs.mjs docs`. It checks completeness only; correctness is checked by review and by running what the documents say.
+
 ## Done when
 
 - [ ] Each changed behaviour is reflected in the reference, guides and changelog
 - [ ] Commands and samples were run and work as written
 - [ ] The page has one clear purpose (tutorial, how-to, reference or explanation)
 - [ ] Links resolve; no secrets or real personal data in examples
+- [ ] The `docs/` set is complete (`check-docs.mjs` passes) and every changed fact is updated in the one document that owns it

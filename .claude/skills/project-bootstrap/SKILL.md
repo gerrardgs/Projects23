@@ -29,6 +29,8 @@ Set up the project so that the first commit already builds, lints, type-checks, 
    - [`.vscode/extensions.json`](assets/vscode-extensions.json) (rename and trim to the stack)
    - [`.pre-commit-config.yaml`](assets/pre-commit-config.yaml) with secret scanning and basic hygiene hooks
    - [`README.md`](assets/README.template.md) and an [ADR](assets/adr-template.md) folder (`docs/adr/`) for significant decisions
+   - The project documentation set in `docs/` from the [documentation templates](../technical-documentation/assets/docs/), filled with this project's real facts, with documents that do not apply listed as not applicable in `docs/README.md`, and `check-docs.mjs` in CI ([technical-documentation](../technical-documentation/SKILL.md) section 5)
+   - [`CONTRIBUTING.md`](assets/CONTRIBUTING.template.md) with setup commands you have run, the workflow and the checks to pass before a pull request
    - [`SECURITY.md`](assets/SECURITY.template.md) (rename to `SECURITY.md`) with a private vulnerability-reporting channel; for public repositories also turn on secret scanning with push protection and use a private no-reply commit email
 5. Configure the formatter, linter and type checker at their strictest practical settings, and make them pass on the empty project.
 6. Add one real test and make `test` pass.
