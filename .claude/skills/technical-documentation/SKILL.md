@@ -40,6 +40,7 @@ The [Diátaxis](https://diataxis.fr/start-here/) framework separates four needs.
 - Lead with what the reader needs to do or know; one idea per paragraph; short sentences; active voice; consistent terms.
 - No generated-sounding prose: no buzzwords, inflated significance, chatbot openers or closers, claims without a source, or invented specifics ([anti-slop writing reference](../anti-slop/references/writing.md)).
 - Every command and code sample is copy-pasteable and was actually run; state the versions it was tested with.
+- Documents, changelog entries and release notes are written in the owner's name; never add AI attribution lines or badges ([08-git-workflow](../../rules/08-git-workflow.md) section 2).
 - Use real-looking but synthetic examples (reserved domains such as `example.com`, documentation IP ranges), never real credentials or personal data.
 - Document behaviour and contracts, not implementation details that change often.
 - Write for accessibility: descriptive link text, alt text for images, headings in order, no information conveyed only by colour.

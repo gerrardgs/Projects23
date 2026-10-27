@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.18.0: only the human author is credited (2026-10-26)
+
+The repository owner asked that only the owner appear as a contributor, never an AI agent. GitHub lists every `Co-Authored-By` trailer as a contributor, so one trailer is enough to show an agent on the repository page. The rule and its check follow Projects24 v1.11.0, adapted to this repository.
+
+- **`AGENTS.md` non-negotiable 10**: commits, tags, releases and pull requests carry only the owner's Git identity; no AI co-author or sign-off trailer, "Generated with" line, or AI author, committer or bot identity.
+- **Rule 08**: section 2 states the rule and replaces the earlier advice to disclose AI assistance with a commit trailer (disclosure, where a project requires it, now goes in the pull request description or the project's notes); section 3 explains how to remove an attribution that was already pushed (owner's approval, byte-identical tree, backup branch, tags moved, `--force-with-lease`); section 4 keeps AI attribution out of pull requests and release notes.
+- **New `scripts/check-authorship.mjs`** (Node.js 22+, no dependencies) and seven tests: flags AI author or committer identities, AI co-author, sign-off and similar trailers, and "Generated with" lines naming an AI tool; ignores topics that merely mention AI tools, Dependabot and human co-authors. Unlike the Projects24 version it does not mistake a person named Devin for Devin AI, reads Git errors cleanly (exit code 2) and follows this repository's script conventions. It passes on the current history (20 commits, 0 attributions) and fails on the pre-amend commit kept in `backup/before-trailer-removal`.
+- **CI**: a new `authorship` job checks the full history (`fetch-depth: 0`); the installer now also copies the script into projects.
+- **Skills**: `change-existing-code`, `ci-cd-pipeline`, `project-bootstrap` (first commit and done-when), `technical-documentation` and `deploy-and-release` point to the rule where commits and release notes are written; the Copilot instructions gain item 11.
+- **Docs**: `docs/` updated where the rule applies (code style, rules, testing, configuration, deployment, security, tech stack), and the README lists the check.
+
+## 2.17.0: this repository follows its own documentation set (2026-10-23)
+
+Projects 23 now keeps the complete `docs/` set it requires of other projects, written from facts checked in this repository on 2026-10-23.
+
+- **New documents**: `docs/README.md` (index with owners, review dates, eight documents marked not applicable with reasons, reading paths), `docs/AGENTS.md` and `docs/CLAUDE.md` (how agents edit `docs/`), `PRD.md`, `TECHSTACKS.md` (every runtime and pinned tool, with end-of-life dates from endoflife.date), `CODE_STYLE.md`, `RULES.md` (invariants of the spec, protected areas, approvals, exceptions), `CONFIGURATION.md` (installer environment variables and every script option), `INTEGRATIONS.md` (registries and services the scripts and CI call, their limits and failure behaviour), `TESTING.md` (every test suite with its count and command), `DEBUGGING.md` (known validator and CI failures with fixes), `DEPLOYMENT.md` (release, rollback, a dry-run of the installer), `docs/SECURITY.md` (threat model and controls; the reporting policy stays in the root `SECURITY.md`, which GitHub shows first) and `DOCUMENTATION.md`.
+- **`docs/ARCHITECTURE.md`**: the existing five sections are unchanged; the standard sections (overview, system context diagram, containers, data flow, trust boundaries, quality attributes, key decisions, deployment view, known limitations) were added below them.
+- **Not applicable, with reasons**: API, database, schema, privacy, operations, design, design system and assets.
+- **CI**: the `spec` job runs `check-docs.mjs docs`, so the set must stay complete. README links the index.
+- **Corrections found while writing**: claims about the installer, the Ruff configuration of the machine-learning template and the scripts' exit codes were checked against the code and stated exactly.
+
 ## 2.16.0: a complete, substantial docs/ folder for every project (2026-10-23)
 
 Every project that follows this specification now keeps a complete `docs/` folder, and each document must hold real, verified facts about that project.

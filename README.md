@@ -189,6 +189,7 @@ Every commit and pull request to Projects 23 is automatically validated through 
 - **Clean-Code Lint**: ESLint in `tools/lint` fails the build on any function above cyclomatic complexity 10, nesting depth 3, or 4 parameters in this repository's own scripts and Node.js template; Ruff enforces the same complexity limit in the Python templates.
 - **Validator and Lookup Self-Tests & Spec Checks**: Full frontmatter syntax parsing, size budget verification, link validity across all Markdown files, and mirror drift detection.
 - **Secret Scanning**: gitleaks (checksum-verified binary) scans every commit on every branch and the working tree.
+- **Authorship**: `scripts/check-authorship.mjs` checks the full history so that no commit credits an AI agent (no AI author, committer, co-author trailer or "Generated with" line); only the human author appears as a contributor.
 - **Code Scanning**: CodeQL (`security-extended` queries) analyses the GitHub Actions workflows, JavaScript/TypeScript and Python on every push, pull request and daily.
 - **Always-On Updates**: the whole validation workflow, including `npm audit`, `pip-audit` and the secret scan, re-runs every day, so vulnerabilities published after the last commit are still caught. Dependabot checks every pinned tool, action, lockfile and base-image digest daily (7-day cooldown for version updates; security updates are not delayed), and the daily [freshness workflow](.github/workflows/freshness.yml) runs `scripts/check-updates.mjs` for the pins Dependabot cannot read (binary versions in workflows, PEP 735 dependency groups) and fails when one is due.
 - **Workflow & Shell Security Audits**: ShellCheck for shell scripts, Actionlint for workflow syntax, and offline Zizmor security audits for GitHub Actions workflows.
@@ -203,7 +204,7 @@ Every commit and pull request to Projects 23 is automatically validated through 
 
 ## Documentation
 
-Detailed architectural and procedural documentation is available in `docs/`:
+Detailed architectural and procedural documentation is available in `docs/`, indexed in [docs/README.md](docs/README.md). It follows the spec's own documentation set (PRD, architecture, tech stack, code style, rules, configuration, integrations, testing, debugging, deployment, security), and CI checks that it stays complete:
 
 - [Architecture Guide](docs/ARCHITECTURE.md): Design rationale, context budget calculations, and model cognitive constraints.
 - [Domain Coverage Matrix](.agents/domain-coverage.md): Detailed mappings of technical roles and specialized sectors to skills.

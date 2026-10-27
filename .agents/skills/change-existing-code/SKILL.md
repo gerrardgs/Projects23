@@ -52,6 +52,7 @@ Use expand and contract: add new columns or tables in a backward-compatible way,
 
 - Imports and local variables that your edit left unused go with that edit. List functions, classes, files or modules that your change made unused, with the search that shows nothing else uses them, and propose removing them; remove them only after the user agrees.
 - Update documentation, configuration examples, and the changelog.
+- Commit as the repository owner only, with no AI co-author trailer or "Generated with" line ([08-git-workflow](../../rules/08-git-workflow.md) section 2).
 - Report what changed, what stayed deliberately unchanged, how it was verified, and any follow-up risk (see the report format in [AGENTS.md](../../../AGENTS.md)).
 
 ## Warning signs: stop and ask the user

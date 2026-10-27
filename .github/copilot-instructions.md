@@ -12,3 +12,4 @@ The full engineering rules for this repository are in `AGENTS.md`, with details 
 8. Execute cleanly: smallest change, verify each step, no unrelated edits, no leftover temporary files or processes, and no irreversible action without approval.
 9. Never delete, overwrite, rewrite or disable existing code, tests or configuration on your own. Propose the change with its reason, dependants, alternatives and undo path, and wait for the user's decision.
 10. In security reviews, report a vulnerability only with the trust boundary crossed and the observed result; otherwise mark it as needing validation or as a hardening note. Never probe production or third-party systems.
+11. Commit only with the repository owner's identity. Never add a Co-Authored-By, Signed-off-by or similar trailer, or a "Generated with" line, that credits an AI agent or tool.

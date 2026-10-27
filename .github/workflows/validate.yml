@@ -38,6 +38,8 @@ jobs:
         run: node --test ".agents/skills/security-hardening/assets/claude-code-guardrails/*.test.mjs"
       - name: Documentation checker tests
         run: node --test ".agents/skills/technical-documentation/assets/*.test.mjs"
+      - name: This repository's documentation set is complete
+        run: node .agents/skills/technical-documentation/assets/check-docs.mjs docs
       - name: Validate rules, skills, mirror and links
         run: node scripts/agents-sync.mjs --check --all-markdown
       - name: Install lint tools
@@ -250,6 +252,21 @@ jobs:
           node-version: 24
       - run: npm ci --prefix tools/lint
       - run: npm run --prefix tools/lint lint
+
+  authorship:
+    name: Authorship (only the human author, full history)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - name: No commit credits an AI agent (rule 08 section 2)
+        run: node scripts/check-authorship.mjs
 
   secret-scan:
     name: Secret scan of the full Git history

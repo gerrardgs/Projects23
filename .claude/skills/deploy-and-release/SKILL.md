@@ -49,6 +49,8 @@ Rules that apply to every Dockerfile:
 
 After every deploy, run smoke tests against the real environment and watch the key metrics (error rate, latency, saturation) for a set period before declaring success.
 
+Tag each release from CI-verified commits and write its release notes in the owner's name, without AI attribution lines, agent signatures or badges ([08-git-workflow](../../rules/08-git-workflow.md) sections 2 and 4).
+
 ## 4. Database migrations without downtime (expand and contract)
 
 1. **Expand**: add new tables or nullable columns, or new indexes built concurrently. Old code keeps working.
