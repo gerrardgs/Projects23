@@ -60,6 +60,7 @@ If your tool does not load these folders automatically, **open the matching file
 | [05-error-handling.md](.agents/rules/05-error-handling.md) | on demand | Errors, boundary validation, logging, timeouts, resource cleanup |
 | [07-testing.md](.agents/rules/07-testing.md) | on demand | Writing, changing or running tests |
 | [08-git-workflow.md](.agents/rules/08-git-workflow.md) | on demand | Commits, branches, pull requests, versioning, releases |
+| [10-text-hygiene-and-provenance.md](.agents/rules/10-text-hygiene-and-provenance.md) | on demand | Text hygiene, AI provenance marks, invisible Unicode, statistical rewrite, C2PA/metadata |
 
 ## 5. Skills index: pick the procedure for the task
 
@@ -81,6 +82,8 @@ If your tool does not load these folders automatically, **open the matching file
 | Prove resilience | [chaos-engineering](.agents/skills/chaos-engineering/SKILL.md) | Fault-injection experiments, game days, verifying timeouts, fallbacks, failover and alerts |
 | Document | [technical-documentation](.agents/skills/technical-documentation/SKILL.md) | READMEs, guides, API and configuration reference, ADRs, changelogs, runbooks |
 | Anti-slop | [anti-slop](.agents/skills/anti-slop/SKILL.md) | Keeping generic AI patterns out of comments, docs, UI copy and interfaces; no fabricated content; controls that work |
+| Clean text | [clean-user-facing-text](.agents/skills/clean-user-facing-text/SKILL.md) | Local zero-dependency Unicode hygiene and stylometric rewrite pass for reader-facing prose while preserving voice and facts |
+| Provenance | [remove-ai-marks](.agents/skills/remove-ai-marks/SKILL.md) | Multi-vendor AI mark removal: invisible Unicode (Layer A), rewrite (Layer B), and C2PA/EXIF/container metadata across files |
 | Any tool | [technology-adoption](.agents/skills/technology-adoption/SKILL.md) | Any language, framework, library, platform or SaaS, especially one no other skill covers |
 
 ### Domain skills (load together with the lifecycle skill for the phase)

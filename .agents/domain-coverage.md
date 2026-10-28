@@ -54,6 +54,8 @@ Every domain moves through the same phases. Load the lifecycle skill for the pha
 | Automate | [ci-cd-pipeline](skills/ci-cd-pipeline/SKILL.md) |
 | Document | [technical-documentation](skills/technical-documentation/SKILL.md) |
 | Remove AI slop before delivery | [anti-slop](skills/anti-slop/SKILL.md) |
+| Clean user-facing text & Unicode hygiene | [clean-user-facing-text](skills/clean-user-facing-text/SKILL.md) |
+| Remove multi-vendor AI provenance & C2PA | [remove-ai-marks](skills/remove-ai-marks/SKILL.md) |
 | Release and operate | [deploy-and-release](skills/deploy-and-release/SKILL.md), [cloud-infrastructure](skills/cloud-infrastructure/SKILL.md) |
 | Prove resilience | [chaos-engineering](skills/chaos-engineering/SKILL.md) |
 
