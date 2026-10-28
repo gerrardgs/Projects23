@@ -43,6 +43,7 @@ The single place for the runtimes, tools and pinned versions this repository use
 | Live versions and end of life | `scripts/tech-lookup.mjs` | `node scripts/tech-lookup.mjs <ecosystem>:<name>` |
 | Pins outside Dependabot | `scripts/check-updates.mjs` | `node scripts/check-updates.mjs` |
 | Commit authorship | `scripts/check-authorship.mjs` | `node scripts/check-authorship.mjs` |
+| All checks with a summary | `scripts/run-quiet.mjs` | `npm run verify` |
 
 The CI tool pins live in `tools/ci/requirements.txt` and `tools/lint/package.json`; template tool pins in each template's `pyproject.toml` or `package.json`.
 

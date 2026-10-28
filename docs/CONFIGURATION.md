@@ -39,6 +39,7 @@ None. Script behaviour is chosen with command-line options:
 | `check-updates.mjs` | `--cooldown-days N` (default 7) |
 | `check-docs.mjs` | `[docs-dir]` (default `docs`) |
 | `check-authorship.mjs` | `[range]` (default `HEAD`, the whole history; for example `origin/main..` for a branch) |
+| `run-quiet.mjs` | `--lines N` (default 40), `--name <label>`, `--steps <npm scripts>` or `-- <command> [args]` |
 
 ## Validation
 

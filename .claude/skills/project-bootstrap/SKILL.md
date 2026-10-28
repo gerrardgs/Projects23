@@ -33,7 +33,7 @@ Set up the project so that the first commit already builds, lints, type-checks, 
    - [`CONTRIBUTING.md`](assets/CONTRIBUTING.template.md) with setup commands you have run, the workflow and the checks to pass before a pull request
    - [`SECURITY.md`](assets/SECURITY.template.md) (rename to `SECURITY.md`) with a private vulnerability-reporting channel; for public repositories also turn on secret scanning with push protection and use a private no-reply commit email
 5. Configure the formatter, linter and type checker at their strictest practical settings, and make them pass on the empty project.
-6. Add one real test and make `test` pass.
+6. Add one real test and make `test` pass. Add a `verify` script that runs format check, lint, type check and tests in one command with a summary, for example `"verify": "node scripts/run-quiet.mjs --steps lint,typecheck,test"`, so people and agents check everything without reading full logs ([09-clean-execution](../../rules/09-clean-execution.md) section 2).
 7. Add CI from [ci-cd-pipeline](../ci-cd-pipeline/SKILL.md) and Dependabot.
 8. Add this specification: `AGENTS.md`, `.agents/`, and the adapters for the tools the team uses. Fill in section 8 of `AGENTS.md` ("Project profile") with the real commands.
 

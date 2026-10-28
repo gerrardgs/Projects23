@@ -15,7 +15,8 @@
 #
 # Installed: AGENTS.md, CLAUDE.md, GEMINI.md, .aider.conf.yml, .gemini/settings.json,
 #            .github/copilot-instructions.md, .agents/ (rules and skills), scripts/agents-sync.mjs,
-#            scripts/tech-lookup.mjs, scripts/check-authorship.mjs (fails when a commit credits an AI agent).
+#            scripts/tech-lookup.mjs, scripts/check-authorship.mjs (fails when a commit credits an AI agent),
+#            scripts/run-quiet.mjs (runs commands and prints only a summary, to save agent tokens).
 # Never installed: README, LICENSE, CHANGELOG, .gitignore, docs or workflows. Those belong to your project.
 
 set -euo pipefail
@@ -38,6 +39,7 @@ SPEC_FILES=(
   "scripts/agents-sync.mjs"
   "scripts/tech-lookup.mjs"
   "scripts/check-authorship.mjs"
+  "scripts/run-quiet.mjs"
 )
 SPEC_DIRECTORIES=(".agents")
 

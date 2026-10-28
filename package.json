@@ -7,7 +7,9 @@
   "scripts": {
     "sync": "node scripts/agents-sync.mjs",
     "check": "node scripts/agents-sync.mjs --check --all-markdown",
-    "test": "node --test scripts/*.test.mjs"
+    "lint": "npm run --prefix tools/lint lint",
+    "test": "node --test scripts/*.test.mjs",
+    "verify": "node scripts/run-quiet.mjs --steps check,lint,test"
   },
   "devDependencies": {
     "@types/node": "^22.18.0",

@@ -34,7 +34,7 @@ Projects 23 Architecture
 ========================
 
   +-------------------------------------------------------------------------+
-  | Core (Always Loaded): AGENTS.md (~147 lines)                            |
+  | Core (Always Loaded): AGENTS.md (~154 lines)                            |
   | Priorities, non-negotiables, workflow, indexes, operating conditions    |
   +-------------------------------------------------------------------------+
        |                                                 |
@@ -61,7 +61,7 @@ Projects 23 Architecture
 
 | Layer | Location | Loaded | Contents |
 | :--- | :--- | :--- | :--- |
-| **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 147 lines) |
+| **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 154 lines) |
 | **Rules** | [`.agents/rules/`](.agents/rules/) | Always (5) or when relevant (4) | Principles, clean code, verification, security, clean execution, dependencies, error handling, testing, Git workflow |
 | **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 30 step-by-step procedures (15 lifecycle, 15 domain) with verified templates and references |
 | **Adapters** | `CLAUDE.md`, `GEMINI.md`, `.gemini/settings.json`, `.github/copilot-instructions.md`, `.aider.conf.yml` | Per tool | Standard loaders connecting each tool to the single core |
@@ -189,6 +189,7 @@ Every commit and pull request to Projects 23 is automatically validated through 
 - **Clean-Code Lint**: ESLint in `tools/lint` fails the build on any function above cyclomatic complexity 10, nesting depth 3, or 4 parameters in this repository's own scripts and Node.js template; Ruff enforces the same complexity limit in the Python templates.
 - **Validator and Lookup Self-Tests & Spec Checks**: Full frontmatter syntax parsing, size budget verification, link validity across all Markdown files, and mirror drift detection.
 - **Secret Scanning**: gitleaks (checksum-verified binary) scans every commit on every branch and the working tree.
+- **CLI First, Small Output**: `npm run verify` runs the spec checks, ESLint and the script tests and prints one line per step; `scripts/run-quiet.mjs` does the same for any command and keeps the full log in a file, so agents read summaries instead of whole logs (`AGENTS.md` non-negotiable 11, rule 09 section 2).
 - **Authorship**: `scripts/check-authorship.mjs` checks the full history so that no commit credits an AI agent (no AI author, committer, co-author trailer or "Generated with" line); only the human author appears as a contributor.
 - **Code Scanning**: CodeQL (`security-extended` queries) analyses the GitHub Actions workflows, JavaScript/TypeScript and Python on every push, pull request and daily.
 - **Always-On Updates**: the whole validation workflow, including `npm audit`, `pip-audit` and the secret scan, re-runs every day, so vulnerabilities published after the last commit are still caught. Dependabot checks every pinned tool, action, lockfile and base-image digest daily (7-day cooldown for version updates; security updates are not delayed), and the daily [freshness workflow](.github/workflows/freshness.yml) runs `scripts/check-updates.mjs` for the pins Dependabot cannot read (binary versions in workflows, PEP 735 dependency groups) and fails when one is due.

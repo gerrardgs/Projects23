@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.19.0: CLI first, small output (2026-10-28)
+
+Every line of output an agent reads costs tokens. Processes now run through the terminal with the project's own scripts, and agents read summaries instead of whole logs. Mirrors Projects24 v1.13.0, adapted to this repository.
+
+- **`AGENTS.md` non-negotiable 11**: installs, builds, tests, linters, servers, git and deploys go through the CLI, not step by step through chat, a browser or MCP tools; summaries and exit codes instead of whole logs.
+- **Rule 09 section 2**: one summarising `verify` command; quiet and summary flags checked against each tool's help (`npm ci --no-audit --no-fund`, `node --test --test-reporter=dot`, `eslint --quiet`, `pytest -q`, `ruff check --output-format concise`, `git status --short`), other toolchains' documented quiet flags; long output written to a file with only the failure read; servers in the background and stopped afterwards; nothing re-run that already passed.
+- **New `scripts/run-quiet.mjs`** (Node.js 22+, no dependencies) and five tests: one `PASS` line per passing step, the tail and the full log path for a failing one, real warning lines counted. On Projects24's `npm test` the output fell from 3,373 to 132 bytes. The installer copies it.
+- **`npm run verify`** (new `lint` script for `tools/lint`): validator, ESLint and the script tests in one command. `project-bootstrap` adds a `verify` script to new projects; `CLAUDE.md`, README and `docs/` (configuration, tech stack, testing, rules, architecture) describe it.
+
 ## 2.18.0: only the human author is credited (2026-10-26)
 
 The repository owner asked that only the owner appear as a contributor, never an AI agent. GitHub lists every `Co-Authored-By` trailer as a contributor, so one trailer is enough to show an agent on the repository page. The rule and its check follow Projects24 v1.11.0, adapted to this repository.
