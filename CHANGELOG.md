@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.20.0: text hygiene, Unicode cleaning, and multi-vendor watermark removal (2026-10-29)
+
+Integrates comprehensive text hygiene, invisible Unicode stripping, and multi-vendor AI watermark removal adapted from the watermarks-remover specification into Projects 23.
+
+- **Rule 10 (`10-text-hygiene-and-provenance.md`)**: text hygiene and provenance rule covering Layer A (invisible Unicode marks, bidi overrides, zero-width characters), Layer B (statistical text watermarking rewrite with voice preservation), and container/metadata cleaning.
+- **Skill `clean-user-facing-text`**: lightweight, zero-dependency Python toolset (`clean_text.py`, `inspect_text.py`, `score_stylometry.py`, `text_unicode.py`, `common.py`) for scrubbing zero-width spaces, directional marks, homoglyphs, and generic stylistic artifacts from reader-facing text while preserving authorial voice.
+- **Skill `remove-ai-marks`**: multi-format cleaning engine and asset stack (`compose.yaml`, `Dockerfile.*`, `config/clean_strategy.json`, inspection and cleansing scripts) supporting text, audio, video, images, and container formats (PDF, DOCX, ODT, HTML).
+- **Editor Integration**: `.cursor/rules/clean-user-facing-text.mdc` and `.cursor/rules/remove-ai-marks.mdc`.
+- **Verification & Sync**: 32 skills synchronized to `.claude/skills/`, full project test suite passing (`npm run verify`), and strict authorship compliance (0 AI trailers or bot identities).
+
 ## 2.19.0: CLI first, small output (2026-10-28)
 
 Every line of output an agent reads costs tokens. Processes now run through the terminal with the project's own scripts, and agents read summaries instead of whole logs. Mirrors Projects24 v1.13.0, adapted to this repository.
