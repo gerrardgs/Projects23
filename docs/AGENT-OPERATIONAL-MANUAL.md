@@ -28,6 +28,7 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 | Commit, pull request, release | rule [08](../.agents/rules/08-git-workflow.md) | |
 | Hand work over to another session or agent | rule [09](../.agents/rules/09-clean-execution.md) section 7 (handoff note) | |
 | Work longer than one session, parallel sub-agents, or an unattended loop | [agent-delivery-loop](../.agents/skills/agent-delivery-loop/SKILL.md), rule [11](../.agents/rules/11-agentic-delivery-and-review.md) | [git-worktrees](../.agents/skills/git-worktrees/SKILL.md) |
+| Secret scanning setup, a blocked push or scanner finding, or a leaked credential | [secret-scanning](../.agents/skills/secret-scanning/SKILL.md), rule [13](../.agents/rules/13-secret-scanning.md) | [security-hardening](../.agents/skills/security-hardening/SKILL.md) section 5 |
 | Question about a shipped build, binary, APK/IPA or crash dump; release-build audit; REA | [reverse-engineering](../.agents/skills/reverse-engineering/SKILL.md), rule [12](../.agents/rules/12-reverse-engineering.md) | [security-hardening](../.agents/skills/security-hardening/SKILL.md) |
 | CodeRabbit review, its pull request comments, or `.coderabbit.yaml` | [coderabbit-review](../.agents/skills/coderabbit-review/SKILL.md) | [rigorous-code-audit](../.agents/skills/rigorous-code-audit/SKILL.md) |
 | Documentation only | [technical-documentation](../.agents/skills/technical-documentation/SKILL.md) | [project-bootstrap assets](../.agents/skills/project-bootstrap/assets/) (README, ADR and SECURITY templates) |

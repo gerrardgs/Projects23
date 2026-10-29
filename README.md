@@ -35,21 +35,22 @@ Projects 23 Architecture
 ========================
 
   +-------------------------------------------------------------------------+
-  | Core (Always Loaded): AGENTS.md (~164 lines)                            |
+  | Core (Always Loaded): AGENTS.md (~166 lines)                            |
   | Priorities, non-negotiables, workflow, indexes, operating conditions    |
   +-------------------------------------------------------------------------+
        |                                                 |
        v (links to)                                      v (links to)
   +-----------------------------------+             +-----------------------------------+
   | Rules (.agents/rules/)            |             | Skills (.agents/skills/)          |
-  | 12 normative rules:               |             | 36 on-demand step-by-step guides: |
-  | - 5 Always-On (core, clean code,  |             | - 21 Software Lifecycle Skills    |
+  | 13 normative rules:               |             | 37 on-demand step-by-step guides: |
+  | - 5 Always-On (core, clean code,  |             | - 22 Software Lifecycle Skills    |
   |   verification, security, clean   |             |                                   |
   |   execution)                      |             | - 15 Mission-Critical Domains     |
-  | - 7 On-Demand (dependencies,      |             |                                   |
+  | - 8 On-Demand (dependencies,      |             |                                   |
   |   errors, testing, git, text,     |             | + Verified assets, templates, and |
   |   agentic delivery, AI review,    |             |   sector reference standards      |
-  |   reverse engineering)            |             |                                   |
+  |   reverse engineering, secret     |             |                                   |
+  |   scanning)                       |             |                                   |
   +-----------------------------------+             +-----------------------------------+
        |                                                 |
        +-----------------------+-------------------------+
@@ -63,9 +64,9 @@ Projects 23 Architecture
 
 | Layer | Location | Loaded | Contents |
 | :--- | :--- | :--- | :--- |
-| **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 164 lines) |
-| **Rules** | [`.agents/rules/`](.agents/rules/) | Always (5) or when relevant (7) | Principles, clean code, verification, security, clean execution, dependencies, error handling, testing, Git workflow, text hygiene and provenance, agentic delivery and AI review, reverse engineering |
-| **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 36 step-by-step procedures (21 lifecycle, 15 domain) with verified templates and references |
+| **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 166 lines) |
+| **Rules** | [`.agents/rules/`](.agents/rules/) | Always (5) or when relevant (8) | Principles, clean code, verification, security, clean execution, dependencies, error handling, testing, Git workflow, text hygiene and provenance, agentic delivery and AI review, reverse engineering, secret scanning |
+| **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 37 step-by-step procedures (22 lifecycle, 15 domain) with verified templates and references |
 | **Adapters** | `CLAUDE.md`, `GEMINI.md`, `.gemini/settings.json`, `.github/copilot-instructions.md`, `.aider.conf.yml` | Per tool | Standard loaders connecting each tool to the single core |
 | **Mirror** | `.claude/skills/` | Generated | Automated copy of skills for Claude Code and Cline; kept in sync via script |
 | **Tooling** | [`scripts/`](scripts/) | You, agents or CI | Installer, mirror sync and validator, and `tech-lookup.mjs` (live versions, licences, deprecations, end-of-life dates and security scores from 12 registries and data sources) |
@@ -75,7 +76,7 @@ Projects 23 Architecture
 
 ## Skills Catalog
 
-### 1. Software Lifecycle Skills (21 Skills)
+### 1. Software Lifecycle Skills (22 Skills)
 
 Procedures covering software from inception to production operation:
 
@@ -91,6 +92,7 @@ Procedures covering software from inception to production operation:
 | **Review** | [rigorous-code-audit](.agents/skills/rigorous-code-audit/SKILL.md) | Toolchain verification, OWASP Top 10:2025 checklist, security findings that must prove the boundary crossed and the observed result, independent disproving pass, confirmed / needs validation / rejected verdicts, calibrated security severity, coverage statement |
 | **AI review** | [coderabbit-review](.agents/skills/coderabbit-review/SKILL.md) | CodeRabbit CLI reviews in agent mode with the NDJSON outcome classified by a tested script (skipped, failed or truncated runs are never called clean), severities kept, every finding verified, at most three review runs per change set; pull request thread fixes with per-fix approval; a schema-validated `.coderabbit.yaml` carrying these rules (adapted from [coderabbitai/skills](https://github.com/coderabbitai/skills) and [coderabbitai/antigravity-plugin](https://github.com/coderabbitai/antigravity-plugin)) |
 | **Secure** | [security-hardening](.agents/skills/security-hardening/SKILL.md) | Threat modelling, OWASP ASVS 5.0, codebase vulnerability audits with sandboxed execution and an attack-class catalogue for 10 domains (adapted from Cloudflare's security-audit skill), secret rotation, SAST, dependency audits, container scanning, and SBOM generation |
+| **Secrets** | [secret-scanning](.agents/skills/secret-scanning/SKILL.md) | Layered secret scanning from [gitleaks](https://github.com/gitleaks/gitleaks) (offline, pre-commit and full history) and [TruffleHog](https://github.com/trufflesecurity/trufflehog) (live verification), GitHub [push protection](https://docs.github.com/en/code-security/concepts/secret-security/push-protection) and [Secret Protection](https://github.com/security/advanced-security/secret-protection) settings, a `.gitleaks.toml` extending the 222 built-in rules, pre-commit and CI examples with pinned, checksum-verified binaries (actionlint clean), a tested report merger that never prints a secret (5 tests), fingerprint-based false-positive handling and a revoke-first leaked-secret runbook |
 | **Inspect artifacts** | [reverse-engineering](.agents/skills/reverse-engineering/SKILL.md) | Authorized analysis of shipped builds, binaries, APK/IPA, Electron apps, crash dumps and samples, adapted from [morluto/rea](https://github.com/morluto/rea): a written scope with authority and allowed operations, static before runtime, a tested zero-dependency release-artifact auditor (secrets, keys, `.env`, source maps, databases, internal URLs; 7 tests), REA routes with standard-tool alternatives, an observed / inferred / unknown evidence ledger, and the EU Directive 2009/24/EC and 17 U.S.C. §1201 limits; DRM circumvention and copying protected code or design are refused |
 | **Automate** | [ci-cd-pipeline](.agents/skills/ci-cd-pipeline/SKILL.md) | GitHub Actions workflows pinned to commit SHAs, least-privilege token permissions, and Dependabot with cooldown timers |
 | **Ship** | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Production launch checklists, zero-downtime database migrations, canary/blue-green rollouts, observability, and rollback plans |

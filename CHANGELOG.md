@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.24.0: secret scanning in layers, and leaked-secret response (2026-10-29)
+
+The repository owner asked to adopt [gitleaks](https://github.com/gitleaks/gitleaks), [TruffleHog](https://github.com/trufflesecurity/trufflehog), [GitHub push protection](https://docs.github.com/en/code-security/concepts/secret-security/push-protection) and [GitHub Secret Protection](https://github.com/security/advanced-security/secret-protection) as skills and rules. All were checked on 2026-10-29: gitleaks v8.30.1 (MIT), TruffleHog v3.99.7 (AGPL-3.0, used as a tool), and GitHub's documentation and pricing pages. This repository already ran gitleaks in CI, and the project-bootstrap pre-commit template already had the gitleaks hook; this release adds the missing layers and the response procedure.
+
+- **Rule 13 (`13-secret-scanning.md`, on demand)**:
+  - four layers (pre-commit hook, push protection, CI over history and changes, platform scanning at rest), plus build scans for shipped artifacts;
+  - pinned, checksum-verified scanners with redacted reports;
+  - live verification only where the owner allows it;
+  - narrow, reviewed suppressions;
+  - push protection is never bypassed by an agent;
+  - leaks are handled revoke-first, and history rewrites need approval;
+  - secret-shaped test values are assembled at run time.
+- **Skill `secret-scanning`**:
+  - layers, setup, triage, test fixtures, and how agents handle secrets;
+  - references: `tools.md` (gitleaks and TruffleHog commands, exit codes, suppression and verification, checked against their READMEs, hook definitions and source), `github-secret-protection.md` (availability, push protection coverage, bypass reasons and the alerts they create, recommended owner settings) and `leaked-secret-runbook.md` (contain, assess, clean up, learn).
+- **New assets**:
+  - `gitleaks.example.toml`: keeps the 222 built-in rules and adds database URLs with inline passwords. It was parsed with Python 3.14 `tomllib`, and its regex was tested against matching and non-matching URLs.
+  - `pre-commit-secrets.example.yaml`: gitleaks on commit, TruffleHog on push.
+  - `secret-scan.example.yml`: gitleaks over the full history and TruffleHog over the changed commits, both with release checksums pinned. It passes actionlint 1.7.12 with ShellCheck.
+- **New tested `secret-report.mjs`** (5 tests): merges a gitleaks JSON report and TruffleHog JSON lines into one summary keyed by file, line and commit, ranks verified, unknown and unverified findings with the action for each, and never outputs `Secret`, `Match`, `Raw`, `RawV2`, `Redacted` or `ExtraData`. Field names come from gitleaks `report/finding.go` and TruffleHog `pkg/output/json.go`.
+- **Wiring**:
+  - `AGENTS.md` indexes, `CLAUDE.md` on-demand list, CI step and ESLint scope;
+  - `security-hardening` (SKILL and tools reference) and `project-bootstrap` link to the new skill;
+  - README, `docs/` (architecture, PRD, testing, security, operational manual), `engineering-concepts.md` and `domain-coverage.md`.
+- **Not verified here**:
+  - gitleaks and TruffleHog were not run locally, because neither is installed on this machine. The existing CI job runs gitleaks.
+  - The repository's push protection setting could not be read without signing in.
+
 ## 2.23.0: reverse engineering within the law, and release-artifact audits (2026-10-29)
 
 The repository owner asked to adopt the relevant parts of [morluto/rea](https://github.com/morluto/rea) ("Reverse Engineer Anything", MIT, v6.8.0, commit `d39b300`, read on 2026-10-29) as skills and rules. REA is a dual-use tool. The adoption keeps its method (route by target, summary first, evidence with limits) and its responsible-use boundaries, and leaves out its "see a feature you like, build your own" use case, which would copy protected code or design.

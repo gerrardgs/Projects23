@@ -34,6 +34,8 @@ The repository holds public specification text and code only. Known exposure: co
 
 No secrets are used by the scripts or the CI. If one is ever needed, it goes into GitHub encrypted secrets scoped to the job that needs it, never into files ([rule 06](../.agents/rules/06-security.md)).
 
+The repository is public, so GitHub secret scanning runs on it automatically. Turning on repository-level push protection, which makes bypasses create alerts, is the owner's setting ([secret-scanning](../.agents/skills/secret-scanning/references/github-secret-protection.md) section 4); its state was not checked on 2026-10-29.
+
 ## Dependency and supply-chain security
 
 Dependabot checks every ecosystem daily (7-day cooldown for version updates, none for security updates); `freshness.yml` checks pins Dependabot cannot read; gitleaks and the MCP Toolbox binary are checksum-verified; CodeQL scans the workflows, JavaScript and Python daily and on every push.
@@ -46,5 +48,5 @@ Dependabot checks every ecosystem daily (7-day cooldown for version updates, non
 
 1. Confirm the report privately and assess which releases are affected.
 2. Fix on `main`, release a new version, and publish a GitHub security advisory with the affected and fixed tags.
-3. If a secret was exposed: revoke and rotate it first, then remove it; deleting it from the latest commit is not enough.
+3. If a secret was exposed: revoke and rotate it first, then remove it; deleting it from the latest commit is not enough ([leaked-secret runbook](../.agents/skills/secret-scanning/references/leaked-secret-runbook.md)).
 4. Tell users how to update: `bash scripts/install.sh --ref <fixed tag> --force` for files they have not customised.

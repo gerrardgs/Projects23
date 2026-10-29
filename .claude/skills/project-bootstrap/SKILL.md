@@ -27,7 +27,7 @@ Set up the project so that the first commit already builds, lints, type-checks, 
    - `.gitignore` from the official [github/gitignore](https://github.com/github/gitignore) template for the language, plus `.env` and `.env.*` with `!.env.example`, keys and certificates (`*.pem`, `*.key`, `*.p12`), credential files, Terraform state and `*.tfvars`, kubeconfigs and database dumps
    - [`.env.example`](assets/env.example) (rename to `.env.example`) listing every variable, with no real values
    - [`.vscode/extensions.json`](assets/vscode-extensions.json) (rename and trim to the stack)
-   - [`.pre-commit-config.yaml`](assets/pre-commit-config.yaml) with secret scanning and basic hygiene hooks
+   - [`.pre-commit-config.yaml`](assets/pre-commit-config.yaml) with secret scanning and basic hygiene hooks (the full secret-scanning setup, including push protection and CI, is in [secret-scanning](../secret-scanning/SKILL.md))
    - [`README.md`](assets/README.template.md) and an [ADR](assets/adr-template.md) folder (`docs/adr/`) for significant decisions
    - The project documentation set in `docs/` from the [documentation templates](../technical-documentation/assets/docs/), filled with this project's real facts, with documents that do not apply listed as not applicable in `docs/README.md`, and `check-docs.mjs` in CI ([technical-documentation](../technical-documentation/SKILL.md) section 5)
    - [`CONTRIBUTING.md`](assets/CONTRIBUTING.template.md) with setup commands you have run, the workflow and the checks to pass before a pull request

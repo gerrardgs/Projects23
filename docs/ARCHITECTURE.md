@@ -12,7 +12,7 @@ How Projects 23 is organised, why, and how each AI coding tool loads it.
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────┐
-│ Core (always loaded): AGENTS.md, about 164 lines                     │
+│ Core (always loaded): AGENTS.md, about 166 lines                     │
 │ Priorities, non-negotiables, workflow, indexes, operating conditions │
 └──────────────────────────────────────────────────────────────────────┘
           │ links to                               │ links to
@@ -20,16 +20,16 @@ How Projects 23 is organised, why, and how each AI coding tool loads it.
 ┌───────────────────────────────────┐   ┌───────────────────────────────────┐
 │ Rules (.agents/rules/)            │   │ Skills (.agents/skills/)          │
 │ always_on: 01, 02, 03, 06, 09     │   │ Loaded when the task matches:     │
-│ model_decision (on demand):       │   │ 21 lifecycle skills (specify...   │
-│   04, 05, 07, 08, 10, 11, 12      │   │ adopt) and 15 domain skills       │
+│ model_decision (on demand):       │   │ 22 lifecycle skills (specify...   │
+│   04, 05, 07, 08, 10-13           │   │ adopt) and 15 domain skills       │
 │ Short, normative "must" rules     │   │ (backend ... QA). Procedures plus │
 │                                   │   │ verified templates and references │
 └───────────────────────────────────┘   └───────────────────────────────────┘
 ```
 
-- **Rules** say *what* must hold. Five are always on, because they apply to every task (principles, clean code, verification, security, clean execution). Seven load only when relevant.
+- **Rules** say *what* must hold. Five are always on, because they apply to every task (principles, clean code, verification, security, clean execution). Eight load only when relevant.
 - **Skills** say *how* to do a kind of task, step by step. They follow the [Agent Skills specification](https://agentskills.io/specification): only each skill's name and description are loaded at startup, and the body loads when the task matches. Bulky material sits in `references/` and `assets/` and loads only when needed.
-- **Size**: `node scripts/agents-sync.mjs` prints the current always-on estimate (characters divided by 4). On 2026-10-29 it was about 14,200 tokens for `AGENTS.md` plus the five always-on rules. Tools that support skills also load every skill's name and description at startup: for the 36 skills that is 19,429 characters, about 4,860 tokens. Skill bodies load only when the task matches. Antigravity's documented budget for global and always-on rules is 20,000 tokens.
+- **Size**: `node scripts/agents-sync.mjs` prints the current always-on estimate (characters divided by 4). On 2026-10-29 it was about 14,300 tokens for `AGENTS.md` plus the five always-on rules. Tools that support skills also load every skill's name and description at startup: for the 37 skills that is 20,199 characters, about 5,050 tokens. Skill bodies load only when the task matches. Antigravity's documented budget for global and always-on rules is 20,000 tokens.
 
 ## 3. How each tool loads the spec
 
@@ -140,7 +140,7 @@ flowchart LR
 
 - Verifiability: every fact can be traced to a dated source, and every template runs in CI.
 - Portability: any tool that reads `AGENTS.md` works; scripts need only Node.js 22 or later.
-- Context efficiency: the always-on core stays under the 20,000-token budget (about 14,200 tokens on 2026-10-29).
+- Context efficiency: the always-on core stays under the 20,000-token budget (about 14,300 tokens on 2026-10-29).
 - Safety: installing never destroys a user's files; agents are told to confirm before deleting or rewriting existing code.
 - Maintainability: the repository's own code passes the same clean-code limits it prescribes.
 

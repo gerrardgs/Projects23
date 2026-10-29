@@ -64,6 +64,7 @@ If your tool does not load these folders automatically, **open the matching file
 | [10-text-hygiene-and-provenance.md](.agents/rules/10-text-hygiene-and-provenance.md) | on demand | Text hygiene, AI provenance marks, invisible Unicode, statistical rewrite, C2PA/metadata |
 | [11-agentic-delivery-and-review.md](.agents/rules/11-agentic-delivery-and-review.md) | on demand | Multi-session, parallel or unattended agent work, worktrees, AI code review |
 | [12-reverse-engineering.md](.agents/rules/12-reverse-engineering.md) | on demand | Authorized analysis of shipped artifacts, binaries, crash dumps; release-build audits |
+| [13-secret-scanning.md](.agents/rules/13-secret-scanning.md) | on demand | Secret scanning layers, push protection, findings, leaked-secret response |
 
 ## 5. Skills index: pick the procedure for the task
 
@@ -81,6 +82,7 @@ If your tool does not load these folders automatically, **open the matching file
 | Review | [rigorous-code-audit](.agents/skills/rigorous-code-audit/SKILL.md) | Reviewing a diff, pull request or codebase |
 | AI review | [coderabbit-review](.agents/skills/coderabbit-review/SKILL.md) | CodeRabbit reviews in the CLI or on pull requests, fixing its comments, `.coderabbit.yaml` |
 | Secure | [security-hardening](.agents/skills/security-hardening/SKILL.md) | Threat modelling, hardening, security scanning, secrets |
+| Secrets | [secret-scanning](.agents/skills/secret-scanning/SKILL.md) | gitleaks, TruffleHog, push protection; triaging findings; a leaked secret |
 | Inspect artifacts | [reverse-engineering](.agents/skills/reverse-engineering/SKILL.md) | Authorized analysis of builds, binaries, APK/IPA, crash dumps; release-build audits; REA |
 | Automate | [ci-cd-pipeline](.agents/skills/ci-cd-pipeline/SKILL.md) | CI workflows, release automation, Dependabot |
 | Ship | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Containers, configuration, migrations, rollout, monitoring, rollback |
