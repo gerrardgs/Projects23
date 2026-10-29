@@ -12,7 +12,7 @@ How Projects 23 is organised, why, and how each AI coding tool loads it.
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────┐
-│ Core (always loaded): AGENTS.md, about 166 lines                     │
+│ Core (always loaded): AGENTS.md, about 124 lines                     │
 │ Priorities, non-negotiables, workflow, indexes, operating conditions │
 └──────────────────────────────────────────────────────────────────────┘
           │ links to                               │ links to
@@ -29,7 +29,7 @@ How Projects 23 is organised, why, and how each AI coding tool loads it.
 
 - **Rules** say *what* must hold. Five are always on, because they apply to every task (principles, clean code, verification, security, clean execution). Eight load only when relevant.
 - **Skills** say *how* to do a kind of task, step by step. They follow the [Agent Skills specification](https://agentskills.io/specification): only each skill's name and description are loaded at startup, and the body loads when the task matches. Bulky material sits in `references/` and `assets/` and loads only when needed.
-- **Size**: `node scripts/agents-sync.mjs` prints the current always-on estimate (characters divided by 4). On 2026-10-29 it was about 14,300 tokens for `AGENTS.md` plus the five always-on rules. Tools that support skills also load every skill's name and description at startup: for the 37 skills that is 20,199 characters, about 5,050 tokens. Skill bodies load only when the task matches. Antigravity's documented budget for global and always-on rules is 20,000 tokens.
+- **Size**: `node scripts/agents-sync.mjs` prints the current always-on estimate (characters divided by 4). On 2026-10-29 it was about 13,000 tokens for `AGENTS.md` plus the five always-on rules, leaving about 7,000 tokens of headroom; the check warns within 5% of the budget. The per-skill table lives in [`.agents/SKILLS.md`](../.agents/SKILLS.md), read on demand, because tools that support skills already load each skill's name and description; `AGENTS.md` keeps the categories and a pointer. Tools that support skills also load every skill's name and description at startup: for the 37 skills that is 20,199 characters, about 5,050 tokens. Skill bodies load only when the task matches. Antigravity's documented budget for global and always-on rules is 20,000 tokens; files beyond it are demoted to pointers that the agent reads on demand ([Antigravity rules](https://antigravity.google/docs/rules), checked 2026-10-29).
 
 ## 3. How each tool loads the spec
 
@@ -79,10 +79,10 @@ Where a tool does not load `.agents/rules/` itself, the indexes in `AGENTS.md` t
 
 1. **Mirror**: copies each skill from `.agents/skills/` to `.claude/skills/`. A manifest (`.claude/skills/.agents-sync.json`) records which skills it created, so it removes only its own stale copies and never touches skills you added by hand.
 2. **Drift check** (`--check`): compares SHA-256 fingerprints of source and mirror and fails if they differ.
-3. **Skill validation**: frontmatter per the Agent Skills specification (name format and length, name matches folder, description length, body under 500 lines).
+3. **Skill validation**: frontmatter per the Agent Skills specification (name format and length, name matches folder, description length, body under 500 lines); every skill listed in `.agents/SKILLS.md`, which `AGENTS.md` links, and nothing listed that does not exist.
 4. **Rule validation**: a valid `trigger` (Antigravity silently drops rules without one), a description for `model_decision` rules, and at most 12,000 characters (Windsurf's per-file limit, the strictest of the tools).
 5. **Strict YAML**: rejects frontmatter that real YAML parsers would reject or read differently, such as an unquoted value containing `: `.
-6. **Consistency**: `AGENTS.md` must link every rule and skill; `CLAUDE.md` must import `AGENTS.md` and should import every always-on rule.
+6. **Consistency**: `AGENTS.md` must link every rule and the skills index `.agents/SKILLS.md`, and the index must list every skill; `CLAUDE.md` must import `AGENTS.md` and should import every always-on rule.
 7. **Links**: every relative link in the spec files must resolve; `file://` links are rejected. `--all-markdown` extends the check to every Markdown file in the repository.
 
 ## 5. Design decisions
@@ -140,7 +140,7 @@ flowchart LR
 
 - Verifiability: every fact can be traced to a dated source, and every template runs in CI.
 - Portability: any tool that reads `AGENTS.md` works; scripts need only Node.js 22 or later.
-- Context efficiency: the always-on core stays under the 20,000-token budget (about 14,300 tokens on 2026-10-29).
+- Context efficiency: the always-on core stays under the 20,000-token budget (about 13,000 tokens on 2026-10-29).
 - Safety: installing never destroys a user's files; agents are told to confirm before deleting or rewriting existing code.
 - Maintainability: the repository's own code passes the same clean-code limits it prescribes.
 

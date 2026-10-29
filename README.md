@@ -35,7 +35,7 @@ Projects 23 Architecture
 ========================
 
   +-------------------------------------------------------------------------+
-  | Core (Always Loaded): AGENTS.md (~166 lines)                            |
+  | Core (Always Loaded): AGENTS.md (~124 lines)                            |
   | Priorities, non-negotiables, workflow, indexes, operating conditions    |
   +-------------------------------------------------------------------------+
        |                                                 |
@@ -64,7 +64,7 @@ Projects 23 Architecture
 
 | Layer | Location | Loaded | Contents |
 | :--- | :--- | :--- | :--- |
-| **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 166 lines) |
+| **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rules index and a pointer to the skills index ([`.agents/SKILLS.md`](.agents/SKILLS.md)), operating conditions, definition of done (about 124 lines) |
 | **Rules** | [`.agents/rules/`](.agents/rules/) | Always (5) or when relevant (8) | Principles, clean code, verification, security, clean execution, dependencies, error handling, testing, Git workflow, text hygiene and provenance, agentic delivery and AI review, reverse engineering, secret scanning |
 | **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 37 step-by-step procedures (22 lifecycle, 15 domain) with verified templates and references |
 | **Adapters** | `CLAUDE.md`, `GEMINI.md`, `.gemini/settings.json`, `.github/copilot-instructions.md`, `.aider.conf.yml` | Per tool | Standard loaders connecting each tool to the single core |

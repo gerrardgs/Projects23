@@ -34,7 +34,7 @@ AI coding agents produce plausible but wrong output: invented APIs, packages and
 
 ## Non-functional requirements
 
-- Context budget: `AGENTS.md` plus always-on rules under 20,000 tokens (about 14,300 on 2026-10-29); each skill body under 500 lines; each rule at most 12,000 characters.
+- Context budget: `AGENTS.md` plus always-on rules under 20,000 tokens (about 13,000 on 2026-10-29); each skill body under 500 lines; each rule at most 12,000 characters.
 - Portability: scripts need only Node.js 22 or later (no dependencies); the installer needs Bash, `curl` and `tar`.
 - Security: workflows pinned to commit SHAs with read-only default permissions; downloaded binaries verified by checksum.
 - Clean code: the repository's own JavaScript passes ESLint with cyclomatic complexity at most 10, nesting depth at most 3 and at most 4 parameters.

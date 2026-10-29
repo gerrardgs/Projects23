@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.25.0: skills index out of the always-on context (2026-10-29)
+
+- **Always-on context made structural, not squeezed**: the per-skill table moved from `AGENTS.md` to `.agents/SKILLS.md`, which is read on demand. Tools that support Agent Skills (Claude Code, Codex, Gemini CLI, Antigravity, Cursor) already load every skill's name and description, so the table in `AGENTS.md` was paid for on every turn twice. `AGENTS.md` keeps the categories and a pointer, and any other tool is told to read the index. Antigravity's documented budget for global and always-on rules is 20,000 tokens, and files beyond it are demoted to pointers ([Antigravity rules](https://antigravity.google/docs/rules), checked 2026-10-29).
+- **Validator** (`scripts/agents-sync.mjs`):
+  - the new pure function `indexProblems` checks that every skill is linked from `AGENTS.md` or listed in `.agents/SKILLS.md` (which `AGENTS.md` must then link), and that the index lists nothing that does not exist;
+  - the always-on check now prints the remaining headroom and warns within 5% of the budget, so the next addition is planned instead of discovered;
+  - one new test.
+- **Docs**: architecture (size, validation), contributing (where to add a skill), debugging (the new messages) and README updated.
+- **Result**: always-on context about 14,300 → 13,000 tokens (headroom about 7,000).
+- **Checked**: the committed tree (`git archive HEAD`, 525 files) was scanned with `audit-artifact.mjs`: no key patterns, private keys or environment files; the 30 warnings are development URLs (localhost, 127.0.0.1, 10.0.2.2) in documentation and templates. gitleaks and TruffleHog could not be installed in this session; the CI job still runs gitleaks over the full history.
+
 ## 2.24.0: secret scanning in layers, and leaked-secret response (2026-10-29)
 
 The repository owner asked to adopt [gitleaks](https://github.com/gitleaks/gitleaks), [TruffleHog](https://github.com/trufflesecurity/trufflehog), [GitHub push protection](https://docs.github.com/en/code-security/concepts/secret-security/push-protection) and [GitHub Secret Protection](https://github.com/security/advanced-security/secret-protection) as skills and rules. All were checked on 2026-10-29: gitleaks v8.30.1 (MIT), TruffleHog v3.99.7 (AGPL-3.0, used as a tool), and GitHub's documentation and pricing pages. This repository already ran gitleaks in CI, and the project-bootstrap pre-commit template already had the gitleaks hook; this release adds the missing layers and the response procedure.

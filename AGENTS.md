@@ -10,7 +10,7 @@ This file is the **always-on core**. Deeper guidance loads on demand:
 - **Rules** (short, normative): [`.agents/rules/`](.agents/rules/)
 - **Skills** (step-by-step procedures): [`.agents/skills/`](.agents/skills/) (mirrored to `.claude/skills/` for Claude Code and Cline)
 
-If your tool does not load these folders automatically, **open the matching file from the tables in sections 4 and 5 before starting that kind of work.**
+If your tool does not load these folders automatically, **open the matching rule from the table in section 4, or the matching skill from the [skills index](.agents/SKILLS.md), before starting that kind of work.**
 
 ---
 
@@ -66,54 +66,12 @@ If your tool does not load these folders automatically, **open the matching file
 | [12-reverse-engineering.md](.agents/rules/12-reverse-engineering.md) | on demand | Authorized analysis of shipped artifacts, binaries, crash dumps; release-build audits |
 | [13-secret-scanning.md](.agents/rules/13-secret-scanning.md) | on demand | Secret scanning layers, push protection, findings, leaked-secret response |
 
-## 5. Skills index: pick the procedure for the task
+## 5. Skills: pick the procedure for the task
 
-### Lifecycle skills (every kind of software)
+Skills are step-by-step procedures in [`.agents/skills/`](.agents/skills/). Tools that support Agent Skills (Claude Code, Codex, Gemini CLI, Antigravity, Cursor and others) load each skill's name and description and open the body when a task matches. **Any other tool: read the [skills index](.agents/SKILLS.md) and open the matching skill before starting that kind of work.**
 
-| Phase | Skill | Use it when |
-| :--- | :--- | :--- |
-| Specify | [feature-specification](.agents/skills/feature-specification/SKILL.md) | Turning a request into goals, acceptance criteria, a plan and ordered tasks before coding |
-| Design | [software-architecture](.agents/skills/software-architecture/SKILL.md) | System design, quality attributes, architecture styles, distributed-systems trade-offs, resilience patterns, ADRs |
-| Start | [project-bootstrap](.agents/skills/project-bootstrap/SKILL.md) | Creating a repository: runtime, toolchain, editor extensions, CI, docs |
-| Build | [native-from-scratch](.agents/skills/native-from-scratch/SKILL.md) | Writing a new service, CLI or module, standard library first |
-| Change | [change-existing-code](.agents/skills/change-existing-code/SKILL.md) | Modifying, refactoring, upgrading or migrating existing code |
-| Test | [test-engineering](.agents/skills/test-engineering/SKILL.md) | Adding tests, regression tests, test setup, flaky tests |
-| Debug | [systematic-debugging](.agents/skills/systematic-debugging/SKILL.md) | Errors, crashes, wrong output, slowness, incidents |
-| Review | [rigorous-code-audit](.agents/skills/rigorous-code-audit/SKILL.md) | Reviewing a diff, pull request or codebase |
-| AI review | [coderabbit-review](.agents/skills/coderabbit-review/SKILL.md) | CodeRabbit reviews in the CLI or on pull requests, fixing its comments, `.coderabbit.yaml` |
-| Secure | [security-hardening](.agents/skills/security-hardening/SKILL.md) | Threat modelling, hardening, security scanning, secrets |
-| Secrets | [secret-scanning](.agents/skills/secret-scanning/SKILL.md) | gitleaks, TruffleHog, push protection; triaging findings; a leaked secret |
-| Inspect artifacts | [reverse-engineering](.agents/skills/reverse-engineering/SKILL.md) | Authorized analysis of builds, binaries, APK/IPA, crash dumps; release-build audits; REA |
-| Automate | [ci-cd-pipeline](.agents/skills/ci-cd-pipeline/SKILL.md) | CI workflows, release automation, Dependabot |
-| Ship | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Containers, configuration, migrations, rollout, monitoring, rollback |
-| Deliver with agents | [agent-delivery-loop](.agents/skills/agent-delivery-loop/SKILL.md) | Work beyond one session: phase loop with planning files (GSD), unattended story loop (Ralph) |
-| Isolate | [git-worktrees](.agents/skills/git-worktrees/SKILL.md) | One worktree per parallel or unattended task: create, inspect, set up, merge back |
-| Prove resilience | [chaos-engineering](.agents/skills/chaos-engineering/SKILL.md) | Fault-injection experiments, game days, verifying timeouts, fallbacks, failover and alerts |
-| Document | [technical-documentation](.agents/skills/technical-documentation/SKILL.md) | READMEs, guides, API and configuration reference, ADRs, changelogs, runbooks |
-| Anti-slop | [anti-slop](.agents/skills/anti-slop/SKILL.md) | Keeping generic AI patterns out of comments, docs, UI copy and interfaces; no fabricated content; controls that work |
-| Clean text | [clean-user-facing-text](.agents/skills/clean-user-facing-text/SKILL.md) | Local zero-dependency Unicode hygiene and stylometric rewrite pass for reader-facing prose while preserving voice and facts |
-| Provenance | [remove-ai-marks](.agents/skills/remove-ai-marks/SKILL.md) | Multi-vendor AI mark removal: invisible Unicode (Layer A), rewrite (Layer B), and C2PA/EXIF/container metadata across files |
-| Any tool | [technology-adoption](.agents/skills/technology-adoption/SKILL.md) | Any language, framework, library, platform or SaaS, especially one no other skill covers |
-
-### Domain skills (load together with the lifecycle skill for the phase)
-
-| Domain | Skill | Use it when |
-| :--- | :--- | :--- |
-| Backend | [backend-engineering](.agents/skills/backend-engineering/SKILL.md) | APIs (REST, GraphQL, gRPC), databases, queues, caching, jobs |
-| Integration | [api-integration](.agents/skills/api-integration/SKILL.md) | Third-party APIs in any sector, OAuth, webhooks, retries, EDI, FHIR, payments |
-| Web | [web-frontend-engineering](.agents/skills/web-frontend-engineering/SKILL.md) | Web UIs: accessibility, Core Web Vitals, browser security |
-| Mobile | [mobile-engineering](.agents/skills/mobile-engineering/SKILL.md) | Android, iOS, Flutter, React Native apps and store releases |
-| Data platform | [data-engineering](.agents/skills/data-engineering/SKILL.md) | Batch and streaming pipelines, big data, lakehouse, data quality |
-| Analytics | [data-analysis](.agents/skills/data-analysis/SKILL.md) | SQL and DataFrame analysis, statistics, experiments, charts |
-| ML / DL | [machine-learning](.agents/skills/machine-learning/SKILL.md) | Data science, model training and evaluation, MLOps |
-| GenAI | [llm-applications](.agents/skills/llm-applications/SKILL.md) | LLM features: prompts, structured output, evals, guardrails |
-| RAG | [rag-systems](.agents/skills/rag-systems/SKILL.md) | Retrieval over documents, vector search, grounded answers |
-| Agents | [ai-agent-systems](.agents/skills/ai-agent-systems/SKILL.md) | Tool-using agents, MCP servers, multi-agent systems |
-| Vision | [computer-vision](.agents/skills/computer-vision/SKILL.md) | Images, video, detection, segmentation, OCR, edge vision |
-| Real-time AI | [ml-inference-serving](.agents/skills/ml-inference-serving/SKILL.md) | Model serving, low latency, streaming, GPUs, edge inference |
-| Cloud / SRE | [cloud-infrastructure](.agents/skills/cloud-infrastructure/SKILL.md) | IaC, Kubernetes, IAM, networking, SLOs, DR, cost |
-| QA | [quality-assurance](.agents/skills/quality-assurance/SKILL.md) | Test strategy, load, accessibility, contract, DAST, release readiness |
-| IT operations | [it-operations](.agents/skills/it-operations/SKILL.md) | Identity and SSO, endpoints, networks, email, backup, ITSM, IT security frameworks |
+- **Lifecycle**: specify, design, start, build, change, test, debug, review (also AI review with CodeRabbit), secure (also secrets and shipped-artifact inspection), automate, ship, deliver with agents and worktrees, prove resilience, document, anti-slop, clean text, provenance, any tool.
+- **Domains**: backend, integration, web, mobile, data platform, analytics, ML/DL, GenAI, RAG, agents, vision, real-time AI, cloud/SRE, QA, IT operations.
 
 A task often spans several skills. A bug fix in an API, for example, uses systematic-debugging, backend-engineering, test-engineering, then rigorous-code-audit. [.agents/domain-coverage.md](.agents/domain-coverage.md) maps roles and domains to skills, including domains without a dedicated skill; [.agents/engineering-concepts.md](.agents/engineering-concepts.md) maps engineering concepts and the SWEBOK knowledge areas to the rules and skills that apply them.
 

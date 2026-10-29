@@ -10,7 +10,7 @@ The repository has two kinds of product: the specification (Markdown) and runnab
 
 | Level | Location | Tool |
 | :--- | :--- | :--- |
-| Script unit and CLI tests | `scripts/*.test.mjs` (agents-sync 11, tech-lookup 10, check-updates 3, check-authorship 7, run-quiet 5) | `node:test` |
+| Script unit and CLI tests | `scripts/*.test.mjs` (agents-sync 12, tech-lookup 10, check-updates 3, check-authorship 7, run-quiet 5) | `node:test` |
 | Authorship of every commit | The full Git history | `node scripts/check-authorship.mjs` (CI job `authorship`, with `fetch-depth: 0`) |
 | Guard hook | `.agents/skills/security-hardening/assets/claude-code-guardrails/guard.test.mjs` (5) | `node:test` |
 | Docs completeness checker | `.agents/skills/technical-documentation/assets/check-docs.test.mjs` (5) | `node:test` |
