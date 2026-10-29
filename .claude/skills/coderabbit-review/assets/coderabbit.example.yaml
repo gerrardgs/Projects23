@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# Starting point for a project that follows this specification. Copy to the repository root as
+# ".coderabbit.yaml" only after the owner has decided to use the CodeRabbit GitHub App, then adjust the
+# paths. Validated against schema.v2.json on 2026-10-29. Keys not set here keep CodeRabbit's defaults.
+language: en-US
+
+reviews:
+  profile: chill
+  high_level_summary: true
+  review_status: true
+  poem: false
+  in_progress_fortune: false
+  enable_prompt_for_ai_agents: true
+  auto_review:
+    enabled: true
+    drafts: false
+
+  # Generated or vendored output: review the source instead.
+  path_filters:
+    - "!**/dist/**"
+    - "!**/build/**"
+    - "!**/coverage/**"
+    - "!.claude/skills/**"
+
+  path_instructions:
+    - path: "**/*.{ts,tsx,js,mjs,cjs,py,go,rs,java,kt,cs,swift,dart}"
+      instructions: |
+        Apply AGENTS.md and the rules in .agents/rules. Flag invented APIs, flags or packages; missing
+        error handling at boundaries; secrets in code; silenced type checks, lint rules or tests;
+        functions with cyclomatic complexity above 10; and comments that restate the code.
+    - path: "**/{test,tests,__tests__,spec}/**"
+      instructions: |
+        Tests must assert observable behaviour, cover failure paths, and be deterministic (no real
+        clock, network or random order). Flag weakened or skipped assertions.
+    - path: "**/migrations/**"
+      instructions: |
+        Migrations must be safe on a live database: expand, then migrate, then contract; no long
+        locks on large tables; a tested down path or a written reason why there is none.
+    - path: ".github/workflows/**"
+      instructions: |
+        Third-party actions pinned to a full commit SHA with the version in a comment, least-privilege
+        permissions per job, no secrets printed, no untrusted input interpolated into run scripts.
+    - path: "**/SKILL.md"
+      instructions: |
+        Keep the skill focused on routing and workflow; detail belongs in references. Every referenced
+        file, command and flag must exist and match its current official documentation.
+
+  pre_merge_checks:
+    title:
+      mode: warning
+      requirements: "Conventional Commits format: type(optional scope): summary in the imperative mood."
+    description:
+      mode: warning
+    custom_checks:
+      - name: Verification evidence
+        mode: warning
+        instructions: |
+          Pass when the pull request description lists the commands that were run to verify the
+          change (for example tests, linters, type checks) and their results, or states which checks
+          were not run and why. Fail otherwise.
+      - name: Only the human author is credited
+        mode: error
+        instructions: |
+          Fail when the pull request title or description contains a "Generated with" line naming an
+          AI tool, or a Co-Authored-By or Signed-off-by line naming an AI agent or bot. Pass otherwise.
+
+  tools:
+    gitleaks:
+      enabled: true
+    actionlint:
+      enabled: true
+    zizmor:
+      enabled: true
+    shellcheck:
+      enabled: true
+    markdownlint:
+      enabled: true
+
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "AGENTS.md"
+      - ".agents/rules/*.md"

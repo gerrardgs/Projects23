@@ -1,6 +1,6 @@
 # Testing
 
-What protects Projects 23 from regressions, where it lives and how to run it. Test counts are from 2026-10-23; the chaos kit count from 2026-10-29.
+What protects Projects 23 from regressions, where it lives and how to run it. Test counts are from 2026-10-23; the chaos kit and agent helper counts from 2026-10-29.
 
 ## Strategy
 
@@ -14,6 +14,7 @@ The repository has two kinds of product: the specification (Markdown) and runnab
 | Authorship of every commit | The full Git history | `node scripts/check-authorship.mjs` (CI job `authorship`, with `fetch-depth: 0`) |
 | Guard hook | `.agents/skills/security-hardening/assets/claude-code-guardrails/guard.test.mjs` (5) | `node:test` |
 | Docs completeness checker | `.agents/skills/technical-documentation/assets/check-docs.test.mjs` (5) | `node:test` |
+| Agent helpers | `.agents/skills/agent-delivery-loop/assets/*.test.mjs` (check-stories 8, story-loop 6, both with temporary Git repositories), `.agents/skills/git-worktrees/assets/worktrees.test.mjs` (6), `.agents/skills/coderabbit-review/assets/review-outcome.test.mjs` (9), `.agents/skills/reverse-engineering/assets/audit-artifact.test.mjs` (7) | `node:test` |
 | Node.js service template | `.agents/skills/native-from-scratch/assets/node-http-service/server.test.ts` | `node:test` on Node.js 22, 24, 26 |
 | Python service template | `.../native-from-scratch/assets/python-http-service/test_app.py` (11) | `unittest` on Python 3.11 to 3.14 |
 | Machine-learning baseline | `.../machine-learning/assets/baseline-classifier/test_baseline.py` (5) | `unittest` |
@@ -26,7 +27,7 @@ The repository has two kinds of product: the specification (Markdown) and runnab
 
 ## Running tests
 
-- All Node.js tests: `node --test "scripts/*.test.mjs" ".agents/skills/security-hardening/assets/claude-code-guardrails/*.test.mjs" ".agents/skills/technical-documentation/assets/*.test.mjs"`
+- All Node.js tests: `node --test "scripts/*.test.mjs" ".agents/skills/security-hardening/assets/claude-code-guardrails/*.test.mjs" ".agents/skills/technical-documentation/assets/*.test.mjs" ".agents/skills/agent-delivery-loop/assets/*.test.mjs" ".agents/skills/git-worktrees/assets/*.test.mjs" ".agents/skills/coderabbit-review/assets/*.test.mjs" ".agents/skills/reverse-engineering/assets/*.test.mjs"`
 - Specification: `node scripts/agents-sync.mjs --check --all-markdown`
 - Documentation: `node .agents/skills/technical-documentation/assets/check-docs.mjs docs`
 - Clean-code lint: `npm ci --prefix tools/lint && npm run --prefix tools/lint lint`

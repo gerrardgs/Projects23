@@ -38,6 +38,8 @@ jobs:
         run: node --test ".agents/skills/security-hardening/assets/claude-code-guardrails/*.test.mjs"
       - name: Documentation checker tests
         run: node --test ".agents/skills/technical-documentation/assets/*.test.mjs"
+      - name: Agent delivery, worktree, review and artifact audit helper tests
+        run: node --test ".agents/skills/agent-delivery-loop/assets/*.test.mjs" ".agents/skills/git-worktrees/assets/*.test.mjs" ".agents/skills/coderabbit-review/assets/*.test.mjs" ".agents/skills/reverse-engineering/assets/*.test.mjs"
       - name: This repository's documentation set is complete
         run: node .agents/skills/technical-documentation/assets/check-docs.mjs docs
       - name: Validate rules, skills, mirror and links

@@ -4,7 +4,7 @@
   "description": "Clean-code lint for this repository's own JavaScript and TypeScript (complexity <= 10, nesting <= 3, per rules 01 and 02).",
   "type": "module",
   "scripts": {
-    "lint": "cd ../.. && eslint --config tools/lint/eslint.config.mjs scripts .agents/skills/native-from-scratch/assets/node-http-service .agents/skills/security-hardening/assets/claude-code-guardrails .agents/skills/technical-documentation/assets"
+    "lint": "cd ../.. && eslint --config tools/lint/eslint.config.mjs scripts .agents/skills/native-from-scratch/assets/node-http-service .agents/skills/security-hardening/assets/claude-code-guardrails .agents/skills/technical-documentation/assets .agents/skills/agent-delivery-loop/assets .agents/skills/git-worktrees/assets .agents/skills/coderabbit-review/assets .agents/skills/reverse-engineering/assets"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

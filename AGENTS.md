@@ -62,6 +62,8 @@ If your tool does not load these folders automatically, **open the matching file
 | [07-testing.md](.agents/rules/07-testing.md) | on demand | Writing, changing or running tests |
 | [08-git-workflow.md](.agents/rules/08-git-workflow.md) | on demand | Commits, branches, pull requests, versioning, releases |
 | [10-text-hygiene-and-provenance.md](.agents/rules/10-text-hygiene-and-provenance.md) | on demand | Text hygiene, AI provenance marks, invisible Unicode, statistical rewrite, C2PA/metadata |
+| [11-agentic-delivery-and-review.md](.agents/rules/11-agentic-delivery-and-review.md) | on demand | Multi-session, parallel or unattended agent work, worktrees, AI code review |
+| [12-reverse-engineering.md](.agents/rules/12-reverse-engineering.md) | on demand | Authorized analysis of shipped artifacts, binaries, crash dumps; release-build audits |
 
 ## 5. Skills index: pick the procedure for the task
 
@@ -77,9 +79,13 @@ If your tool does not load these folders automatically, **open the matching file
 | Test | [test-engineering](.agents/skills/test-engineering/SKILL.md) | Adding tests, regression tests, test setup, flaky tests |
 | Debug | [systematic-debugging](.agents/skills/systematic-debugging/SKILL.md) | Errors, crashes, wrong output, slowness, incidents |
 | Review | [rigorous-code-audit](.agents/skills/rigorous-code-audit/SKILL.md) | Reviewing a diff, pull request or codebase |
+| AI review | [coderabbit-review](.agents/skills/coderabbit-review/SKILL.md) | CodeRabbit reviews in the CLI or on pull requests, fixing its comments, `.coderabbit.yaml` |
 | Secure | [security-hardening](.agents/skills/security-hardening/SKILL.md) | Threat modelling, hardening, security scanning, secrets |
+| Inspect artifacts | [reverse-engineering](.agents/skills/reverse-engineering/SKILL.md) | Authorized analysis of builds, binaries, APK/IPA, crash dumps; release-build audits; REA |
 | Automate | [ci-cd-pipeline](.agents/skills/ci-cd-pipeline/SKILL.md) | CI workflows, release automation, Dependabot |
 | Ship | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Containers, configuration, migrations, rollout, monitoring, rollback |
+| Deliver with agents | [agent-delivery-loop](.agents/skills/agent-delivery-loop/SKILL.md) | Work beyond one session: phase loop with planning files (GSD), unattended story loop (Ralph) |
+| Isolate | [git-worktrees](.agents/skills/git-worktrees/SKILL.md) | One worktree per parallel or unattended task: create, inspect, set up, merge back |
 | Prove resilience | [chaos-engineering](.agents/skills/chaos-engineering/SKILL.md) | Fault-injection experiments, game days, verifying timeouts, fallbacks, failover and alerts |
 | Document | [technical-documentation](.agents/skills/technical-documentation/SKILL.md) | READMEs, guides, API and configuration reference, ADRs, changelogs, runbooks |
 | Anti-slop | [anti-slop](.agents/skills/anti-slop/SKILL.md) | Keeping generic AI patterns out of comments, docs, UI copy and interfaces; no fabricated content; controls that work |
@@ -117,7 +123,7 @@ A task often spans several skills. A bug fix in an API, for example, uses system
 - **No network**: rely on the installed code, lockfiles and local documentation; do not guess versions or APIs you cannot check.
 - **Non-interactive** (CI, scheduled or background agents): never wait for input. Make only safe, reversible changes, and report blockers instead of guessing past them.
 - **Monorepo or nested instructions**: the `AGENTS.md` nearest to the file being edited takes precedence for that directory. Explicit user instructions override this file, except where they would break section 2 or the security rules; then explain the conflict.
-- **Several agents or sub-agents**: give each one a self-contained task with the relevant rule and skill links. Review and verify their results before reporting them as done. For a spec split into tasks with blocking edges, run the ready tasks in parallel, each in its own branch or worktree based on one integration branch, merge each finished task back, start the tasks it unblocks, then review the whole integration branch once ([rigorous-code-audit](.agents/skills/rigorous-code-audit/SKILL.md)).
+- **Several agents or sub-agents**: give each one a self-contained task with the relevant rule and skill links. Review and verify their results before reporting them as done. For a spec split into tasks with blocking edges, run the ready tasks in parallel, each in its own branch or worktree based on one integration branch, merge each finished task back, start the tasks it unblocks, then review the whole integration branch once ([rigorous-code-audit](.agents/skills/rigorous-code-audit/SKILL.md); procedures in [agent-delivery-loop](.agents/skills/agent-delivery-loop/SKILL.md) and [git-worktrees](.agents/skills/git-worktrees/SKILL.md)).
 - **Unfamiliar language or framework**: read the official documentation and the existing code first, and follow the platform's idioms, not habits from another language.
 - **Production or shared environments**: read-only by default. Never change data, infrastructure or deployments without explicit approval.
 
