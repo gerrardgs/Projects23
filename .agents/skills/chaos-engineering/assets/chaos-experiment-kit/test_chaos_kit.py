@@ -12,7 +12,7 @@ from collections.abc import Callable, Generator
 from contextlib import contextmanager
 from typing import Any
 
-from chaos import Experiment, Outcome, Probe, Tolerance, run_experiment
+from chaos import Experiment, Journal, Outcome, Probe, Tolerance, evaluate, run_experiment
 from example_experiment import PriceClient, run_all
 from fault_proxy import FaultProxy, Faults
 
@@ -209,6 +209,34 @@ def timed(action: Callable[[], object]) -> float:
     started = time.monotonic()
     action()
     return time.monotonic() - started
+
+
+class EvaluateTest(unittest.TestCase):
+    def journal_for(self, system: FakeSystem) -> Journal:
+        clock = FakeClock()
+        return run_experiment(experiment_for(system), clock=clock, sleep=clock.sleep)
+
+    def test_held_hypothesis_recommends_automation(self) -> None:
+        evaluation = evaluate(self.journal_for(FakeSystem(degraded=0.95)))
+        self.assertEqual(evaluation.outcome, Outcome.HELD)
+        self.assertEqual(evaluation.deviations, {})
+        self.assertEqual(evaluation.worst_values, {"health": 0.95})
+        self.assertIn("regression test", evaluation.next_steps[0])
+
+    def test_disproved_hypothesis_counts_deviations_and_plans_a_fix(self) -> None:
+        evaluation = evaluate(self.journal_for(FakeSystem(degraded=0.5)))
+        self.assertEqual(evaluation.outcome, Outcome.DISPROVED)
+        self.assertGreater(evaluation.deviations["during"], 0)
+        self.assertNotIn("after", evaluation.deviations)
+        self.assertEqual(evaluation.worst_values["health"], 0.5)
+        self.assertIn("re-run", evaluation.next_steps[1])
+
+    def test_not_run_asks_to_fix_health_first(self) -> None:
+        evaluation = evaluate(self.journal_for(FakeSystem(healthy=0.2)))
+        self.assertEqual(evaluation.outcome, Outcome.NOT_RUN)
+        self.assertEqual(evaluation.deviations, {"before": 1})
+        self.assertIn("health first", evaluation.next_steps[0])
+        self.assertEqual(evaluation.to_text().splitlines()[0], f"test: {Outcome.NOT_RUN.value}")
 
 
 class FaultProxyTest(unittest.TestCase):

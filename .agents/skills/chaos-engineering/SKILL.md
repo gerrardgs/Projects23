@@ -10,6 +10,14 @@ metadata:
 
 "Chaos Engineering is the discipline of experimenting on a system in order to build confidence in the system's capability to withstand turbulent conditions in production" ([Principles of Chaos Engineering](https://principlesofchaos.org/)). It is a controlled experiment with a hypothesis, not breaking things at random. Sources checked on 2026-10-16: the Principles, AWS Well-Architected [REL12-BP04](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/rel_testing_resiliency_failure_injection_resiliency.html) and [REL12-BP05](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/rel_testing_resiliency_game_days_resiliency.html), Azure Well-Architected [RE:08](https://learn.microsoft.com/en-us/azure/well-architected/reliability/reliability-test), and the [Chaos Toolkit experiment specification](https://chaostoolkit.org/reference/api/experiment/).
 
+Every experiment follows the same five-step cycle; the sections below give the detail for each step:
+
+1. **Define normal (steady state)**: a measurable output users care about, observed before anything is injected (section 2).
+2. **State the hypothesis for the failure**: if this fault occurs, this mitigation keeps the steady state (section 2).
+3. **Create the chaos**: inject the fault within a limited blast radius, with stop conditions and a tested rollback (sections 3 and 4).
+4. **Observe whether the system behaves as expected**: compare the steady state during and after the fault with the hypothesis (section 4).
+5. **Evaluate and plan the improvement**: record the result, find the cause of each deviation, plan and track the fix, and re-run (section 5).
+
 ## 1. Safety first (non-negotiable for agents)
 
 Fault injection deliberately degrades a system. Treat it like a deployment ([AGENTS.md](../../../AGENTS.md) section 2, item 5):
@@ -71,10 +79,21 @@ Result record:    <where the journal, graphs and findings are stored>
 
 During the run: check the steady state before injecting (bail out if the system is not healthy, as Chaos Toolkit requires), watch the guardrails, stop at the first unexpected effect, and always roll back. Afterwards confirm the system returned to its known-good state.
 
-## 5. Learn and automate
+## 5. Evaluate, improve and automate
 
 - Record every run: time, version, environment, fault, observations, outcome, and graphs or exported metrics.
-- If the hypothesis was disproved, treat it like an incident finding: fix the design (timeouts, fallbacks, redundancy, alerts, runbooks), then run the experiment again.
+- Evaluate each run against the hypothesis and write the improvement plan in the same record:
+
+```text
+Outcome:          <held | disproved | aborted by a stop condition | not run: system not in steady state>
+Deviations:       <which metric left its tolerance, when (before, during, after), worst value observed>
+Root cause:       <why the mitigation did not hold; evidence: graphs, logs, traces>
+Actions:          <fix>; owner: <name>; due: <date>      (one line per action)
+Re-run:           <the same experiment after the fix; date; result>
+Next experiment:  <held: automate it, then one step more intensity or blast radius, with approval>
+```
+
+- If the hypothesis was disproved, treat it like an incident finding: fix the design (timeouts, fallbacks, redundancy, alerts, runbooks), then run the experiment again until it holds.
 - When the hypothesis holds, **automate the experiment as a regression test**, in the delivery pipeline and on a schedule outside deployments, so later changes cannot silently remove the resilience (AWS REL12-BP04 lists not running chaos experiments in CI/CD as an anti-pattern).
 - Update the failure mode analysis with what you learned and retire experiments that no longer give insight.
 
@@ -100,10 +119,10 @@ Pick the tool that matches the platform you already run; managed services keep s
 
 [`assets/chaos-experiment-kit/`](assets/chaos-experiment-kit/) runs real experiments on your machine with no dependencies (Python 3.11+):
 
-- `chaos.py`: runner with steady-state probes and tolerances, bail-out when the system is not in steady state, stop conditions, guaranteed rollback (also on errors and Ctrl+C), recovery check, and a JSON journal.
+- `chaos.py`: runner with steady-state probes and tolerances, bail-out when the system is not in steady state, stop conditions, guaranteed rollback (also on errors and Ctrl+C), recovery check, a JSON journal, and `evaluate()`, which summarises a journal into deviations per phase, the worst value per probe and the next steps for its outcome (step 5 of the cycle).
 - `fault_proxy.py`: a local TCP proxy that adds latency or drops connections to one dependency (listens on `127.0.0.1` only).
-- `example_experiment.py`: a client with a timeout and fallback, tested against a slow and an unreachable dependency; exit code 0 when every hypothesis held.
-- `test_chaos_kit.py`: 19 tests, including one showing that the same experiments catch a client without a fallback.
+- `example_experiment.py`: a client with a timeout and fallback, tested against a slow and an unreachable dependency; exit code 0 when every hypothesis held; the evaluation of each run goes to standard error.
+- `test_chaos_kit.py`: 22 tests, including one showing that the same experiments catch a client without a fallback.
 
 The example relies on a fallback on purpose. AWS avoids fallbacks "because it's difficult to prove and its effectiveness is hard to test" ([Avoiding fallback in distributed systems](https://builder.aws.com/content/3EuS9Sakq7L3VLQIF3qzfMfke1Y/avoiding-fallback-in-distributed-systems)); if you keep one, an experiment that runs on every build, like this one, is what keeps it proven ([software-architecture](../software-architecture/SKILL.md) section 5).
 
@@ -118,5 +137,5 @@ python -m unittest -v
 - [ ] Each experiment has a written steady state, hypothesis, blast radius, stop conditions and rollback
 - [ ] Approval obtained for any shared or production environment; stakeholders informed
 - [ ] The system was in steady state before injection and verified back in steady state afterwards
-- [ ] Results recorded; disproved hypotheses turned into fixes and re-run
+- [ ] Results recorded and evaluated; disproved hypotheses turned into an improvement plan with owners and due dates, fixed and re-run
 - [ ] Experiments that held are automated as regression tests in CI/CD or on a schedule

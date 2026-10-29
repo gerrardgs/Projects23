@@ -9,7 +9,8 @@ model of Chaos Toolkit (https://chaostoolkit.org/reference/api/experiment/):
    A violated stop condition (a guardrail) ends the run at once.
 3. Always roll back, even after an error or an interrupt; a failed rollback is recorded, not hidden.
 4. Check the steady state again to verify recovery.
-5. Return a journal that records what happened, for the experiment log.
+5. Return a journal that records what happened, for the experiment log; `evaluate` turns it into the
+   evaluation and the next steps of the improvement plan.
 """
 
 from __future__ import annotations
@@ -97,6 +98,65 @@ class Journal:
 
     def to_json(self) -> str:
         return json.dumps(asdict(self), indent=2)
+
+
+@dataclass(frozen=True, slots=True)
+class Evaluation:
+    """Step 5 of the cycle: what the experiment showed and what to do next."""
+
+    title: str
+    outcome: Outcome
+    deviations: dict[str, int]
+    worst_values: dict[str, float]
+    next_steps: tuple[str, ...]
+
+    def to_text(self) -> str:
+        lines = [f"{self.title}: {self.outcome}"]
+        lines += [
+            f"  deviations during {phase}: {count}"
+            for phase, count in sorted(self.deviations.items())
+        ]
+        lines += [
+            f"  worst {probe}: {value:g}" for probe, value in sorted(self.worst_values.items())
+        ]
+        lines += [f"  next: {step}" for step in self.next_steps]
+        return "\n".join(lines)
+
+
+_NEXT_STEPS = {
+    Outcome.HELD: (
+        "Record the result and run this experiment as a regression test in CI or on a schedule.",
+        "Raise the intensity or widen the blast radius one step, only with approval.",
+    ),
+    Outcome.DISPROVED: (
+        "Treat it as an incident finding: find the root cause of each deviation.",
+        "Plan the fix (owner, due date), apply it, and re-run this experiment until it holds.",
+    ),
+    Outcome.ABORTED: (
+        "Restore the system to its known-good state and confirm it before anything else.",
+        "Find why the guardrail or the injection failed, fix the experiment, and re-run it.",
+    ),
+    Outcome.NOT_RUN: (
+        "Fix the system's health first; an experiment on an unhealthy system teaches nothing.",
+        "Re-run once the steady state holds.",
+    ),
+}
+
+
+def evaluate(journal: Journal) -> Evaluation:
+    """Summarises a journal: deviations per phase, worst value per probe, next steps. Pure."""
+    deviations: dict[str, int] = {}
+    worst: dict[str, float] = {}
+    for observation in journal.observations:
+        if not observation.within_tolerance:
+            deviations[observation.phase] = deviations.get(observation.phase, 0) + 1
+        if observation.value is not None:
+            worst[observation.probe] = min(
+                worst.get(observation.probe, observation.value), observation.value
+            )
+    return Evaluation(
+        journal.title, journal.outcome, deviations, worst, _NEXT_STEPS[journal.outcome]
+    )
 
 
 Clock = Callable[[], float]

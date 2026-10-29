@@ -21,7 +21,7 @@ from collections.abc import Callable, Generator
 from contextlib import contextmanager
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-from chaos import Experiment, Journal, Outcome, Probe, Tolerance, run_experiment
+from chaos import Experiment, Journal, Outcome, Probe, Tolerance, evaluate, run_experiment
 from fault_proxy import FaultProxy, Faults
 
 LATENCY_BUDGET_SECONDS = 0.3
@@ -140,6 +140,7 @@ def main() -> int:
     journals = run_all()
     for journal in journals:
         print(journal.to_json())
+        print(evaluate(journal).to_text(), file=sys.stderr)
     held = sum(journal.outcome is Outcome.HELD for journal in journals)
     print(f"{held} of {len(journals)} hypotheses held", file=sys.stderr)
     return 0 if held == len(journals) else 1

@@ -29,7 +29,7 @@ How Projects 23 is organised, why, and how each AI coding tool loads it.
 
 - **Rules** say *what* must hold. Five are always on, because they apply to every task (principles, clean code, verification, security, clean execution). Four load only when relevant.
 - **Skills** say *how* to do a kind of task, step by step. They follow the [Agent Skills specification](https://agentskills.io/specification): only each skill's name and description are loaded at startup, and the body loads when the task matches. Bulky material sits in `references/` and `assets/` and loads only when needed.
-- **Size**: `node scripts/agents-sync.mjs` prints the current always-on estimate (characters divided by 4). On 2026-10-28 it was about 12,800 tokens for `AGENTS.md` plus the five always-on rules. Tools that support skills also load every skill's name and description at startup: for the 30 skills that is 15,945 characters, about 4,000 tokens. Skill bodies load only when the task matches. Antigravity's documented budget for global and always-on rules is 20,000 tokens.
+- **Size**: `node scripts/agents-sync.mjs` prints the current always-on estimate (characters divided by 4). On 2026-10-29 it was about 13,900 tokens for `AGENTS.md` plus the five always-on rules. Tools that support skills also load every skill's name and description at startup: for the 32 skills that is 16,608 characters, about 4,150 tokens. Skill bodies load only when the task matches. Antigravity's documented budget for global and always-on rules is 20,000 tokens.
 
 ## 3. How each tool loads the spec
 
@@ -140,7 +140,7 @@ flowchart LR
 
 - Verifiability: every fact can be traced to a dated source, and every template runs in CI.
 - Portability: any tool that reads `AGENTS.md` works; scripts need only Node.js 22 or later.
-- Context efficiency: the always-on core stays under the 20,000-token budget (about 12,800 tokens on 2026-10-28).
+- Context efficiency: the always-on core stays under the 20,000-token budget (about 13,900 tokens on 2026-10-29).
 - Safety: installing never destroys a user's files; agents are told to confirm before deleting or rewriting existing code.
 - Maintainability: the repository's own code passes the same clean-code limits it prescribes.
 

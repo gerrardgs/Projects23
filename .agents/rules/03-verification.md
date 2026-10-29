@@ -49,3 +49,12 @@ Check the runtime's own deprecation list when unsure: Node.js `--throw-deprecati
 ## 5. When verification is impossible
 
 If you lack network access or the tool is not installed, do not guess silently. Say what you could not verify, give the command the user can run to check it, and prefer an approach you *can* verify locally.
+
+## 6. Blind spots, cross-checks and objective validation
+
+Verification of single facts is not enough; a correct fact can still answer the wrong question. Before and after the work:
+
+- **Dissect blind spots.** Run a pre-mortem: assume the work has already failed and list why ([Klein, "Performing a Project Premortem", Harvard Business Review, September 2007](https://hbr.org/2007/09/performing-a-project-premortem)). Walk the checklist: edge cases and failure paths, security and privacy, accessibility, operations and observability, cost, compatibility and migration, legal and licensing, and people or systems the change affects that nobody mentioned. Record what you checked and what you could not.
+- **Cross-check data.** Every fact a decision rests on is confirmed by at least two independent pieces of evidence: the primary source and an execution (running the tool, the test, `--help`), or two primary sources. When they disagree, report the disagreement instead of choosing silently. Counts, sizes and versions are re-measured, not copied from earlier notes.
+- **Use current, maintained standards and tools.** Prefer the current edition of a standard and tools that are maintained and widely adopted; check the version, release date, deprecation and end of life at the source (`node scripts/tech-lookup.mjs`, the standard's publisher) and name them with the date checked. Flag deprecated practices you meet and propose their replacement ([09-clean-execution](09-clean-execution.md) section 2), and say when a newer edition exists but is not adopted yet.
+- **Validate objectively.** Success criteria are written before the work and are measurable; evidence is reproducible (the command and its output, a test, a measurement); the verdict comes from tools, tests or an independent reviewer, not from the author's impression. Report what failed or was not checked as plainly as what passed.

@@ -1,6 +1,6 @@
 # Testing
 
-What protects Projects 23 from regressions, where it lives and how to run it. Test counts are from 2026-10-23.
+What protects Projects 23 from regressions, where it lives and how to run it. Test counts are from 2026-10-23; the chaos kit count from 2026-10-29.
 
 ## Strategy
 
@@ -18,7 +18,7 @@ The repository has two kinds of product: the specification (Markdown) and runnab
 | Python service template | `.../native-from-scratch/assets/python-http-service/test_app.py` (11) | `unittest` on Python 3.11 to 3.14 |
 | Machine-learning baseline | `.../machine-learning/assets/baseline-classifier/test_baseline.py` (5) | `unittest` |
 | API integration kit | `.../api-integration/assets/python-integration-kit/test_integration_kit.py` (18) | `unittest` |
-| Chaos experiment kit | `.../chaos-engineering/assets/chaos-experiment-kit/test_chaos_kit.py` (19) | `unittest` |
+| Chaos experiment kit | `.../chaos-engineering/assets/chaos-experiment-kit/test_chaos_kit.py` (22) | `unittest` |
 | MCP Toolbox example (real server over MCP stdio) | `.../ai-agent-systems/assets/mcp-toolbox-sqlite/test_toolbox_smoke.py` (5) | `unittest` with the pinned Toolbox binary |
 | Specification | every `.md` file | `scripts/agents-sync.mjs --check --all-markdown`, PyYAML cross-check |
 | Documentation of this repository | `docs/` | `check-docs.mjs docs` |

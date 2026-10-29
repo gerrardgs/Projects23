@@ -46,6 +46,8 @@ For a significant or unclear feature, interview the user until nothing is silent
 - For a significant choice, compare two or three options with their trade-offs and record the decision ([ADR template](../project-bootstrap/assets/adr-template.md)).
 - When a question is cheaper to answer by building than by debating (does this state model hold, which layout works), build a **throwaway prototype**: clearly named as one, trivial to run, no persistence or polish, showing its state. Keep the validated decision, not the prototype; leave the prototype out of the main branch.
 - List risks with mitigations: security (threat model, [security-hardening](../security-hardening/SKILL.md)), data migration, performance, backward compatibility, rollout and rollback.
+- Run a pre-mortem on the plan: assume it has failed and list why, then add the blind spots and failure hypotheses (if this dependency or step fails, what should happen and how you will see it) to the plan ([03-verification](../../rules/03-verification.md) section 6).
+- Present the plan in the implementation-plan format of [09-clean-execution](../../rules/09-clean-execution.md) section 1 and start the tasks only after the user approves it.
 
 ## 3. Tasks: ordered, small and verifiable
 
@@ -71,5 +73,6 @@ For a significant or unclear feature, interview the user until nothing is silent
 - [ ] Goals, non-goals, acceptance criteria, edge cases and non-functional requirements are written and agreed
 - [ ] Open questions answered by the owner, or explicitly deferred
 - [ ] Plan names affected components, contract and data changes, risks and the rollback
+- [ ] Plan includes the pre-mortem blind spots and failure hypotheses, and the user approved it before any task started
 - [ ] Tasks are small, ordered and each has a verification
 - [ ] Every acceptance criterion maps to a passing test

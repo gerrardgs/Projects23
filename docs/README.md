@@ -6,21 +6,21 @@ Index of `docs/` for Projects 23: what each document answers, who owns it, and w
 
 | Document | Answers | Owner | Last reviewed |
 | :--- | :--- | :--- | :--- |
-| [PRD.md](PRD.md) | What Projects 23 is, for whom, and how success is judged | Repository owner | 2026-10-23 |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | How the spec is organised, how each AI tool loads it, and why | Repository owner | 2026-10-23 |
+| [PRD.md](PRD.md) | What Projects 23 is, for whom, and how success is judged | Repository owner | 2026-10-29 |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | How the spec is organised, how each AI tool loads it, and why | Repository owner | 2026-10-29 |
 | [TECHSTACKS.md](TECHSTACKS.md) | Every runtime, tool and pinned version, with end-of-life dates | Repository owner | 2026-10-23 |
 | [CODE_STYLE.md](CODE_STYLE.md) | Conventions for the repository's own scripts, templates and Markdown | Repository owner | 2026-10-23 |
 | [RULES.md](RULES.md) | Invariants of the spec, protected areas and approvals | Repository owner | 2026-10-23 |
 | [CONFIGURATION.md](CONFIGURATION.md) | Environment variables, adapter files and options | Repository owner | 2026-10-23 |
 | [INTEGRATIONS.md](INTEGRATIONS.md) | External registries and services the scripts and CI call | Repository owner | 2026-10-23 |
-| [TESTING.md](TESTING.md) | What is tested, where, and the exact commands | Repository owner | 2026-10-23 |
+| [TESTING.md](TESTING.md) | What is tested, where, and the exact commands | Repository owner | 2026-10-29 |
 | [DEBUGGING.md](DEBUGGING.md) | Known failures of the validators, templates and CI, with fixes | Repository owner | 2026-10-23 |
 | [DEPLOYMENT.md](DEPLOYMENT.md) | How a release is made and how users install it | Repository owner | 2026-10-23 |
 | [SECURITY.md](SECURITY.md) | Threat model and controls; the reporting policy is the root `SECURITY.md` | Repository owner | 2026-10-23 |
 | [DOCUMENTATION.md](DOCUMENTATION.md) | How these documents are organised and kept current | Repository owner | 2026-10-23 |
 | [AGENTS.md](AGENTS.md), [CLAUDE.md](CLAUDE.md) | How agents edit the files in `docs/` | Repository owner | 2026-10-23 |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to author rules, skills and templates (GitHub shows it as the contributing guide) | Repository owner | 2026-10-23 |
-| [AGENT-OPERATIONAL-MANUAL.md](AGENT-OPERATIONAL-MANUAL.md) | Which rule or skill to load for each kind of task | Repository owner | 2026-10-23 |
+| [AGENT-OPERATIONAL-MANUAL.md](AGENT-OPERATIONAL-MANUAL.md) | Which rule or skill to load for each kind of task | Repository owner | 2026-10-29 |
 | [ANTI-HALLUCINATION-PLAYBOOK.md](ANTI-HALLUCINATION-PLAYBOOK.md) | How agents verify facts instead of inventing them | Repository owner | 2026-10-23 |
 
 ## Not applicable

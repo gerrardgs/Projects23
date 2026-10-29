@@ -45,6 +45,7 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 | Deploy a model, cut inference latency, real-time AI | [ml-inference-serving](../.agents/skills/ml-inference-serving/SKILL.md) | [cloud-infrastructure](../.agents/skills/cloud-infrastructure/SKILL.md) |
 | Infrastructure, Kubernetes, IAM, SLOs, cloud cost | [cloud-infrastructure](../.agents/skills/cloud-infrastructure/SKILL.md) | [ci-cd-pipeline](../.agents/skills/ci-cd-pipeline/SKILL.md) |
 | Resilience check, fault injection, chaos experiment, game day | [chaos-engineering](../.agents/skills/chaos-engineering/SKILL.md) | [cloud-infrastructure](../.agents/skills/cloud-infrastructure/SKILL.md) section 5, [quality-assurance](../.agents/skills/quality-assurance/SKILL.md) |
+| Plan any change, check its blind spots and validate the result objectively | rule [09](../.agents/rules/09-clean-execution.md) section 1 (plan format) | rule [03](../.agents/rules/03-verification.md) section 6 (pre-mortem, cross-checks, objective validation) |
 | Test plan, load test, release sign-off | [quality-assurance](../.agents/skills/quality-assurance/SKILL.md) | [test-engineering](../.agents/skills/test-engineering/SKILL.md) |
 | Connect to a third-party API, receive webhooks, build a connector | [api-integration](../.agents/skills/api-integration/SKILL.md) | its [sector standards](../.agents/skills/api-integration/references/sector-standards.md) |
 | Identity, SSO, endpoints, network, email, backup, help desk | [it-operations](../.agents/skills/it-operations/SKILL.md) | [security-hardening](../.agents/skills/security-hardening/SKILL.md) |
@@ -56,7 +57,7 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 
 1. **Understand**: restate the goal and acceptance criteria; list assumptions.
 2. **Ground**: read the relevant code, manifests and tests; run the baseline build and tests.
-3. **Plan**: the smallest correct change; for multi-step work, a numbered plan with checkpoints.
+3. **Plan and wait for approval**: the smallest correct change, written as the implementation plan of rule [09](../.agents/rules/09-clean-execution.md) section 1, with the blind spots and failure hypotheses of rule [03](../.agents/rules/03-verification.md) section 6; act only after the user approves it (`AGENTS.md` non-negotiable 12).
 4. **Do**: one step at a time, following the rules and the chosen skill.
 5. **Verify**: run the formatter, linter, type checker and tests; read the actual output.
 6. **Report**: the format in `AGENTS.md` section 7: changed, verified, not done, risks.
@@ -69,6 +70,7 @@ Which rules and skills to use for each kind of task, for AI agents and for the p
 
 ## 4. What humans should still do
 
+- Read and approve the agent's implementation plan before it acts, and check that its success criteria are measurable.
 - Approve anything irreversible or outward-facing: deletions, force pushes, migrations, deployments, publishing, messages to other people.
 - Review diffs before merging; an agent's report is a summary, not proof.
 - Keep the "Project profile" in `AGENTS.md` current, so agents run the right commands.

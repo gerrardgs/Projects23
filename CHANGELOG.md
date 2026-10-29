@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.21.0: plan first, blind spots and objective validation, the chaos engineering cycle (2026-10-29)
+
+The repository owner asked that agents always present an implementation plan and never act on their own, that every plan dissects blind spots, cross-checks data, uses current and maintained standards and tools, and is validated objectively, and that chaos engineering follows an explicit cycle ending in evaluation and an improvement plan.
+
+- **`AGENTS.md` non-negotiable 12**: before changing files, running a command that changes state, or contacting an external service, the agent presents an implementation plan and waits for approval; reading and analysing need none; approval covers only the approved plan; non-interactive runs deliver the plan and carry out only the steps it marks as safe and reversible. Workflow step 3 now reads "Plan, then wait for approval".
+- **Rule 09 section 1**: a standard implementation-plan format (goal, success criteria, steps with checks, files and systems, risks and undo, blind spots, failure hypotheses, sources, decisions needed); work that reveals something the plan did not foresee stops for a revised plan.
+- **Rule 03 section 6 (new)**: blind spots by pre-mortem ([Klein, HBR, September 2007](https://hbr.org/2007/09/performing-a-project-premortem)) with a checklist; every fact a decision rests on confirmed by two independent pieces of evidence, disagreements reported; current, maintained standards and tools checked at the source with dates; success criteria written before the work and judged by tools, tests or an independent reviewer.
+- **`chaos-engineering`**: the five-step cycle stated up front (define the steady state, state the failure hypothesis, create the chaos, observe against the hypothesis, evaluate and plan the improvement); section 5 becomes "Evaluate, improve and automate" with an evaluation and improvement-plan template (outcome, deviations, root cause, actions with owner and due date, re-run, next experiment).
+- **Chaos experiment kit**: new `evaluate()` in `chaos.py` summarises a journal into deviations per phase, the worst value per probe and next steps for its outcome; `example_experiment.py` prints the evaluation to standard error; three new tests (22 in total). Ruff 0.17.0 and mypy 2.4.0 `--strict` are clean; the tests pass on Python 3.11.17 and 3.13.9, and 15 consecutive runs on 3.11 passed.
+- **Hooks**: `feature-specification` (pre-mortem and plan approval), `rigorous-code-audit` (blind-spot and cross-check axis), `technology-adoption` (current editions, dated facts, two sources), `.github/copilot-instructions.md` item 12, the operational manual (plan step and router row), `engineering-concepts` (plan, pre-mortem, cross-checks, chaos cycle), `docs/RULES.md`, and the token and test figures in `docs/`.
+- **README**: a seventh principle, "Plan First, Validate Objectively"; counts left stale by 2.20.0 corrected (10 rules with 5 on demand, 32 skills with 17 lifecycle, `AGENTS.md` about 158 lines).
+
 ## 2.20.0: text hygiene, Unicode cleaning, and multi-vendor watermark removal (2026-10-29)
 
 Integrates comprehensive text hygiene, invisible Unicode stripping, and multi-vendor AI watermark removal adapted from the watermarks-remover specification into Projects 23.

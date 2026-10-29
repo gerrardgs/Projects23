@@ -41,6 +41,10 @@ Record each command and its result. A tool that cannot run (not installed, broke
 - Compare the change with its originating requirement (issue, spec, acceptance criteria): requirements missing or only partly done; behaviour nobody asked for (scope creep); requirements that look implemented but behave wrongly. Quote the requirement for each finding.
 - Report this axis apart from the standards and quality findings below and do not rank one against the other: code can follow every standard and still build the wrong thing, or do exactly what was asked while breaking conventions (two-axis review adapted from Matt Pocock's [code-review skill](https://github.com/mattpocock/skills/tree/main/skills/engineering/code-review), MIT). With no requirement available, say so.
 
+### Blind spots
+- Run a pre-mortem on the change: assume it caused an incident and list why. Walk edge cases and failure paths, security and privacy, accessibility, operations and observability, cost, compatibility and migration, licensing, and the people or systems affected that the change does not mention ([03-verification](../../rules/03-verification.md) section 6). Report what you checked and what you could not check.
+- Cross-check the facts the change relies on (versions, limits, API behaviour, counts in docs) against a primary source or by running the tool; report disagreements instead of choosing one.
+
 ### Correctness
 - Does the code do what the requirement or PR description says? Check every branch, including the `else` and default cases.
 - Boundaries: empty collections, zero, negative numbers, maximum values, off-by-one, Unicode and multi-byte text, time zones and DST, floating-point money (use integer minor units or decimal types).

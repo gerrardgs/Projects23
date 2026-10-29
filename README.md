@@ -16,14 +16,15 @@ Every command, version, package name, extension identifier, and template in this
 
 ## Why Projects 23
 
-Most AI coding assistants struggle with long-term code quality: they invent non-existent APIs, introduce unnecessary third-party packages, leave incomplete placeholders, and produce hard-to-maintain code. Projects 23 is built on one concept, **clean code and clean execution**, applied through four principles:
+Most AI coding assistants struggle with long-term code quality: they invent non-existent APIs, introduce unnecessary third-party packages, leave incomplete placeholders, and produce hard-to-maintain code. Projects 23 is built on one concept, **clean code and clean execution**, applied through seven principles:
 
 1. **Clean Code and Clean Execution**: Code that the next engineer can read, change and trust ([rule 02](.agents/rules/02-clean-code.md)), produced by work that is predictable, minimal, verified step by step, reversible and leaves no mess ([rule 09](.agents/rules/09-clean-execution.md)). This repository holds itself to the same standard: CI enforces cyclomatic complexity of 10 or less and nesting depth of 3 or less on its own code.
 2. **Native-First, Zero Bloat**: Always utilize platform standard libraries before adding third-party dependencies. When packages are necessary, select minimal, maintained packages with no known unpatched vulnerabilities, checked with a dependency audit.
 3. **Anti-Hallucination Protocol**: A 6-step verification protocol for symbols, package names, versions, CLI flags, and environment variables against the active environment or official registries, backed by `scripts/tech-lookup.mjs` for live registry and end-of-life data.
 4. **Existing Code Is Preserved**: Agents never delete, overwrite, rewrite or disable existing code on their own. They stop, propose the change with its reason, dependants, alternatives and undo path, and wait for the user's decision ([AGENTS.md](AGENTS.md) non-negotiable 9, [rule 09](.agents/rules/09-clean-execution.md) section 2).
 5. **Think Before Changing**: Before new code, a bug fix or a change, agents state their assumptions, present competing readings, name what is unclear and push back when a simpler or safer path exists; every changed line traces to the request, and tasks become checkable goals ("a test reproduces the bug, then passes"). When evidence contradicts them, they correct their reasoning instead of stacking patches ([rule 01](.agents/rules/01-core-principles.md) section 8, adapted from the [Karpathy-inspired guidelines](https://github.com/multica-ai/andrej-karpathy-skills)).
-6. **Complete Lifecycle and Domain Mastery**: 30 modular skills that guide agents through every phase of software development, from specification and architecture to chaos engineering, and across complex domains like ML, distributed systems, and real-time AI. An [engineering concepts index](.agents/engineering-concepts.md) maps all 18 SWEBOK V4.0a knowledge areas and the named concepts engineers use daily to the rules and skills that apply them.
+6. **Plan First, Validate Objectively**: Agents present an implementation plan (goal, measurable success criteria, steps with checks, risks and undo, pre-mortem blind spots, failure hypotheses, sources) and act only after the user approves it; facts a decision rests on are cross-checked against two independent pieces of evidence, and success is judged by tools and tests ([AGENTS.md](AGENTS.md) non-negotiable 12, [rule 09](.agents/rules/09-clean-execution.md) section 1, [rule 03](.agents/rules/03-verification.md) section 6).
+7. **Complete Lifecycle and Domain Mastery**: 32 modular skills that guide agents through every phase of software development, from specification and architecture to chaos engineering, and across complex domains like ML, distributed systems, and real-time AI. An [engineering concepts index](.agents/engineering-concepts.md) maps all 18 SWEBOK V4.0a knowledge areas and the named concepts engineers use daily to the rules and skills that apply them.
 
 ---
 
@@ -34,19 +35,19 @@ Projects 23 Architecture
 ========================
 
   +-------------------------------------------------------------------------+
-  | Core (Always Loaded): AGENTS.md (~154 lines)                            |
+  | Core (Always Loaded): AGENTS.md (~158 lines)                            |
   | Priorities, non-negotiables, workflow, indexes, operating conditions    |
   +-------------------------------------------------------------------------+
        |                                                 |
        v (links to)                                      v (links to)
   +-----------------------------------+             +-----------------------------------+
   | Rules (.agents/rules/)            |             | Skills (.agents/skills/)          |
-  | 9 normative rules:                |             | 30 on-demand step-by-step guides: |
-  | - 5 Always-On (core, clean code,  |             | - 15 Software Lifecycle Skills    |
+  | 10 normative rules:               |             | 32 on-demand step-by-step guides: |
+  | - 5 Always-On (core, clean code,  |             | - 17 Software Lifecycle Skills    |
   |   verification, security, clean   |             |                                   |
   |   execution)                      |             | - 15 Mission-Critical Domains     |
-  | - 4 On-Demand (dependencies,      |             |                                   |
-  |   errors, testing, git workflow)  |             | + Verified assets, templates, and |
+  | - 5 On-Demand (dependencies,      |             |                                   |
+  |   errors, testing, git, text)     |             | + Verified assets, templates, and |
   |                                   |             |   sector reference standards      |
   +-----------------------------------+             +-----------------------------------+
        |                                                 |
@@ -61,9 +62,9 @@ Projects 23 Architecture
 
 | Layer | Location | Loaded | Contents |
 | :--- | :--- | :--- | :--- |
-| **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 154 lines) |
-| **Rules** | [`.agents/rules/`](.agents/rules/) | Always (5) or when relevant (4) | Principles, clean code, verification, security, clean execution, dependencies, error handling, testing, Git workflow |
-| **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 30 step-by-step procedures (15 lifecycle, 15 domain) with verified templates and references |
+| **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rule and skill indexes, operating conditions, definition of done (about 158 lines) |
+| **Rules** | [`.agents/rules/`](.agents/rules/) | Always (5) or when relevant (5) | Principles, clean code, verification, security, clean execution, dependencies, error handling, testing, Git workflow, text hygiene and provenance |
+| **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 32 step-by-step procedures (17 lifecycle, 15 domain) with verified templates and references |
 | **Adapters** | `CLAUDE.md`, `GEMINI.md`, `.gemini/settings.json`, `.github/copilot-instructions.md`, `.aider.conf.yml` | Per tool | Standard loaders connecting each tool to the single core |
 | **Mirror** | `.claude/skills/` | Generated | Automated copy of skills for Claude Code and Cline; kept in sync via script |
 | **Tooling** | [`scripts/`](scripts/) | You, agents or CI | Installer, mirror sync and validator, and `tech-lookup.mjs` (live versions, licences, deprecations, end-of-life dates and security scores from 12 registries and data sources) |
@@ -90,7 +91,7 @@ Procedures covering software from inception to production operation:
 | **Secure** | [security-hardening](.agents/skills/security-hardening/SKILL.md) | Threat modelling, OWASP ASVS 5.0, codebase vulnerability audits with sandboxed execution and an attack-class catalogue for 10 domains (adapted from Cloudflare's security-audit skill), secret rotation, SAST, dependency audits, container scanning, and SBOM generation |
 | **Automate** | [ci-cd-pipeline](.agents/skills/ci-cd-pipeline/SKILL.md) | GitHub Actions workflows pinned to commit SHAs, least-privilege token permissions, and Dependabot with cooldown timers |
 | **Ship** | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Production launch checklists, zero-downtime database migrations, canary/blue-green rollouts, observability, and rollback plans |
-| **Prove resilience** | [chaos-engineering](.agents/skills/chaos-engineering/SKILL.md) | Principles of Chaos Engineering, AWS REL12-BP04 and Azure RE:08: steady-state hypotheses, fault catalogue by layer, blast radius, stop conditions, rollback, game days; runnable standard-library experiment kit (runner, fault-injecting proxy, 19 tests) |
+| **Prove resilience** | [chaos-engineering](.agents/skills/chaos-engineering/SKILL.md) | Principles of Chaos Engineering, AWS REL12-BP04 and Azure RE:08: steady-state hypotheses, fault catalogue by layer, blast radius, stop conditions, rollback, game days; five-step cycle from steady state to evaluation and improvement plan; runnable standard-library experiment kit (runner, fault-injecting proxy, evaluation, 22 tests) |
 | **Document** | [technical-documentation](.agents/skills/technical-documentation/SKILL.md) | Diátaxis (tutorial, how-to, reference, explanation), README, API and configuration reference, ADRs, changelog, runbooks, docs as code; the complete project `docs/` set (23 templates: PRD, architecture, tech stack, code style, rules, configuration, API, integrations, database, schema, privacy, design, design system, assets, security, testing, debugging, deployment, operations and more) with a CI completeness check |
 | **Anti-slop** | [anti-slop](.agents/skills/anti-slop/SKILL.md) | Filter for generic AI output (adapted from [miqdadbadjuber/anti-slop](https://github.com/miqdadbadjuber/anti-slop)): no fabricated statistics, testimonials or data, every control verified to work, plain comments and prose, purpose required for decorative UI, WCAG 2.2 contrast, focus, reflow and touch-target figures checked at the source |
 | **Clean text** | [clean-user-facing-text](.agents/skills/clean-user-facing-text/SKILL.md) | Local zero-dependency Unicode hygiene and stylometric rewrite pass for reader-facing prose while preserving author voice and factual integrity |

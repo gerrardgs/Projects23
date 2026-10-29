@@ -10,7 +10,21 @@ Clean code ([02-clean-code](02-clean-code.md)) is about what the result looks li
 ## 1. Before acting
 
 - Understand the request and read the code, configuration and commands involved ([AGENTS.md](../../AGENTS.md) section 3).
-- Plan the smallest change that solves it. For multi-step work, write the steps and the check that proves each one, as `1. <step> → verify: <check>`.
+- Plan the smallest change that solves it, write it as an implementation plan, and wait for the user's approval before acting ([AGENTS.md](../../AGENTS.md) non-negotiable 12). Size it to the task: three lines for a typo, every field for a feature or a risky change.
+
+```text
+Goal:                <what will be true when done>
+Success criteria:    <measurable checks, decided now, before the work>
+Steps:               1. <step> → verify: <check>
+Files and systems:   <what will be touched, created or called>
+Risks and undo:      <what could go wrong; how to revert>
+Blind spots:         <pre-mortem: if this failed, why? edge cases, security, privacy, accessibility, operations, cost, compatibility, legal, users not considered>
+Failure hypotheses:  <if <dependency or step> fails, then <expected behaviour>; how we will see it>
+Sources:             <the primary sources and tools that the facts in the plan rest on, with versions and dates>
+Decisions needed:    <questions only the user can answer>
+```
+
+- Approval covers the plan as approved. When the work reveals something the plan did not foresee, stop and present the change to the plan; do not widen the scope on your own.
 - Turn the task into a goal you can check, so you can loop until it is met instead of guessing when you are done: "fix the bug" becomes "a test reproduces it, then passes"; "add validation" becomes "tests for invalid inputs fail, then pass"; "refactor" becomes "the same tests pass before and after".
 - Prefer a preview: dry-run flags (`--dry-run`, `--check`, `plan`, `diff`, `-WhatIf`), a scratch copy, or a test, before the real action.
 

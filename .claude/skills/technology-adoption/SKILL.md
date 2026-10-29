@@ -36,6 +36,8 @@ Then read, in this order:
 3. The **security advisories** for the project (GitHub Security Advisories, the ecosystem's audit tool, OSV).
 4. The installed source or type definitions, which are the final authority for signatures ([03-verification](../../rules/03-verification.md)).
 
+Prefer the current edition of a standard and a tool that is maintained and widely adopted. Record each fact with the source and the date you checked it, confirm facts a decision rests on with two independent sources (for example the registry and the release page), and say so when a newer edition or major version exists that the project has not adopted yet ([03-verification](../../rules/03-verification.md) section 6).
+
 ## 3. Evaluate before adopting (new dependency, platform or service)
 
 | Question | Evidence |

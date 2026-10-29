@@ -10,6 +10,7 @@ Rules specific to maintaining Projects 23. The rules that the spec gives to ever
 - Every version, limit, standard or quotation in a rule or skill is verified at its source and dated; content adapted from another project names it, its licence and the commit read.
 - `AGENTS.md` plus the always-on rules stay under 20,000 tokens; skill bodies under 500 lines; rules at most 12,000 characters.
 - Files that tools load as instructions (`AGENTS.md`, `CLAUDE.md`) appear in templates only under `.template.md` names.
+- Agents present an implementation plan with blind spots and failure hypotheses and act only after the owner approves it (`AGENTS.md` non-negotiable 12, rule 09 section 1, rule 03 section 6).
 - Processes run through the CLI and agents read summaries, not whole logs (`AGENTS.md` non-negotiable 11, rule 09 section 2; `npm run verify`).
 - Only the human author is credited: no commit, tag, release note or pull request carries an AI identity, co-author trailer or "Generated with" line (`AGENTS.md` non-negotiable 10, checked by `scripts/check-authorship.mjs` in CI).
 
