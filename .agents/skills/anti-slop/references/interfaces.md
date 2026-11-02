@@ -1,6 +1,6 @@
 # Interfaces Without Slop
 
-For web and mobile interfaces, dashboards and admin screens. It complements [web-frontend-engineering](../../web-frontend-engineering/SKILL.md) and [mobile-engineering](../../mobile-engineering/SKILL.md). Adapted from the antislop-ui, antislop-human and antislop-layoutmobile skills of [miqdadbadjuber/anti-slop](https://github.com/miqdadbadjuber/anti-slop) (MIT); accessibility figures checked against WCAG 2.2 on 2026-10-23.
+For web and mobile interfaces, dashboards and admin screens. It complements [web-frontend-engineering](../../web-frontend-engineering/SKILL.md) and [mobile-engineering](../../mobile-engineering/SKILL.md). Adapted from the antislop-ui, antislop-human and antislop-layoutmobile skills of [miqdadbadjuber/anti-slop](https://github.com/miqdadbadjuber/anti-slop) (MIT); accessibility figures checked against WCAG 2.2 on 2026-10-23. The two gates "Semantics and affordances" and "Performance mechanisms" follow upstream commit `941b153` (2026-11-01), written here in our own words.
 
 ## Hard gates
 
@@ -15,6 +15,10 @@ For web and mobile interfaces, dashboards and admin screens. It complements [web
 | Touch targets | At least 24 by 24 CSS pixels or enough spacing ([SC 2.5.8](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html), level AA); aim for 44 by 44 for primary controls ([SC 2.5.5](https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html), level AAA) |
 | Responsive | No horizontal scroll at phone width; columns collapse; full-height sections use the dynamic viewport unit (`dvh`), not `100vh`; a focused input is never hidden by the on-screen keyboard |
 | Themes | A light and a dark theme, if both ship, both work |
+| Semantics and affordances | Actions are `<button>` and navigation is `<a href>` to a real destination, never a clickable `div` or `span`. Every control has an accessible name (an icon-only button gets an `aria-label` or visually hidden text, and its icon is hidden from assistive technology); every image has `alt` (empty when decorative); every field has a visible label. Enabled controls show a pointer cursor, set once in the base styles, and disabled ones a not-allowed cursor. Hover, active and disabled states differ from each other and never rely on colour alone. ARIA never contradicts the native role |
+| Motion | Non-essential motion stops under `prefers-reduced-motion: reduce`; anything that moves for more than 5 seconds has a pause control ([SC 2.2.2](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html)) |
+| Whole documents | When the task produces a page or app shell (not a component): `<html lang>`, a unique `<title>`, landmarks (`header`, `nav`, `main`, `footer`), one `h1` with no skipped levels, and no `user-scalable=no` or `maximum-scale=1` in the viewport meta |
+| Performance mechanisms | Every `<img>`, `<video>` and `<iframe>` has `width` and `height` or `aspect-ratio`, and space is reserved for late content (embeds, banners). The hero image is an `<img>` in the HTML, not lazy, with `fetchpriority="high"`. No third-party script blocks rendering in `<head>`: defer it, load it async, or start it on interaction. Never report a Lighthouse score or a Core Web Vitals number that was not measured; say "not measured". The thresholds are field data from real users, which a code-only task does not have |
 | Source, not patches | Features are written in the source, not injected by a script that rewrites files or CSS afterwards |
 
 ## Purpose required (allowed with a reason, not by default)

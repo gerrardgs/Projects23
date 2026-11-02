@@ -8,13 +8,15 @@ metadata:
 
 # Anti-Slop
 
-Slop is output whose form signals "generated" instead of carrying information: the banner comment, the "seamless, cutting-edge" sentence, the invented "10,000+ teams", the dashboard of made-up numbers. This skill is a filter, not a style guide: it removes what should not be there and leaves direction (brand, voice, layout) to the project. Adapted from [miqdadbadjuber/anti-slop](https://github.com/miqdadbadjuber/anti-slop) (MIT, commit `69416cf`, read on 2026-10-23), with its accessibility figures checked against WCAG 2.2.
+Slop is output whose form signals "generated" instead of carrying information: the banner comment, the "seamless, cutting-edge" sentence, the invented "10,000+ teams", the dashboard of made-up numbers. This skill is a filter, not a style guide: it removes what should not be there and leaves direction (brand, voice, layout) to the project. Adapted from [miqdadbadjuber/anti-slop](https://github.com/miqdadbadjuber/anti-slop) (MIT, commit `69416cf`, read on 2026-10-23; two gates, accessible semantics and performance mechanisms, updated from commit `941b153` of 2026-11-01), with its accessibility figures checked against WCAG 2.2.
 
 ## 1. Hard gates (no exceptions)
 
 1. **Nothing fabricated.** No invented statistics, testimonials, customer or team names, ratings, dates, quotes, security or compliance claims, or "realistic" sample data presented as real ([AGENTS.md](../../../AGENTS.md) non-negotiable 1). Use real data with its source, or an honest placeholder that says what it is (`[real figure needed]`, "Coming soon"). When a fact is unknown, say so or leave it out; never fill the gap with a plausible guess.
 2. **Everything shown works.** Every link goes somewhere that exists, every button, form and toggle does what it says, every theme you ship works. Verify by running it, not by reading it ([09-clean-execution](../../rules/09-clean-execution.md)).
 3. **People can use it.** WCAG 2.2 AA at least: contrast, keyboard access with a visible focus, empty, loading and error states, resizable text ([interfaces reference](references/interfaces.md)).
+4. **Controls look and read as controls.** Native elements, accessible names, a pointer cursor, distinct hover, active and disabled states, motion that respects the reduced-motion setting, and on a whole page the language, title and landmarks ([interfaces reference](references/interfaces.md), accessible semantics).
+5. **Performance is built in and never invented.** Media has dimensions, the hero image is not lazy, no third-party script blocks rendering, and a Lighthouse or Web Vitals number is reported only if it was measured ([interfaces reference](references/interfaces.md), performance mechanisms).
 
 ## 2. The purpose test
 
@@ -44,4 +46,5 @@ One em dash, one "however", one bold phrase or one rounded button proves nothing
 - [ ] Prose states things plainly: no stacked buzzwords, inflated significance, chatbot openers or closers, or generic upbeat endings
 - [ ] Every interactive element was exercised and works; empty, loading and error states exist
 - [ ] Contrast, keyboard access, focus, zoom and touch targets meet the [interfaces reference](references/interfaces.md)
+- [ ] Controls are native with accessible names, pointer cursor and distinct states; media has dimensions; the hero image is not lazy; every performance number was measured or says "not measured"
 - [ ] Nothing outside the requested scope was rewritten; existing slop was reported, not silently changed

@@ -53,6 +53,7 @@ Every domain moves through the same phases. Load the lifecycle skill for the pha
 | Secret scanning, push protection and leaked-credential response | [secret-scanning](skills/secret-scanning/SKILL.md) |
 | Reverse engineering, binary and release-artifact analysis, malware and crash triage | [reverse-engineering](skills/reverse-engineering/SKILL.md), [security-hardening](skills/security-hardening/SKILL.md) |
 | AI code review with CodeRabbit | [coderabbit-review](skills/coderabbit-review/SKILL.md) |
+| Auditing an existing codebase into handoff plans for other agents | [improve-plans](skills/improve-plans/SKILL.md), [agent-delivery-loop](skills/agent-delivery-loop/SKILL.md) |
 | Multi-session, parallel or unattended agent work | [agent-delivery-loop](skills/agent-delivery-loop/SKILL.md), [git-worktrees](skills/git-worktrees/SKILL.md) |
 | Secure | [security-hardening](skills/security-hardening/SKILL.md) |
 | Automate | [ci-cd-pipeline](skills/ci-cd-pipeline/SKILL.md) |

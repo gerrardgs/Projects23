@@ -42,8 +42,8 @@ Projects 23 Architecture
        v (links to)                                      v (links to)
   +-----------------------------------+             +-----------------------------------+
   | Rules (.agents/rules/)            |             | Skills (.agents/skills/)          |
-  | 13 normative rules:               |             | 37 on-demand step-by-step guides: |
-  | - 5 Always-On (core, clean code,  |             | - 22 Software Lifecycle Skills    |
+  | 13 normative rules:               |             | 38 on-demand step-by-step guides: |
+  | - 5 Always-On (core, clean code,  |             | - 23 Software Lifecycle Skills    |
   |   verification, security, clean   |             |                                   |
   |   execution)                      |             | - 15 Mission-Critical Domains     |
   | - 8 On-Demand (dependencies,      |             |                                   |
@@ -66,7 +66,7 @@ Projects 23 Architecture
 | :--- | :--- | :--- | :--- |
 | **Core** | [`AGENTS.md`](AGENTS.md) | Always | Priorities, non-negotiables, workflow, rules index and a pointer to the skills index ([`.agents/SKILLS.md`](.agents/SKILLS.md)), operating conditions, definition of done (about 124 lines) |
 | **Rules** | [`.agents/rules/`](.agents/rules/) | Always (5) or when relevant (8) | Principles, clean code, verification, security, clean execution, dependencies, error handling, testing, Git workflow, text hygiene and provenance, agentic delivery and AI review, reverse engineering, secret scanning |
-| **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 37 step-by-step procedures (22 lifecycle, 15 domain) with verified templates and references |
+| **Skills** | [`.agents/skills/`](.agents/skills/) | When task matches | 38 step-by-step procedures (23 lifecycle, 15 domain) with verified templates and references |
 | **Adapters** | `CLAUDE.md`, `GEMINI.md`, `.gemini/settings.json`, `.github/copilot-instructions.md`, `.aider.conf.yml` | Per tool | Standard loaders connecting each tool to the single core |
 | **Mirror** | `.claude/skills/` | Generated | Automated copy of skills for Claude Code and Cline; kept in sync via script |
 | **Tooling** | [`scripts/`](scripts/) | You, agents or CI | Installer, mirror sync and validator, and `tech-lookup.mjs` (live versions, licences, deprecations, end-of-life dates and security scores from 12 registries and data sources) |
@@ -76,7 +76,7 @@ Projects 23 Architecture
 
 ## Skills Catalog
 
-### 1. Software Lifecycle Skills (22 Skills)
+### 1. Software Lifecycle Skills (23 Skills)
 
 Procedures covering software from inception to production operation:
 
@@ -98,6 +98,7 @@ Procedures covering software from inception to production operation:
 | **Ship** | [deploy-and-release](.agents/skills/deploy-and-release/SKILL.md) | Production launch checklists, zero-downtime database migrations, canary/blue-green rollouts, observability, and rollback plans |
 | **Deliver with agents** | [agent-delivery-loop](.agents/skills/agent-delivery-loop/SKILL.md) | Work beyond one session without context rot: the phase loop (discuss, plan in waves, execute in fresh contexts, verify requirement and decision coverage, ship) with planning files, adapted from [open-gsd/gsd-core](https://github.com/open-gsd/gsd-core); the unattended story loop adapted from [snarktank/ralph](https://github.com/snarktank/ralph), with a tested stories checker and a loop runner that stops on failed checks, uncommitted changes or a branch switch and never bypasses permissions |
 | **Isolate** | [git-worktrees](.agents/skills/git-worktrees/SKILL.md) | One worktree per parallel or unattended task with plain Git, a tested zero-dependency helper, [git-worktree-runner](https://github.com/coderabbitai/git-worktree-runner) or Claude Code `--worktree`; no copied secrets, separate ports and databases, removal and hook trust left to the user |
+| **Plan for others** | [improve-plans](.agents/skills/improve-plans/SKILL.md) | Read-only audit that ends in prioritized, self-contained handoff plans for another agent, with a drift check, reconcile and a tested plan checker |
 | **Prove resilience** | [chaos-engineering](.agents/skills/chaos-engineering/SKILL.md) | Principles of Chaos Engineering, AWS REL12-BP04 and Azure RE:08: steady-state hypotheses, fault catalogue by layer, blast radius, stop conditions, rollback, game days; five-step cycle from steady state to evaluation and improvement plan; runnable standard-library experiment kit (runner, fault-injecting proxy, evaluation, 22 tests) |
 | **Document** | [technical-documentation](.agents/skills/technical-documentation/SKILL.md) | Diátaxis (tutorial, how-to, reference, explanation), README, API and configuration reference, ADRs, changelog, runbooks, docs as code; the complete project `docs/` set (23 templates: PRD, architecture, tech stack, code style, rules, configuration, API, integrations, database, schema, privacy, design, design system, assets, security, testing, debugging, deployment, operations and more) with a CI completeness check |
 | **Anti-slop** | [anti-slop](.agents/skills/anti-slop/SKILL.md) | Filter for generic AI output (adapted from [miqdadbadjuber/anti-slop](https://github.com/miqdadbadjuber/anti-slop)): no fabricated statistics, testimonials or data, every control verified to work, plain comments and prose, purpose required for decorative UI, WCAG 2.2 contrast, focus, reflow and touch-target figures checked at the source |

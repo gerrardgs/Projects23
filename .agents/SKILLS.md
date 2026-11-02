@@ -13,6 +13,7 @@ Every skill in this specification, with when to use it. Tools that support Agent
 | Change | [change-existing-code](skills/change-existing-code/SKILL.md) | Modifying, refactoring, upgrading or migrating existing code |
 | Test | [test-engineering](skills/test-engineering/SKILL.md) | Adding tests, regression tests, test setup, flaky tests |
 | Debug | [systematic-debugging](skills/systematic-debugging/SKILL.md) | Errors, crashes, wrong output, slowness, incidents |
+| Plan for others | [improve-plans](skills/improve-plans/SKILL.md) | Read-only audit of an existing codebase that ends in prioritized, self-contained handoff plans, a drift check and a plan checker |
 | Review | [rigorous-code-audit](skills/rigorous-code-audit/SKILL.md) | Reviewing a diff, pull request or codebase |
 | AI review | [coderabbit-review](skills/coderabbit-review/SKILL.md) | CodeRabbit reviews in the CLI or on pull requests, fixing its comments, `.coderabbit.yaml` |
 | Secure | [security-hardening](skills/security-hardening/SKILL.md) | Threat modelling, hardening, security scanning, secrets |

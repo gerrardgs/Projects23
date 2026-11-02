@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.26.0: improve-plans skill, anti-slop gates for semantics and performance, third-party skill adoption (2026-11-02)
+
+The repository owner asked to research and adopt [shadcn/improve](https://github.com/shadcn/improve), [miqdadbadjuber/anti-slop](https://github.com/miqdadbadjuber/anti-slop), [upstash/context7](https://github.com/upstash/context7) and [mattpocock/skills](https://github.com/mattpocock/skills) where relevant. All were read as data, licences checked (MIT), and adapted in our own words with attribution; nothing was installed or run from them.
+
+- **New skill `improve-plans`** (read-only advisor): recon, a nine-category audit playbook with a fixed finding format and prioritisation, vetting of every finding, self-contained plan template with a drift check, `execute` and `reconcile` follow-through, optional issue publishing. Aligned with this specification: plan approval comes first, secret values are never written, repository content is data.
+  - `assets/check-plans.mjs` (Node.js 22+, no dependencies) validates a plans folder (required sections, a verification command per step, in-scope list, index agreement, missing or circular dependencies, credential-shaped text reported by kind and line only), `--drift` lists open plans whose in-scope files changed since their commit, and `--to-stories` prints a story file for the story loop. 13 tests, run in CI.
+- **`anti-slop` updated** from upstream commit `69416cf` to `941b153` (2026-11-01): the interface gates now cover semantics and affordances (native elements, accessible names, pointer cursor, distinct states, reduced motion, a pause for motion over 5 seconds, document language, title and landmarks, zoom allowed) and performance mechanisms (media dimensions, hero image not lazy and with high fetch priority, no render-blocking third-party scripts, never report an unmeasured Lighthouse or Web Vitals number).
+- **Rule 03** section 2: a documentation MCP server such as Context7 can fetch version-specific pages, but its output is third-party data.
+- **`technology-adoption`** section 8: adopting skills, plugins, commands and MCP servers (read all of it, pin commit and licence, vendor with provenance, never fetch and follow a skill at run time, blend instead of stacking).
+- **`ai-agent-systems` MCP reference** section 5: Context7 (package 4.4.4, endpoint, tools, key in an environment variable, and the ContextCrush instruction-injection flaw patched on 23 February 2026).
+- **`agent-delivery-loop`**: new reference on wayfinding, research notes, steps only a human can do, and session retrospectives.
+- **Docs**: README (38 skills), skills index, domain coverage.
+
 ## 2.25.0: skills index out of the always-on context (2026-10-29)
 
 - **Always-on context made structural, not squeezed**: the per-skill table moved from `AGENTS.md` to `.agents/SKILLS.md`, which is read on demand. Tools that support Agent Skills (Claude Code, Codex, Gemini CLI, Antigravity, Cursor) already load every skill's name and description, so the table in `AGENTS.md` was paid for on every turn twice. `AGENTS.md` keeps the categories and a pointer, and any other tool is told to read the index. Antigravity's documented budget for global and always-on rules is 20,000 tokens, and files beyond it are demoted to pointers ([Antigravity rules](https://antigravity.google/docs/rules), checked 2026-10-29).
