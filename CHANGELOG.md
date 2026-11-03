@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.27.0: loop engineering (2026-11-04)
+
+The repository owner approved adding the four loop types of Anthropic's "Loop engineering with Claude" (turn-based, goal-based, time-based, proactive). The Claude Code documentation pages for [/goal](https://code.claude.com/docs/en/goal), [/loop](https://code.claude.com/docs/en/scheduled-tasks) and [cloud scheduled tasks](https://code.claude.com/docs/en/routines) were read on 2026-11-04 to check each feature, limit and version.
+
+- **`agent-delivery-loop`**: new reference `loop-engineering.md` (what each loop hands off, how it ends, how to choose, how to write a goal condition, the real limits of `/goal`, `/loop` and cloud scheduled tasks, our constraints on proactive loops, blind spots) and a "Which loop keeps the agent working?" table in the skill.
+- **Tested helper `assets/check-goal.mjs`** (12 tests): rejects a goal condition with no bound, no stated check, more than 4,000 characters, or an outward action (push, deploy, publish, merge, delete); warns about vague words, stacked conditions and missing constraints.
+- **Rule 11**: choose the loop on purpose; a goal names its check and limit; creating a cloud scheduled task needs the owner's approval.
+
 ## 2.26.0: improve-plans skill, anti-slop gates for semantics and performance, third-party skill adoption (2026-11-02)
 
 The repository owner asked to research and adopt [shadcn/improve](https://github.com/shadcn/improve), [miqdadbadjuber/anti-slop](https://github.com/miqdadbadjuber/anti-slop), [upstash/context7](https://github.com/upstash/context7) and [mattpocock/skills](https://github.com/mattpocock/skills) where relevant. All were read as data, licences checked (MIT), and adapted in our own words with attribution; nothing was installed or run from them.

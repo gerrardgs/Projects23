@@ -55,6 +55,7 @@ Every domain moves through the same phases. Load the lifecycle skill for the pha
 | AI code review with CodeRabbit | [coderabbit-review](skills/coderabbit-review/SKILL.md) |
 | Auditing an existing codebase into handoff plans for other agents | [improve-plans](skills/improve-plans/SKILL.md), [agent-delivery-loop](skills/agent-delivery-loop/SKILL.md) |
 | Multi-session, parallel or unattended agent work | [agent-delivery-loop](skills/agent-delivery-loop/SKILL.md), [git-worktrees](skills/git-worktrees/SKILL.md) |
+| Choosing a loop (turn-based, goal-based with `/goal`, time-based with `/loop` or scheduled tasks, proactive) and writing its stop condition | [agent-delivery-loop](skills/agent-delivery-loop/SKILL.md) ([loop engineering](skills/agent-delivery-loop/references/loop-engineering.md)) |
 | Secure | [security-hardening](skills/security-hardening/SKILL.md) |
 | Automate | [ci-cd-pipeline](skills/ci-cd-pipeline/SKILL.md) |
 | Document | [technical-documentation](skills/technical-documentation/SKILL.md) |
