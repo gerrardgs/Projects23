@@ -55,6 +55,9 @@ Every domain moves through the same phases. Load the lifecycle skill for the pha
 | AI code review with CodeRabbit | [coderabbit-review](skills/coderabbit-review/SKILL.md) |
 | Auditing an existing codebase into handoff plans for other agents | [improve-plans](skills/improve-plans/SKILL.md), [agent-delivery-loop](skills/agent-delivery-loop/SKILL.md) |
 | Multi-session, parallel or unattended agent work | [agent-delivery-loop](skills/agent-delivery-loop/SKILL.md), [git-worktrees](skills/git-worktrees/SKILL.md) |
+| Mobile apps: reviewing against Apple's guidelines, modern Swift, React Native and Expo animation | [mobile-engineering](skills/mobile-engineering/SKILL.md) (apple-hig-review, apple-cross-platform-and-glass, swift-modern, expo-animation) |
+| Making a web app feel native on a phone | [web-frontend-engineering](skills/web-frontend-engineering/SKILL.md) ([mobile-web-native-feel](skills/web-frontend-engineering/references/mobile-web-native-feel.md)) |
+| Research, scraping, analytics and integration MCP servers; agentic penetration testing | [ai-agent-systems](skills/ai-agent-systems/SKILL.md) ([MCP servers](skills/ai-agent-systems/references/mcp-servers.md) section 6), [security-hardening](skills/security-hardening/SKILL.md) ([tools](skills/security-hardening/references/tools.md)) |
 | Choosing a loop (turn-based, goal-based with `/goal`, time-based with `/loop` or scheduled tasks, proactive) and writing its stop condition | [agent-delivery-loop](skills/agent-delivery-loop/SKILL.md) ([loop engineering](skills/agent-delivery-loop/references/loop-engineering.md)) |
 | Secure | [security-hardening](skills/security-hardening/SKILL.md) |
 | Automate | [ci-cd-pipeline](skills/ci-cd-pipeline/SKILL.md) |

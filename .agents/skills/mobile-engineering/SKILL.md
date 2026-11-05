@@ -53,6 +53,8 @@ API keys shipped in an app are public. Anything secret stays on the server.
 - Accessibility: content descriptions or labels, dynamic type and font scaling, sufficient contrast, touch targets of at least 24 by 24 CSS pixels or the platform's larger guidance, 44 by 44 for primary controls ([anti-slop interfaces reference](../anti-slop/references/interfaces.md)), and tests with TalkBack and VoiceOver.
 - Crash and error reporting in release builds, without collecting personal data beyond policy.
 
+To review an app against Apple's guidelines see [apple-hig-review](references/apple-hig-review.md) (a method with five lenses, severity and report format, and a topic map to the HIG pages; it does not copy Apple's text) and [apple-cross-platform-and-glass](references/apple-cross-platform-and-glass.md) (Apple's vocabulary in cross-platform terms, a Liquid Glass checklist, auditing code, and Apple Pay marks). Reference notes for two common stacks: [modern Swift](references/swift-modern.md) and [animation in React Native and Expo](references/expo-animation.md). For a web app that must feel native on a phone see [mobile-web-native-feel](../web-frontend-engineering/references/mobile-web-native-feel.md).
+
 ## 5. Release
 
 - Version code and version name (Android) or build and marketing version (iOS) incremented on every release.

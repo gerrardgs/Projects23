@@ -55,7 +55,7 @@ Flutter (state and data libraries: Riverpod, Bloc, Dio, go_router, Drift), React
 | :--- | :--- |
 | Relational | PostgreSQL, MySQL, MariaDB, SQLite, Microsoft SQL Server, Oracle Database, CockroachDB |
 | Document | MongoDB |
-| Key-value and cache | Redis, Valkey |
+| Key-value and cache | Redis, Valkey; hosted: Upstash Redis (Redis-compatible, with a REST API for edge and serverless runtimes; `@upstash/redis` MIT, 1.41.0 on 2026-11-05) |
 | Wide-column | Apache Cassandra, ScyllaDB |
 | Analytical | ClickHouse, DuckDB, cloud data warehouses (for example Snowflake, BigQuery, Redshift, Databricks) |
 | Search | Elasticsearch, OpenSearch |
@@ -77,7 +77,7 @@ OpenAPI (generator: OpenAPI Generator), GraphQL (`graphql`, Apollo Server, Absin
 
 ## Identity and security platforms
 
-Keycloak, Ory Kratos, ZITADEL, Auth0, Okta, Microsoft Entra ID, Firebase Authentication, Supabase Auth; secrets with HashiCorp Vault and OpenBao; certificates with cert-manager; host security with Wazuh and osquery. Libraries: Passport (Node.js), `jsonwebtoken`, Devise (Rails). Security tooling: [security-hardening tools](../../security-hardening/references/tools.md).
+Keycloak, Ory Kratos, ZITADEL, Auth0, Okta, Microsoft Entra ID, Firebase Authentication, Supabase Auth; secrets with HashiCorp Vault and OpenBao; certificates with cert-manager; host security with Wazuh and osquery. Libraries: Passport (Node.js), `jsonwebtoken`, Devise (Rails). Managed identity: Clerk (hosted authentication, user management and organisations; SDK `@clerk/nextjs` MIT, 7.9.24 on 2026-11-05). Security tooling: [security-hardening tools](../../security-hardening/references/tools.md).
 
 ## Build, package and monorepo tools
 
@@ -89,7 +89,7 @@ Unit and integration: Jest, Vitest, `node:test`, pytest, `unittest`, Go `testing
 
 ## Resilience and observability libraries
 
-Polly (.NET), Resilience4j (JVM), Serilog (.NET), zap (Go), `tracing` (Rust), OpenTelemetry SDKs for all major languages; platforms Prometheus, Grafana, Loki, Tempo, Jaeger, Sentry, Elastic, Datadog, New Relic, Splunk, Zabbix, Netdata.
+Polly (.NET), Resilience4j (JVM), Serilog (.NET), zap (Go), `tracing` (Rust), OpenTelemetry SDKs for all major languages; platforms Prometheus, Grafana, Loki, Tempo, Jaeger, Sentry, Elastic, Datadog, New Relic, Splunk, Zabbix, Netdata. Hosted: Better Stack (uptime monitoring, incident management and on-call, status pages, log management and OpenTelemetry-native tracing; commercial service, client `@logtail/node` ISC 0.5.12 on 2026-11-05).
 
 ## Containers, orchestration and delivery
 
@@ -105,7 +105,7 @@ Amazon Web Services, Microsoft Azure, Google Cloud, Oracle Cloud, IBM Cloud, Ali
 
 ## Data, analytics and BI
 
-Apache Spark, Apache Flink, dbt, DuckDB, Polars, pandas, NumPy, Apache Superset, Metabase, Streamlit, Dash. Guidance: [data-engineering](../../data-engineering/SKILL.md), [data-analysis](../../data-analysis/SKILL.md).
+Apache Spark, Apache Flink, dbt, DuckDB, Polars, pandas, NumPy, Apache Superset, Metabase, Streamlit, Dash. Product analytics: PostHog (repository MIT except its `ee` directory, also as a hosted cloud with EU hosting; `posthog-js` Apache-2.0 AND MIT, 1.445.5 on 2026-11-05; self-hosting is documented as suited to about 100,000 events a month, with no support for open-source deployments). Guidance: [data-engineering](../../data-engineering/SKILL.md), [data-analysis](../../data-analysis/SKILL.md).
 
 ## AI, ML and LLM frameworks
 
@@ -113,7 +113,7 @@ Machine learning: scikit-learn, PyTorch, TensorFlow and Keras, JAX, XGBoost, Lig
 
 ## Content, commerce and business applications
 
-WordPress, Drupal, Strapi, Directus, Payload (content management); Shopify, WooCommerce, Magento Open Source (commerce); Odoo, ERPNext (open-source ERP); SAP, Salesforce, ServiceNow, Atlassian Jira (commercial platforms, integrated through their official APIs with [api-integration](../../api-integration/SKILL.md)).
+WordPress, Drupal, Strapi, Directus, Payload (content management); Shopify, WooCommerce, Magento Open Source (commerce); Odoo, ERPNext (open-source ERP); SAP, Salesforce, ServiceNow, Atlassian Jira (commercial platforms, integrated through their official APIs with [api-integration](../../api-integration/SKILL.md)). File uploads: UploadThing (a hosted upload service for TypeScript applications; `uploadthing` MIT, 7.7.4 on 2026-11-05). Treat uploads as untrusted input: type, size and storage limits, malware scanning and signed access ([06-security](../../../rules/06-security.md) section 3).
 
 ## Collaboration and operations
 

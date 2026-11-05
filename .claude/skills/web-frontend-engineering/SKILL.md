@@ -54,6 +54,8 @@ Also: ship less JavaScript (code splitting, tree shaking, no unused dependencies
 - No hard-coded user-visible strings when the project is localized; format dates, numbers and currency with `Intl`; support right-to-left layouts if required.
 - Public pages: unique `title` and meta description, semantic headings, canonical URLs, server-rendered or static HTML for content that must be indexed, and a `sitemap.xml`.
 
+Making a web app feel native on a phone (viewport units, safe areas, hover and tap behaviour, input zoom, overscroll): [references/mobile-web-native-feel.md](references/mobile-web-native-feel.md).
+
 ## 7. Testing
 
 - Component tests with the project's runner (for example Vitest or Jest with Testing Library, querying by role and label as users do).
